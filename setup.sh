@@ -5,23 +5,30 @@
 
 ## make everything runable
 printf "marking scripts as runable..."
-chmod +x setup.sh corki.sh
+chmod +x *.sh
 printf " done\n"
+
+
+printf "making ~/.corki..."
+mkdir "$HOME/.corki"
+echo "done"
 
 # if token wasn't exported by update.sh or steve.sh
 # then we need to prompt the user for it
-if [ -z "$DISCORD_TOKEN" ]; then
+if [ ! -f $HOME/.corki/disc_key ]; then
 	# get bot token
-	printf "Enter your Discord Bot API token: "
+	printf "Enter your Discord token: "
 	read DISCORD_TOKEN
+
+    # put token into config dir
+    printf "inserting token into ur ~/.steve/tg_key... "
+    echo $DISCORD_TOKEN > $HOME/.corki/disc_key
+
+    echo "done"
 fi
 
-# put token into steve.sh
-printf "inserting token into corki.sh... "
-sed -i "s/^export DISCORD_TOKEN=.*/export DISCORD_TOKEN=${DISCORD_TOKEN}/" corki.sh
-printf "done\n"
 
 # install dependencies
 echo "installing dependencies..."
-npm install --save discord.js
+npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror
 echo "installed dependencies"
