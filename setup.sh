@@ -21,7 +21,7 @@ if [ ! -f $HOME/.corki/disc_key ]; then
 	read DISCORD_TOKEN
 
     # put token into config dir
-    printf "inserting token into ur ~/.steve/tg_key... "
+    printf "inserting token into ur ~/.corki/disc_key... "
     echo $DISCORD_TOKEN > $HOME/.corki/disc_key
 
     echo "done"
