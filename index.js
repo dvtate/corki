@@ -1,32 +1,49 @@
 
+
+// see file if ur concerned about privacy, its not bad
+const logCmd = require("./logging.js");
+
 // Import the discord.js module
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 
 // Create an instance of a Discord client
-const client = new Discord.Client();
-
+global.client = new Discord.Client();
 
 // bot will only start reacting to information
 // from Discord _after_ ready is emitted
-client.on('ready', () => {
-	console.log('Ready to fly!');
+global.client.on("ready", () => {
+	console.log("Ready to fly!");
 });
 
-// Create an event listener for messages
-client.on('message', msg => {
-	
-	// If the message is "ping"
-	if (msg.content.match(/_ping/)) {
-		// Send "pong" to the same channel
-		msg.channel.send('pong');
 
-	} else if (message.content.match(/_coinflip/)) {
-		if (Math.random() < 0.5)
-			msg.channel.send('heads');
-		else
-			msg.channel.send('tails');
-	}
+const subreddit_fwd = require("./subreddit_forward.js");
+
+
+
+// set up our list of commands
+var commands = [];
+commands = commands.concat(require("./dev_cmds.js"));
+commands = commands.concat(require("./basic_cmds.js"));
+
+commands = commands.concat([subreddit_fwd.command]);
+subreddit_fwd.configure(client);
+
+
+//commands.concat(require("./.js");
+
+// message event listener
+global.client.on('message', msg => {
+
+	// check each possible command
+	for (var i = 0; i < commands.length; i++)
+		// if it matches, run it
+		if (commands[i].condition(msg)) {
+			commands[i].act(msg);
+			break; // we're done here
+		}
+
 });
 
-// Log our bot in
-client.login(process.env.DISCORD_TOKEN);
+
+// Log bot in using token
+global.client.login(process.env.DISC_KEY);

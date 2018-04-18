@@ -3,7 +3,7 @@
 ## This script automatically sets everything up for you
 ## to be run upon cloning the repo
 
-## make everything runable
+# make everything runable
 printf "marking scripts as runable..."
 chmod +x *.sh
 printf " done\n"
@@ -11,7 +11,11 @@ printf " done\n"
 
 printf "making ~/.corki..."
 mkdir "$HOME/.corki"
+mkdir "$HOME/.corki/reddit"
+touch "$HOME/.corki/reddit/clist"
+touch "$HOME/.corki/reddit/rdate"
 echo "done"
+
 
 # if token wasn't exported by update.sh or steve.sh
 # then we need to prompt the user for it
@@ -30,5 +34,5 @@ fi
 
 # install dependencies
 echo "installing dependencies..."
-npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror
+npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror rss-parser
 echo "installed dependencies"
