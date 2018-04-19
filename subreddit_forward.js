@@ -19,6 +19,7 @@ var recentDate = Date.now();
 async function configure(){
 
     channelList = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit/clist`)}`.split("\n");
+    console.log(`channelList: ${channelList}`);
     recentDate = Date.now();
 
 }
@@ -34,7 +35,7 @@ async function sendNewStories (item) {
     channelList.forEach(channel => {
         if (channel.length > 5)
             global.client.channels.find("id", channel).send(`${item.title} ${item.link}`);
-        //global.client.channels[channel]
+        global.client.channels[channel];
     });
 
 }
@@ -46,7 +47,7 @@ async function loadFeed () {
 
     const parser = new Parser();
 
-    let feed = await parser.parseURL('https://www.reddit.com/r/corkimains/new/.rss');
+    let feed = await parser.parseURL('https://www.reddit.com/r/leagueoflegends/new/.rss');
 
     var latest = 0;
     feed.items.forEach(item => {
@@ -89,6 +90,8 @@ module.exports.command  = {
             if (err)
                 throw err;
         });
+
+        channelList = channelList.concat(msg.channel.id);
 
         // reconfigure
         configure();

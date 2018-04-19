@@ -46,6 +46,9 @@ global.client.on('message', msg => {
 
 });
 
+global.client.on("guildMemberAdd", data => {
+    console.log(data);
+});
 
 // Log bot in using token
 global.client.login(process.env.DISC_KEY);

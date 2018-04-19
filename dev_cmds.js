@@ -28,5 +28,15 @@ module.exports = [
             console.log(msg);
         }
 
+    },
+
+    {
+        condition: function (msg) {
+            return msg.content.match(/^\-msgchan (.+)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "used -msg");
+            global.client.channels.find("id", msg.content.match(/^\-msgchan (.+)/)[1]).send("testing");
+        }
     }
 ];
