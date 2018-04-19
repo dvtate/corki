@@ -13,7 +13,6 @@ printf "making ~/.corki..."
 mkdir "$HOME/.corki"
 mkdir "$HOME/.corki/reddit"
 touch "$HOME/.corki/reddit/clist"
-touch "$HOME/.corki/reddit/rdate"
 echo "done"
 
 
