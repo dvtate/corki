@@ -5,10 +5,13 @@ const logCmd = require("./logging.js");
 module.exports = [
 
     { // vaporwave
+
+        // if returns true then its correct command
         condition: function (msg) {
             return msg.content.match(/^\-vaporwave (.+)/);
         },
 
+        // run when command is triggered
         act: async function (msg) {
             logCmd(msg, "likes -vaporwave");
             const arg = msg.content.match(/^\-vaporwave (.+)/)[1]
@@ -72,6 +75,7 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "-spell'd a word");
 
+            // dict containg calsigns for each letter
             const callLetters = {
             	a: "alpha",    b: "bravo",	   c: "charlie",
             	d: "delta",	   e: "echo", 	   f: "foxtrot",
@@ -84,19 +88,16 @@ module.exports = [
             	y: "yankee",   z: "zulu"
             };
 
+            // split word into an array of letters
             const letters = msg.content.match(/^\-spell (.+)/)[1].toLowerCase().split('');
 
-            var resp = "";
-
-            for (var i = 0; i < letters.length; i++)
-                resp += callLetters[letters[i]] + " ";
-
-            resp = resp.trim();
+            // relpace each letter with its call-sign & recombine into string
+            var resp = letters.map(c => { return callLetters[c]; }).join(" ").trim();
 
             msg.channel.send(resp);
 
         }
-    }
+    },
 
     { // help entry
         condition: function (msg) {
