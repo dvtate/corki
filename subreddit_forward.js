@@ -47,7 +47,7 @@ async function loadFeed () {
 
     const parser = new Parser();
 
-    let feed = await parser.parseURL('https://www.reddit.com/r/leagueoflegends/new/.rss');
+    let feed = await parser.parseURL('https://www.reddit.com/r/corkimains/new/.rss');
 
     var latest = 0;
     feed.items.forEach(item => {
