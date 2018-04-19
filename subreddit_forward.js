@@ -77,7 +77,7 @@ setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
 module.exports.command  = {
 
     condition: function (msg) {
-        return msg.content.match(/^\-subreddit_link/);
+        return msg.content.match(/^\-subreddit-link/);
     },
 
     act: async function (msg) {
