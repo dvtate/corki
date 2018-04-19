@@ -11,7 +11,7 @@ module.exports = [
         },
 
         // run to perform command
-        act: function (msg) {
+        act: async function (msg) {
             logCmd(msg, "-ping'd");
             msg.channel.send("pong");
         }
@@ -23,22 +23,9 @@ module.exports = [
             return msg.content.match(/^\-logmsg/);
         },
 
-        act: function (msg) {
-            msg.channel.send(`msg: ${msg}`);
+        act: async function (msg) {
+            msg.channel.send(`logged msg to stdout`);
             console.log(msg);
-        }
-
-    },
-
-    { // test cmd
-        condition: function (msg) {
-            return msg.content.match(/^\-testcmd/);
-        },
-
-        act: function (msg) {
-            msg.reply(msg.channel.id);
-            console.log(global.client.channels);
-            global.client.channels.find("id", "418968921186631692").send("o lol");
         }
 
     }

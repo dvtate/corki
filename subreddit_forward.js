@@ -8,43 +8,23 @@ const logCmd = require("./logging.js");
 
 
 const Parser = require("rss-parser");
-const parser = new Parser();
 
 // channels we send new reddit posts to
 var channelList;
 
 // date on most recent post
-var recentDate;
+var recentDate = Date.now();
 
 
 async function configure(){
 
     channelList = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit/clist`)}`.split("\n");
-    recentDate = fs.readFileSync(`${process.env.HOME}/.corki/reddit/rdate`);
-
-    if (recentDate.length == 0)
-        fs.writeFile(`${process.env.HOME}/.corki/reddit/rdate`, Date.now(), error => {
-            if (error)
-                throw error;
-        });
+    recentDate = Date.now();
 
 }
 
 module.exports.configure = configure;
 
-async function loadFeed () {
-
-
-    let feed = await parser.parseURL('https://www.reddit.com/r/leagueoflegends/new/.rss');
-
-    feed.items.forEach(item => {
-
-        if (Date.parse(item.pubDate) > recentDate)
-            sendNewStories(item);
-        //console.log(item.title + ':' + item.link);
-
-    });
-}
 
 // send story out to all channels
 async function sendNewStories (item) {
@@ -57,12 +37,30 @@ async function sendNewStories (item) {
         //global.client.channels[channel]
     });
 
-    // prevent same story from being sent multiple times
-    recentDate = Date.parse(item.date);
-    fs.writeFile(`${process.env.HOME}/.corki/reddit/rdate`, Date.now(), err => {
-        if (err) throw err;
+}
+
+
+async function loadFeed () {
+
+    const tmpDate = Date.now(); // check date before waiting on loading
+
+    const parser = new Parser();
+
+    let feed = await parser.parseURL('https://www.reddit.com/r/corkimains/new/.rss');
+
+    var latest = 0;
+    feed.items.forEach(item => {
+
+        if (Date.parse(item.pubDate) > recentDate) {
+            sendNewStories(item);
+            // update latest post time
+            latest = Date.parse(item.pubDate) > latest ? Date.parse(item.pubDate) : latest;
+        }
+        //console.log(`[${item.pubDate}] ${Date.parse(item.pubDate)}::${recentDate}`);
+
     });
 
+    recentDate = tmpDate;
 }
 
 
@@ -74,6 +72,7 @@ function refresh() {
 }
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
 
+
 // used to make it so the bot posts subreddit posts to this channel
 module.exports.command  = {
 
@@ -81,7 +80,7 @@ module.exports.command  = {
         return msg.content.match(/^\-subreddit_link/);
     },
 
-    act: function (msg) {
+    act: async function (msg) {
         logCmd(msg, "linked subreddit to channel");
         msg.channel.send("linked subreddit to this channel");
 
