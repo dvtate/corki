@@ -60,7 +60,18 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "-flipped text");
             const arg = msg.content.match(/^\-flip (.+)/)[1];
-            msg.channel.send(require("lunicode-flip").encode(msg.content));
+            msg.channel.send(require("lunicode-flip").encode(arg));
+        }
+    },
+
+
+    { // help entry
+        condition: function (msg) {
+            return msg.content.match(/^\-vaporwave|^\-glitch|^\-flip|^\-mirror|^\-tinycaps/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "doesn't know how to use -vaporwave");
+            msg.channel.send(`This command requires a text argument to act on\nexample: \`${msg.content} corki\``);
         }
     }
 
