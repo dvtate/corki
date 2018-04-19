@@ -18,4 +18,4 @@ sh "setup.sh"
 
 # kill and revive steve
 printf "spawning new Corki..."
-./steve.sh
+./corki.sh
