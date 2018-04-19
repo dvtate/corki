@@ -26,6 +26,7 @@ commands = commands.concat(require("./dev_cmds.js"));
 commands = commands.concat(require("./basic_cmds.js"));
 commands = commands.concat(require("./corki_cmds.js"));
 commands = commands.concat(require("./international_cmds.js"));
+commands = commands.concat(require("./text_cmds.js"));
 commands = commands.concat([subreddit_fwd.command]);
 subreddit_fwd.configure(client);
 
