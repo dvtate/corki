@@ -6,58 +6,62 @@ module.exports = [
 
     { // vaporwave
         condition: function (msg) {
-            msg.content.match(/^\-vaporwave (.+)/);
+            return msg.content.match(/^\-vaporwave (.+)/);
         },
 
         act: async function (msg) {
             logCmd(msg, "likes -vaporwave");
-            msg.channel.send(require("./vaporwave.js").toVaporwave(msg.content));
+            const arg = msg.content.match(/^\-vaporwave (.+)/)[1]
+            msg.channel.send(require("./vaporwave.js").toVaporwave(arg));
         }
     },
 
     { // glitch
         condition: function (msg) {
-            msg.content.match(/^\-glitch (.+)/);
+            return msg.content.match(/^\-glitch (.+)/);
         },
 
         act: async function (msg) {
             logCmd(msg, "-glitch'd text");
-            msg.channel.send(require("lunicode-creepify").encode(msg.content));
+            const arg = msg.content.match(/^\-glitch (.+)/)[1];
+            msg.channel.send(require("lunicode-creepify").encode(arg));
         }
     },
 
     { // tinycaps
         condition: function (msg) {
-            msg.content.match(/^\-tinycaps (.+)/);
+            return msg.content.match(/^\-tinycaps (.+)/);
         },
 
         act: async function (msg) {
             logCmd(msg, "made text into -tinycaps");
-            msg.channel.send(require("lunicode-tiny").encode(msg.content));
+            const arg = msg.content.match(/^\-tinycaps (.+)/)[1];
+            msg.channel.send(require("lunicode-tiny").encode(arg));
         }
     },
 
     { // mirror
         condition: function (msg) {
-            msg.content.match(/^\-mirror (.+)/);
+            return msg.content.match(/^\-mirror (.+)/);
         },
 
         act: async function (msg) {
             logCmd(msg, "reflected text with -mirror");
-            msg.channel.send(require("lunicode-mirror").encode(msg.content));
+            const arg = msg.content.match(/^\-mirror (.+)/)[1];
+            msg.channel.send(require("lunicode-mirror").encode(arg));
         }
     },
 
     { // flip
         condition: function (msg) {
-            msg.content.match(/^\-flip (.+)/);
+            return msg.content.match(/^\-flip (.+)/);
         },
 
         act: async function (msg) {
             logCmd(msg, "-flipped text");
+            const arg = msg.content.match(/^\-flip (.+)/)[1];
             msg.channel.send(require("lunicode-flip").encode(msg.content));
         }
     }
-
 
 ];
