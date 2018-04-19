@@ -41,6 +41,9 @@ module.exports = [
 * \`-flip <text>\`: flip text upside-down.
 * \`-tinycaps <text>\`: switch letters for small caps.
 * \`-mirror <text>\`: reverse text and characters.`
+                    }, {
+                        name: "Other Commands",
+                        value: "* \`-subreddit-link`: forward all new posts from /r/corkimains here"
                     }
                 ],
 
