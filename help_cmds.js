@@ -34,8 +34,13 @@ module.exports = [
 * \`-exchange <amount> <from> <to>\`: convert between currencies.
 * \`-timezone <unix-tz>\`: gives local time in given unix timezone.`
                     }, {
-                        name: "Corki Commands",
-                        value: "* \`-spell <word>\`: spells word using military phonetic alphabet."
+                        name: "Text Commands",
+                        value: `* \`-spell <word>\`: spells word using military phonetic alphabet.
+* \`-vaporwave <text>\`: formats text to vaporwave (full-width).
+* \`-glitch <text>\`: add characters to make text glitchy.
+* \`-flip <text>\`: flip text upside-down.
+* \`-tinycaps <text>\`: switch letters for small caps.
+* \`-mirror <text>\`: reverse text and characters.`
                     }
                 ],
 

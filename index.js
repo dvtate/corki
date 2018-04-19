@@ -24,7 +24,6 @@ const subreddit_fwd = require("./subreddit_forward.js");
 var commands = [];
 commands = commands.concat(require("./dev_cmds.js"));
 commands = commands.concat(require("./basic_cmds.js"));
-commands = commands.concat(require("./corki_cmds.js"));
 commands = commands.concat(require("./international_cmds.js"));
 commands = commands.concat(require("./text_cmds.js"));
 commands = commands.concat([subreddit_fwd.command]);
