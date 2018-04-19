@@ -10,6 +10,7 @@ module.exports = [
         },
 
         act: async function (msg) {
+            logCmd(msg, "likes -vaporwave");
             msg.channel.send(require("./vaporwave.js").toVaporwave(msg.content));
         }
     },
@@ -20,6 +21,7 @@ module.exports = [
         },
 
         act: async function (msg) {
+            logCmd(msg, "-glitch'd text");
             msg.channel.send(require("lunicode-creepify").encode(msg.content));
         }
     },
@@ -30,6 +32,7 @@ module.exports = [
         },
 
         act: async function (msg) {
+            logCmd(msg, "made text into -tinycaps");
             msg.channel.send(require("lunicode-tiny").encode(msg.content));
         }
     },
@@ -40,6 +43,7 @@ module.exports = [
         },
 
         act: async function (msg) {
+            logCmd(msg, "reflected text with -mirror");
             msg.channel.send(require("lunicode-mirror").encode(msg.content));
         }
     },
@@ -50,6 +54,7 @@ module.exports = [
         },
 
         act: async function (msg) {
+            logCmd(msg, "-flipped text");
             msg.channel.send(require("lunicode-flip").encode(msg.content));
         }
     }
