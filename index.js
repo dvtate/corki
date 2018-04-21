@@ -18,16 +18,14 @@ global.client.on("ready", () => {
 
 const subreddit_fwd = require("./subreddit_forward.js");
 
-
-
 // set up our list of commands
 var commands = [];
 commands = commands.concat(require("./dev_cmds.js"));
 commands = commands.concat(require("./basic_cmds.js"));
 commands = commands.concat(require("./international_cmds.js"));
 commands = commands.concat(require("./text_cmds.js"));
-commands = commands.concat([subreddit_fwd.command]);
-subreddit_fwd.configure(client);
+commands = commands.concat(subreddit_fwd.commands);
+subreddit_fwd.configure();
 
 commands = commands.concat(require("./help_cmds.js"));
 
@@ -46,9 +44,7 @@ global.client.on('message', msg => {
 
 });
 
-global.client.on("guildMemberAdd", data => {
-    console.log(data);
-});
+const token = `${require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key`)}`.trim();
 
 // Log bot in using token
-global.client.login(process.env.DISC_KEY);
+global.client.login(token);

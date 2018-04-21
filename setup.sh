@@ -26,11 +26,19 @@ if [ ! -f $HOME/.corki/disc_key ]; then
     # put token into config dir
     printf "inserting token into ur ~/.corki/disc_key... "
     echo $DISCORD_TOKEN > $HOME/.corki/disc_key
-
     echo "done"
 fi
 
+if [ ! -f $HOME/.corki/riot_key ]; then
+	# get token
+	printf "Enter Riot API token: "
+	read RIOT_TOKEN
 
+	# put in file
+	printf "inserting token into ~/.corki/riot_key... "
+	echo $RIOT_TOKEN > $HOME/.corki/riot_key
+	echo "done"
+fi
 # install dependencies
 echo "installing dependencies..."
 npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror rss-parser

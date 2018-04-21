@@ -1,6 +1,4 @@
 
-
-
 const request = require("request");
 const fs = require("fs");
 
@@ -74,26 +72,57 @@ function refresh() {
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
 
 
-// used to make it so the bot posts subreddit posts to this channel
-module.exports.command  = {
 
-    condition: function (msg) {
-        return msg.content.match(/^\-subreddit-link/);
+module.exports.commands = [
+
+    { // used to make it so the bot posts subreddit posts to this channel
+        condition: function (msg) {
+            return msg.content.match(/^\-subreddit-link/);
+        },
+
+        act: async function (msg) {
+            logCmd(msg, "linked subreddit to channel");
+
+            // add channel to list
+            fs.appendFile(`${process.env.HOME}/.corki/reddit/clist`, msg.channel.id + '\n', err => {
+                if (err)
+                    throw err;
+            });
+
+            channelList = channelList.concat(msg.channel.id);
+
+            // reconfigure
+            configure();
+
+            msg.channel.send("linked subreddit to this channel");
+
+        }
     },
 
-    act: async function (msg) {
-        logCmd(msg, "linked subreddit to channel");
-        msg.channel.send("linked subreddit to this channel");
+    { // stop posting in this channel
+        condition: function (msg) {
+            return msg.content.match(/^\-subreddit-unlink/);
+        },
 
-        // add channel to list
-        fs.appendFile(`${process.env.HOME}/.corki/reddit/clist`, msg.channel.id + '\n', err => {
-            if (err)
-                throw err;
-        });
+        act: async function (msg) {
+            logCmd(msg, "unlinked subreddit to channel");
 
-        channelList = channelList.concat(msg.channel.id);
+            var clist = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit/clist`)}`;
+            var clist_cpy;
+            do {
+                clist_cpy = clist;
+                clist = clist.replace(msg.channel.id + '\n', "");
+            } while (clist_cpy != clist);
 
-        // reconfigure
-        configure();
+            fs.writeFileSync(`${process.env.HOME}/.corki/reddit/clist`, clist);
+
+            configure();
+
+            msg.channel.send("reddit posts will no longer be forwarded here");
+
+
+        }
+
     }
-};
+
+];

@@ -1,8 +1,7 @@
 
 /*
-
 global.client.on("guildMemberAdd", data => {
-    console.log(data);
+    console.log(`new member: ${data}`);
 
 });
 
@@ -17,8 +16,6 @@ module.exports = [
         act: async function (msg) {
 
         }
-    }, {
-
     }
 ];
 */
