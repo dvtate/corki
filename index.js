@@ -16,14 +16,15 @@ global.client.on("ready", () => {
 });
 
 
-const subreddit_fwd = require("./subreddit_forward.js");
-
 // set up our list of commands
 var commands = [];
 commands = commands.concat(require("./dev_cmds.js"));
 commands = commands.concat(require("./basic_cmds.js"));
 commands = commands.concat(require("./international_cmds.js"));
 commands = commands.concat(require("./text_cmds.js"));
+
+
+const subreddit_fwd = require("./subreddit_forward.js");
 commands = commands.concat(subreddit_fwd.commands);
 subreddit_fwd.configure();
 
@@ -41,6 +42,22 @@ global.client.on('message', msg => {
 			commands[i].act(msg);
 			break; // we're done here
 		}
+
+});
+
+// Create an event listener for new guild members
+global.client.on("guildMemberAdd", member => {
+
+    // Send the message to a designated channel on a server:
+    const channel = member.guild.channels.find("name", "member-log");
+
+    // Do nothing if the channel wasn't found on this server
+    if (!channel) return;
+
+    // Send the message, mentioning the member
+    channel.send(`Welcome to the server, ${member}`);
+
+    console.log(`new member: ${member}`);
 
 });
 

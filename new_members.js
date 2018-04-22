@@ -12,4 +12,6 @@ global.client.on("guildMemberAdd", member => {
     // Send the message, mentioning the member
     channel.send(`Welcome to the server, ${member}`);
 
+    console.log(`new member: ${member}`);
+
 });

@@ -38,16 +38,24 @@ module.exports = [
 
         		// exchange error
         		} catch (e) {
-        			if (e == "fx error")
-                        msg.channel.send("invalid currency. See list: \
-        https://www.easymarkets.com/int/learn-centre/discover-trading/currency-acronyms-and-abbreviations/");
-
-        			else
+        			if (e == "fx error") {
+                        msg.channel.send("invalid currency");
+                        msg.channel.send(exchangeHelpInfo);
+        			} else
                         msg.channel.send("something's not right... :/");
 
         			logCmd(msg, `-exchange caught error: ${e}`);
         		}
         	});
+        }
+    },
+
+    { // exchange help
+        condition: function (msg) {
+            return msg.content.match(/^\-exchange(?:\s|$)/);
+        },
+        act: async function (msg) {
+            msg.channel.send(exchangeHelpInfo);
         }
     },
 
@@ -75,15 +83,68 @@ module.exports = [
                 msg.channel.send(`Time in ${tz}: ${timeConv.toString()}`);
 
         	} catch (e) { // catch errors from invalid tz
-                console.log(e);
+                //console.log(e);
         		logCmd(msg, "gave invalid /timezone");
                 msg.channel.send("Invalid timezone\nSee: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List");
+                msg.channel.send(timezoneHelpInfo);
 
             };
         }
-    }
+    },
 
-
+    { // exchange help
+        condition: function (msg) {
+            return msg.content.match(/^\-timezone(?:\s|$)/);
+        },
+        act: async function (msg) {
+            msg.channel.send(timezoneHelpInfo);
+        }
+    },
 
 
 ];
+
+
+const exchangeHelpInfo = { embed: {
+    title: "-exchange Help",
+    description: "-exchange accesses real time exchange rates to make prices in the desired units",
+    fields: [
+        {
+            name: "Useage",
+            value: "`-exchange <quantity> <from> <to>`"
+        }, {
+            name: "Examples",
+            value: `This command is not case-sensitive and you can separate arguments if you wish.
+\`-exchange 20 USD to EUR\`
+\`-exchange 1 btc usd\`
+\`-exchange 50gbpusd\`
+            `
+        }, {
+            name: "Currency Symbols",
+            value: "This command accepts [commonly used currency symbols](https://oxr.readme.io/docs/supported-currencies)"
+        }
+    ]
+}};
+
+const timezoneHelpInfo = { embed: {
+    title: "-timezone Help",
+    description: "-timezone tells the local time in a given timezone",
+    fields: [
+        {
+            name: "Useage",
+            value: "`-timezone <timezone>`"
+        }, {
+            name: "Examples",
+            value: `
+\`-timezone America/New_York\` - gives time on US the east coast
+\`-timezone UTC-5\` - gives time in Eastern Standard time (note, doesn't account for [DST](https://en.wikipedia.org/wiki/Daylight_saving_time))
+\`-timezone Cuba\` - some countries have their own timezone entry
+            `
+        }, {
+            name: "Zones",
+            value: "This command supports all timezones, however they might not \
+be named what you expect. Use [this list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) for reference."
+        }
+
+    ]
+}};

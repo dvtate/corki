@@ -6,7 +6,7 @@ module.exports = [
 
     { // 8ball
         condition: function (msg) {
-            return msg.content.match(/^\-8ball/);
+            return msg.content.match(/^\-8ball(?:$|\s)/);
         },
 
         act: async function (msg) {
@@ -29,9 +29,18 @@ module.exports = [
         }
     },
 
+    { // echo help
+        condition: function (msg) {
+            return msg.content.match(/^\-echo(?:$|\s)/);
+        },
+        act: async function (msg) {
+            msg.channel.send("-echo expected a message");
+        }
+    },
+
     { // coin flip
         condition: function (msg) {
-            return msg.content.match(/^\-coinflip/);
+            return msg.content.match(/^\-coinflip(?:$|\s)/);
         },
 
         act: async function (msg) {
@@ -72,9 +81,9 @@ module.exports = [
 
     },
 
-    {
+    { // random help
         condition: function (msg) {
-            return msg.content.match(/^\-random/);
+            return msg.content.match(/^\-random(?:$|\s)/);
         },
         act: async function (msg) {
             msg.channel.send(randomHelpInfo);
@@ -122,7 +131,7 @@ module.exports = [
 
     { // xkcd
         condition: function (msg) {
-            return msg.content.match(/^\-xkcd/);
+            return msg.content.match(/^\-xkcd(?:$|\s)/);
         },
 
         act: async function (msg) {
@@ -146,13 +155,11 @@ module.exports = [
     }
 
 
-
 ];
 
 
 
 const randomHelpInfo = { embed: {
-    color: 0xff00e6,
     title: "-Random help",
     description: "`-random` is an RNG command which gives you a random number within given parameters",
     fields: [

@@ -81,8 +81,6 @@ module.exports = [
 
                 } else if (req[0] == "msgid") {
                     msg.channel.send(`msg.id = ${msg.id}`);
-                } else if (req[0] == "server") {
-                    var info;
                 } else if (req[0] == "help") {
                     msg.channel.send(logHelpInfo);
                 } else {
@@ -110,7 +108,7 @@ module.exports = [
 
     { // msg - send a message to a channel
         condition: function (msg) {
-            return msg.content.match(/^\-msg (.+) ([\s\S]+)/);
+            return msg.content.match(/^\-msg (\S+) ([\s\S]+)/);
         },
         act: async function (msg) {
             if (!botAdmins.auth(msg.author.id)) {
@@ -150,7 +148,6 @@ module.exports = [
 
 
 const logHelpInfo = { embed: {
-    color: 0xff00e6,
     title: "-log Help",
     description: "`-log` is a multi-purpose command used to help the bot developers by giving useful information",
     fields: [
