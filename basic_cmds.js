@@ -53,20 +53,17 @@ module.exports = [
         	//logCmd(msg, `random :: ${lims}`);
 
         	var rand;
-        	if (lims.length === 1) {
+        	if (lims.length == 1) {
         		const min = 0;
         		const max = Math.floor(Number(lims[0]))
         		rand = (Math.floor(Math.random() * (max - min)) + min);
-        	} else if (lims.length === 2) {
+        	} else if (lims.length >= 2) {
         		const min = Math.ceil(Number(lims[1]));
         		const max = Math.floor(Number(lims[0]));
         		rand = (Math.floor(Math.random() * (max - min)) + min);
         	} else {
-                msg.channel.send(`
-* \`-random <num1>\` -> random number (0 <= n < num1)\n
-* \`-random <num1> <num2>\` -> random number (num1 <= n <= num2)`);
-                return;
-        	}
+                msg.channel.send(randomHelpInfo);
+            }
 
     		msg.channel.send(`random number = ${rand}`);
 
@@ -80,25 +77,7 @@ module.exports = [
             return msg.content.match(/^\-random/);
         },
         act: async function (msg) {
-            msg.channel.send({ embed: {
-                color: 0xff00e6,
-                title: "-Random help",
-                description: "`-random` is an RNG command which gives you a random number within given parameters",
-                fields: [
-                    {
-                        name: "Argument Formats",
-                        value: `Different argument formats give different outputs
-* \`-random <a> <b>\`: a random integer between a and b inclusive --- [a, b]
-* \`-random <a>\`: a random number n where 0 <= n < a --- [0, a)`
-                    }, {
-                        name: "Examples",
-                        value: `
-* \`-random 10\`: to rate someones performance.
-* \`-random 1 100\`: I'm thinking of a number.
-* \`-random 1,100\`: same as above but commas.`
-                    }
-                ]
-            }})
+            msg.channel.send(randomHelpInfo);
         }
 
     },
@@ -169,3 +148,25 @@ module.exports = [
 
 
 ];
+
+
+
+const randomHelpInfo = { embed: {
+    color: 0xff00e6,
+    title: "-Random help",
+    description: "`-random` is an RNG command which gives you a random number within given parameters",
+    fields: [
+        {
+            name: "Argument Formats",
+            value: `Different argument formats give different outputs
+* \`-random <a> <b>\`: a random integer between a and b inclusive --- [a, b]
+* \`-random <a>\`: a random number n where 0 <= n < a --- [0, a)`
+        }, {
+            name: "Examples",
+            value: `
+* \`-random 10\`: to rate someones performance.
+* \`-random 1 100\`: I'm thinking of a number.
+* \`-random 1,100\`: same as above but commas.`
+        }
+    ]
+}};

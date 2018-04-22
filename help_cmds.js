@@ -21,35 +21,47 @@ module.exports = [
                     {
                         name: "General Commands",
                         value: `
-* \`-help\`: access this message.
-* \`-8ball [question]\`: answers yes, no, or maybe.
-* \`-echo <quote>\`: repeats <quote>.
-* \`-coinflip\`: sends heads or tails.
-* \`-random <args>\`: sends random number.
-* \`-xkcd [comic#|latest]\`: sends XKCD comic.
+\`-help\`: access this message.
+\`-8ball [question]\`: answers yes, no, or maybe.
+\`-echo <quote>\`: repeats <quote>.
+\`-coinflip\`: sends heads or tails.
+\`-random <args>\`: sends random number.
+\`-xkcd [comic#|latest]\`: sends XKCD comic.
                         `
                     }, {
                         name: "International Commands",
                         value: `
-* \`-exchange <amount> <from> <to>\`: convert between currencies.
-* \`-timezone <unix-tz>\`: gives local time in given unix timezone.`
+\`-exchange <amount> <from> <to>\`: convert between currencies.
+\`-timezone <unix-tz>\`: gives local time in given unix timezone.`
                     }, {
                         name: "Text Commands",
-                        value: `* \`-spell <word>\`: spells word using military phonetic alphabet.
-* \`-vaporwave <text>\`: formats text to vaporwave (full-width).
-* \`-glitch <text>\`: add characters to make text glitchy.
-* \`-flip <text>\`: flip text upside-down.
-* \`-tinycaps <text>\`: switch letters for small caps.
-* \`-mirror <text>\`: reverse text and characters.`
+                        value: `
+\`-spell <word>\`: spells word using military phonetic alphabet.
+\`-vaporwave <text>\`: formats text to vaporwave (full-width).
+\`-glitch <text>\`: add characters to make text glitchy.
+\`-flip <text>\`: flip text upside-down.
+\`-tinycaps <text>\`: switch letters for small caps.
+\`-mirror <text>\`: reverse text and characters.`
+                    }, {
+                        name: "Developer Commands:",
+                        value: `
+\`-log <args>\`: get/send useful info. (send \`-log help\` for more)
+\`-ping\`: test a connection.
+\`-msg <channel> <message>\`: send a message to a given channel. [admin]
+\`-bug <description>\`: send a bug report (or better yet, [GitHub](https://github.com/dvtate/corki-bot))`
                     }, {
                         name: "Other Commands",
-                        value: "* \`-subreddit-link`: forward all new posts from /r/corkimains here"
+                        value: `
+\`-subreddit-link\`: forward all new posts from [/r/corkimains](https://reddit.com/r/corkimains) here
+\`-subreddit-unlink\`: stop forwarding reddit posts here`
                     }
                 ],
 
                 timestamp: new Date(),
 
-
+                footer: {
+                    text: "Corki"
+                }
 
             }});
 
