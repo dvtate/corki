@@ -120,7 +120,7 @@ module.exports = [
 
             logCmd(msg, "sent a -msg");
 
-            const match = msg.content.match(/\-msg (.+) ([\s\S]+)/)
+            const match = msg.content.match(/\-msg (\S+) ([\s\S]+)/)
             const channel = match[1];
             const contents = match[2];
 
