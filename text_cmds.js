@@ -85,7 +85,8 @@ module.exports = [
             	p: "papa", 	   q: "quebec",    r: "romeo",
             	s: "sierra",   t: "tango",     u: "uniform",
             	v: "victor",   w: "whiskey",   x: "x-ray",
-            	y: "yankee",   z: "zulu"
+            	y: "yankee",   z: "zulu",    '-':"tac",
+                '|': "pipe", '!': "bang"
             };
 
             // split word into an array of letters

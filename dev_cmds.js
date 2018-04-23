@@ -91,6 +91,10 @@ module.exports = [
             } else if (req[0] == "bug") {
                 logCmd(msg, `-log'd a bug: ${req[1]}`);
                 msg.channel.send("Thank you for the bug report!");
+                // forward to tate's personal server
+                global.client.channels.find("id", "435548322120335360")
+                    .send(`@${msg.author.username}#${msg.author.discriminator} found a bug ${req[1]}`);
+
             }
         }
 
@@ -120,7 +124,7 @@ module.exports = [
 
             logCmd(msg, "sent a -msg");
 
-            const match = msg.content.match(/\-msg (\S+) ([\s\S]+)/)
+            const match = msg.content.match(/\-msg (.+) ([\s\S]+)/)
             const channel = match[1];
             const contents = match[2];
 
@@ -141,6 +145,34 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, `found a -bug: ${msg.content.match(/^\-bug (.+)/)[1]}`);
             msg.channel.send("Thank you for the bug report!");
+
+            // forward to tate's personal server
+            global.client.channels.find("id", "435548322120335360")
+                .send(`@${msg.author.username}#${msg.author.discriminator} found a bug ${msg.content.match(/^\-bug (.+)/)[1]}`);
+
+        }
+    },
+
+    {
+        condition: function (msg) {
+            return msg.content.match(/^\-system (.+)/);
+        },
+        act: async function (msg) {
+            // make sure they're authorized
+            if (!botAdmins.auth(msg.author.id)) {
+                msg.channel.send("You are not authorized to perform this action.\n"
+                               + "Ask @ridderhoff#6333 to add you to the botadmins list.");
+                logCmd(msg, "isn't authorized to use -msg");
+                return;
+            }
+
+            const command = msg.content.match(/^\-system (.+)/)[1];
+
+            // run command and send output
+            require("child_process")
+                .exec(command,
+                    (error, stdout, stderr) =>
+                        msg.channel.send(`corki@roflcopter $ ${command}\n${stdout}`));
         }
     }
 ];
