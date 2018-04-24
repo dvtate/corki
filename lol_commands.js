@@ -11,7 +11,7 @@ module.exports = [
         act: async function (msg) {
             const match = msg.content.match(/^\-mastery (\S+) (\S+) (.+)/);
 
-            const champ = teemo.champIDs[match[1]];
+            const champ = teemo.champIDs[match[1].toLowerCase()];
             const server = teemo.serverNames[match[2].toLowerCase()];
 
             if (!champ) {
@@ -30,9 +30,9 @@ module.exports = [
 
                 teemo.riot.get(server, "championMastery.getChampionMastery", summoner.id, champ).then(data => {
                     if (!data)
-                        msg.channel.send(`${match[3]} has never played ${match[1]}`);
+                        msg.channel.send(`${summoner.name} has never played ${match[1].toLowerCase()}`);
                     else
-                        msg.channel.send(`Mastery level ${data.championLevel} with ${data.championPoints} points`);
+                        msg.channel.send(`${summoner.name} has mastery level ${data.championLevel} with ${data.championPoints} points on ${match[1].toLowerCase()}`);
 
 
                 })
