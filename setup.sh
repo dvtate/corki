@@ -9,9 +9,10 @@ chmod +x *.sh
 printf " done\n"
 
 
-printf "making ~/.corki..."
+printf "setting up configuration directory..."
 mkdir "$HOME/.corki"
 mkdir "$HOME/.corki/reddit"
+mkdir "$HOME/.corki/users"
 touch "$HOME/.corki/reddit/clist"
 echo "done"
 
@@ -39,7 +40,21 @@ if [ ! -f $HOME/.corki/riot_key ]; then
 	echo $RIOT_TOKEN > $HOME/.corki/riot_key
 	echo "done"
 fi
+
+
+if [ ! -f $HOME/.corki/champgg_key ]; then
+	# get token
+	printf "Enter champion.gg API token: "
+	read CHAMPGG_TOKEN
+
+	# put in file
+	printf "inserting token into ~/.corki/champgg_key... "
+	echo $CHAMPGG_TOKEN > $HOME/.corki/champgg_key
+	echo "done"
+fi
+
+
 # install dependencies
 echo "installing dependencies..."
-npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror rss-parser
+npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror rss-parser teemojs
 echo "installed dependencies"
