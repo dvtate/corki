@@ -2,11 +2,12 @@ const fs = require("fs");
 
 
 const Teemo = require("teemojs");
+
 const riotAPIToken = `${fs.readFileSync(`${process.env.HOME}/.corki/riot_key`)}`.trim();
 
 module.exports.riot = new Teemo(riotAPIToken);
 
-const champGGToken = fs.readFileSync(`${process.env.HOME}/.corki/champgg_key`);
+const champGGToken = `${fs.readFileSync(`${process.env.HOME}/.corki/champgg_key`)}`.trim();
 
 
 module.exports.champgg = new Teemo(champGGToken, {

@@ -56,5 +56,5 @@ fi
 
 # install dependencies
 echo "installing dependencies..."
-npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror rss-parser teemojs
+npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror rss-parser teemojs request
 echo "installed dependencies"
