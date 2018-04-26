@@ -169,6 +169,7 @@ module.exports = [
 ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
         }
     },
+
     { // eval
       // instead of making a new command just use -eval :S
         condition: function (msg) {

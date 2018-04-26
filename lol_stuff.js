@@ -60,28 +60,11 @@ function getUserData (id) {
 }
 module.exports.getUserData = getUserData;
 
-async function getAcctData (id, req, cb) {
-    arguments
-
-    const data = getUserData(id);
-    if (!data)
-        return null;
-
-    var accts = data.accounts;
-
-    for (var i = 0; i < data.length; i++) {
-        data[i] = await riot.get()
-
-    }
+async function getUserMastery (id, champ, cb) {
 
 }
 
-async function getUserMastery(msg, cb) {
-
-}
-
-module.exports.getAcctData = getAcctData;
-
+module.exports.getUserMastery = getUserMastery;
 
 async function addUserAcct(msg, server, username) {
     setupDir(msg.author.id, msg.channel);
@@ -95,7 +78,7 @@ async function addUserAcct(msg, server, username) {
             icon: summoner.profileIconId
         });
 
-        fs.writeFileSync(`${process.env.HOME}/.corki/users/${msg.author.id}/lol.json`, JSON.stringify(usrObj));
+        setUserData(msg.author.id, usrObj);
         msg.channel.send(`${msg.author} is also ${username}`);
 
     }).catch(err => {
@@ -105,3 +88,10 @@ async function addUserAcct(msg, server, username) {
 }
 
 module.exports.addUserAcct = addUserAcct;
+
+
+
+function setUserData(id, usrObj) {
+    fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`, JSON.stringify(usrObj));
+}
+module.exports.setUserData = setUserData;

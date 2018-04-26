@@ -49,7 +49,16 @@ module.exports = [
 \`-ping\`: test a connection.
 \`-msg <channel> <message>\`: send a message to a given channel. [admin]
 \`-bug <description>\`: send a bug report (or better yet, [GitHub](https://github.com/dvtate/corki-bot))`
-                    }, {
+                    },
+                    {
+                        name: "League of Legends related commands",
+                        value: `
+\`-add-lol <region-code> <summoner-name>\`: link your LoL acct to your discord account.
+\`-list-lol\`: list the League of legends accounts linked to your discord account.
+\`-main-lol <account-number>\`: set an account as your main (use index from `-list-lol`)
+\`-mastery <args>\`: champion mastery information [WIP]`
+                    },
+                    {
                         name: "Other Commands",
                         value: `
 \`-subreddit-link\`: forward all new posts from [/r/corkimains](https://reddit.com/r/corkimains) here
