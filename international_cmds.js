@@ -1,5 +1,5 @@
 
-
+const time = require("time");
 const logCmd = require("./logging.js");
 
 module.exports = [
@@ -60,25 +60,28 @@ module.exports = [
     },
 
     { // timezone convert
+
         condition: function (msg) {
             return msg.content.match(/^\-timezone (.+)/);
         },
+
         act: async function (msg) {
 
 
             logCmd(msg, "/timezone'd");
 
-            const time = require("time");
+            const match = msg.content.match(/^\-timezone (.+)/)[1];
 
-            const tz = msg.content.match(/^\-timezone (.+)/)[1];
+            let tz;
 
             // this is a workaround for a retarded bug in time... idk how/why it does this...
             // the bug: UTC+6 interpreted as UTC-6 and vice versa by date.setTimezone;
-            if (tz.match(/\+/))
-                tz = tz.replace('+', '-');
-            else if (msg.match(/\-/))
-                tz = tz.replace('-', '+');
-
+            if (match.match(/\+/))
+                tz = match.replace('+', '-');
+            else if (match.match(/\-/))
+                tz = match.replace('-', '+');
+            else
+                tz = match;
 
             let timeConv = new time.Date();
 
@@ -88,7 +91,7 @@ module.exports = [
             	timeConv.setTimezone(tz);
 
         		// send msg
-                msg.channel.send(`Time in ${tz}: ${timeConv.toString()}`);
+                msg.channel.send(`Time in ${match}: ${timeConv.toString()}`);
 
         	} catch (e) { // catch errors from invalid tz
                 //console.log(e);
