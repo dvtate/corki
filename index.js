@@ -1,4 +1,4 @@
-
+//"use strict";
 
 // see file if ur concerned about privacy, its not bad
 const logCmd = require("./logging.js");
@@ -49,7 +49,7 @@ global.client.on('message', msg => {
 
 });
 
-// Create an event listener for new guild members
+// welcome new members to the server
 global.client.on("guildMemberAdd", member => {
 
     // server's new members channel

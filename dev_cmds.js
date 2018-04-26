@@ -165,8 +165,34 @@ module.exports = [
             require("child_process")
                 .exec(command,
                     (error, stdout, stderr) =>
-                        msg.channel.send(`corki@roflcopter $ ${command}\n${stdout}`));
+                        msg.channel.send(`corki@roflcopter $ ${command}\n\`\`\`
+${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
         }
+    },
+    { // eval
+      // instead of making a new command just use -eval :S
+        condition: function (msg) {
+            return msg.content.match(/^\-eval ([\s\S]+)/);
+        },
+        act: async function (msg) {
+
+            // make sure they're authorized
+            if (!botAdmins.auth(msg.author.id)) {
+                msg.channel.send("You are not authorized to perform this action.\n"
+                               + "Ask @ridderhoff#6333 to add you to the botadmins list.");
+                logCmd(msg, "isn't authorized to use -eval");
+                return;
+            }
+
+            const code = msg.content.match(/^-eval ([\s\S]+)/)[1];
+            try {
+                    eval(code);
+            } catch (err) {
+                    msg.channel.send(`error: ${err}`);
+            }
+
+        }
+
     }
 ];
 

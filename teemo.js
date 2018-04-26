@@ -1,15 +1,14 @@
 const fs = require("fs");
-
-
 const Teemo = require("teemojs");
 
-const riotAPIToken = `${fs.readFileSync(`${process.env.HOME}/.corki/riot_key`)}`.trim();
 
+
+// riot api
+const riotAPIToken = `${fs.readFileSync(`${process.env.HOME}/.corki/riot_key`)}`.trim();
 module.exports.riot = new Teemo(riotAPIToken);
 
+// champgg api
 const champGGToken = `${fs.readFileSync(`${process.env.HOME}/.corki/champgg_key`)}`.trim();
-
-
 module.exports.champgg = new Teemo(champGGToken, {
   "prefix": "http://api.champion.gg",
   "retries": 3,
@@ -48,7 +47,7 @@ module.exports.champgg = new Teemo(champGGToken, {
 });
 
 
-
+// server names for teemo
 module.exports.serverNames = {
     "br"  : "br1", "eune": "eun1", "euw" : "euw1",
     "jp"  : "jp1", "kr"  : "kr",   "lan" : "la1",
@@ -56,6 +55,9 @@ module.exports.serverNames = {
     "tr"  : "tr1", "ru"  : "ru1",  "pbe" : "pbe1"
 }
 
+
+// edit when new champs come out
+// this might actually have flaws, maybe ``[{ key, id }, {}, ...]` better
 module.exports.champIDs = {
 	"wukong" : 62, "jax": 24, "fiddlesticks": 9, "shaco": 35, "warwick": 19,
     "xayah": 498, "nidalee": 76, "zyra": 143, "kled": 240, "brand": 63, "rammus": 33,

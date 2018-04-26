@@ -9,10 +9,11 @@ chmod +x *.sh
 printf " done\n"
 
 
-printf "setting up configuration directory..."
+echo "setting up configuration directory..."
 mkdir "$HOME/.corki"
 mkdir "$HOME/.corki/reddit"
 mkdir "$HOME/.corki/users"
+mkdir "$HOME/.corki/servers"
 touch "$HOME/.corki/reddit/clist"
 echo "done"
 

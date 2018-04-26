@@ -1,10 +1,13 @@
 const teemo = require("./teemo.js");
 const lol = require("./lol_stuff.js");
+const logCmd = require("./logging.js");
 
 
 
 module.exports = [
-    {
+
+
+    { // a specific summoner's mastery of a specific champ
         condition: function (msg) {
             return msg.content.match(/^\-mastery (\S+) (\S+) (.+)/)
         },
@@ -41,7 +44,53 @@ module.exports = [
                 msg.channel.send(`"${match[3]} wasn't found on ${match[2]}"`);
             });
         }
-    }
+    },
 
+    { // -mastery help
+        condition: function (msg) {
+            return msg.content.match(/^\-mastery/);
+        },
+        act: async function (msg) {
+            msg.channel.send("For now, the format of `-mastery` is: `-mastery <champ> <server> <summoner-name>`");
+        }
+
+    },
+
+
+
+    { // add acct
+        condition: function (msg) {
+            return msg.content.match(/^\-add-lol (\S+) (.+)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "linked an LoL acct (-add-lol)");
+
+            const match = msg.content.match(/-add-lol (\S+) (.+)/);
+            const server = teemo.serverNames[match[1]];
+            const summoner = match[2];
+
+            lol.addUserAcct(msg, server, summoner);
+
+        }
+
+    },
+
+    { // list accts
+        condition: function (msg) {
+            return msg.content.match(/^\-list-lol/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "listed lol accts. (-list-lol)")
+            var userObj = lol.getUserData(msg.author.id);
+
+            var str = `${msg.author} has ${userObj.accounts.length} accounts:\n`;
+            for (var i = 0; i < userObj.accounts.length; i++)
+                str += `[${i}]: ${userObj.accounts[i].server} ${userObj.accounts[i].name}\n`;
+
+            str += `main account: ${userObj.main}`;
+
+            msg.channel.send(str);
+        }
+    }
 
 ];
