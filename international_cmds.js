@@ -72,6 +72,14 @@ module.exports = [
 
             const tz = msg.content.match(/^\-timezone (.+)/)[1];
 
+            // this is a workaround for a retarded bug in time... idk how/why it does this...
+            // the bug: UTC+6 interpreted as UTC-6 and vice versa by date.setTimezone;
+            if (tz.match(/\+/))
+                tz = tz.replace('+', '-');
+            else if (msg.match(/\-/))
+                tz = tz.replace('-', '+');
+
+
             let timeConv = new time.Date();
 
         	try {

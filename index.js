@@ -30,6 +30,7 @@ subreddit_fwd.configure();
 
 
 commands = commands.concat(require("./lol_commands.js"));
+commands = commands.concat(require("./reactions.js"));
 
 commands = commands.concat(require("./help_cmds.js"));
 
@@ -51,14 +52,14 @@ global.client.on('message', msg => {
 // Create an event listener for new guild members
 global.client.on("guildMemberAdd", member => {
 
-    // Send the message to a designated channel on a server:
+    // server's new members channel
     const channel = member.guild.channels.find("name", "new_members");
 
-    // Do nothing if the channel wasn't found on this server
+    // if not found give up
     if (!channel)
 		return;
 
-    // Send the message, mentioning the member
+    // welcome them
     channel.send(`Welcome to the server, ${member}`);
 
 });

@@ -45,7 +45,7 @@ module.exports = [
             logCmd(msg, "asked for a -log");
 
             const req = msg.content.match(/^\-log (.+)/)[1].split(' ');
-            if (req.length == 1) {
+            if (req.length == 1)
                 if (req[0] == "msg") {
                     console.log(msg);
                     msg.channel.send("msg logged to stdout");
@@ -88,14 +88,7 @@ module.exports = [
                     msg.channel.send(logHelpInfo);
                 }
 
-            } else if (req[0] == "bug") {
-                logCmd(msg, `-log'd a bug: ${req[1]}`);
-                msg.channel.send("Thank you for the bug report!");
-                // forward to tate's personal server
-                global.client.channels.find("id", "435548322120335360")
-                    .send(`@${msg.author.username}#${msg.author.discriminator} found a bug ${req[1]}`);
 
-            }
         }
 
     },
