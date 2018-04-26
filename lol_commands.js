@@ -91,6 +91,22 @@ module.exports = [
 
             msg.channel.send(str);
         }
+    },
+
+
+    { // main acct
+        condition: function (msg) {
+            return msg.content.match(/^-main-lol ([0-9])/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "modified their main account");
+            var userObj = lol.getUserData(msg.author.id);
+            userObj.main = msg.content.match(/^-main-lol ([0-9])/)[1];
+            lol.setUserData(msg.author.id, userObj);
+            msg.channel.send("main account updated");
+        }
     }
+
+
 
 ];

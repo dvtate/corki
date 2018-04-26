@@ -29,10 +29,22 @@ module.exports = [
 \`-xkcd [comic#|latest]\`: sends XKCD comic.
                         `
                     }, {
-                        name: "International Commands",
+                        name: "League of Legends related commands",
+                        value: `
+\`-add-lol <region-code> <summoner-name>\`: link your LoL acct to your discord account.
+\`-list-lol\`: list the League of legends accounts linked to your discord account.
+\`-main-lol <account-number>\`: set an account as your main (use index from \`-list-lol\`)
+\`-mastery <args>\`: champion mastery information [WIP]`
+                    }, {                        name: "International Commands",
                         value: `
 \`-exchange <amount> <from> <to>\`: convert between currencies.
 \`-timezone <unix-tz>\`: gives local time in given unix timezone.`
+                    }, {
+                        name: "Server Roles",
+                        value: `
+\`-iam <role(s)>\`: give yourself a role (use commas to assign multiple at once).
+\`-iamnot <role(s)>\`: remove role from self.
+\`-add-assignable-role <role(s)>\`: mark given as self-assignable [admin]`
                     }, {
                         name: "Text Commands",
                         value: `
@@ -48,17 +60,12 @@ module.exports = [
 \`-log <args>\`: get/send useful info. (send \`-log help\` for more)
 \`-ping\`: test a connection.
 \`-msg <channel> <message>\`: send a message to a given channel. [admin]
-\`-bug <description>\`: send a bug report (or better yet, [GitHub](https://github.com/dvtate/corki-bot))`
-                    },
-                    {
-                        name: "League of Legends related commands",
-                        value: `
-\`-add-lol <region-code> <summoner-name>\`: link your LoL acct to your discord account.
-\`-list-lol\`: list the League of legends accounts linked to your discord account.
-\`-main-lol <account-number>\`: set an account as your main (use index from `-list-lol`)
-\`-mastery <args>\`: champion mastery information [WIP]`
-                    },
-                    {
+\`-bug <description>\`: send a bug report (or better yet, [GitHub](https://github.com/dvtate/corki-bot))
+\`-system <command>\`: run shell command on host server. [admin]
+\`-eval <node.js code>\`: run node.js code as the act of a command. [admin]`
+                    }, {
+
+
                         name: "Other Commands",
                         value: `
 \`-subreddit-link\`: forward all new posts from [/r/corkimains](https://reddit.com/r/corkimains) here
@@ -73,7 +80,6 @@ module.exports = [
                 }
 
             }});
-
 
         }
     },

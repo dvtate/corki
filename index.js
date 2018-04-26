@@ -28,7 +28,7 @@ const subreddit_fwd = require("./subreddit_forward.js");
 commands = commands.concat(subreddit_fwd.commands);
 subreddit_fwd.configure();
 
-
+commands = commands.concat(require("./roles.js"));
 commands = commands.concat(require("./lol_commands.js"));
 commands = commands.concat(require("./reactions.js"));
 
