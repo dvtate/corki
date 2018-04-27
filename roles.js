@@ -111,14 +111,18 @@ To self-assign a role you can use the command \`-iam <role>\`
         },
 
         act: async function (msg) {
-            msg.content.match(/^-iamnot (.+)/)[1]                           // find roles argument
-                    .split(",")                                             // take each role (separated by commas)
-                        .map(r => msg.guild.roles.find("name", r.trim()))   // map roles to coresponding id's
-                            .forEach(r => {                                 // attempt to remove each role
-                                if (!r)
-                                    msg.channel.send("invalid role ignored");
-                                else
-                                    msg.member.removeRole(r).catch(console.error);});
+            var roles = msg.content
+                .match(/^-iamnot (.+)/)[1]      // find roles argument
+                    .split(",")                 // take each role (separated by commas)
+                        .map(r => r.trim());    // reomve excess whitespace
+
+            roles.foreach(role => {
+                const r = msg.guild.roles.find("name", role);
+                if (!r)
+                    msg.channel.send(`invalid role "${role}" ignored`);
+                else
+                    msg.member.removeRole(r).catch(console.error);
+            });
 
             msg.channel.send("done!");
 
@@ -126,3 +130,34 @@ To self-assign a role you can use the command \`-iam <role>\`
     },
 
 ];
+
+const rolesHelpInfo = { embed: {
+        title: "Roles",
+        description: "Use the bot to set your roles on the server!",
+        fields: [
+            {
+                name: "Skins",
+                value: "If you want a [colorful name](https://raw.githubusercontent.com/dvtate/dvtate.github.io/master/dls/perm/corki-roles.png) \
+you should use `-iam` to set your skin to one of the following: \
+Urfrider, Arcade, Dragonwing, Ice Toboggan, Red Baron, Hot Rod, Fnatic, UFO"
+            }, {
+                name: "Regions",
+                value: "You can also use `-iam` to specify your region. The following are supported: \
+TR, RU, OCE, LAS, LAN, KR, JP, BR, EUNE, NA, EUW"
+            }, {
+                name: "Example",
+                value: `
+I just joined the serer so I'll set my roles now. I play in NA and like the color green.
+\`-iam NA, UFO\`
+
+I decided to move to Brazil so I'll change my region.
+\`-iamnot NA\`
+\`-iam BR\``
+            }
+        ],
+
+        thumbnail: {
+            url: "https://raw.githubusercontent.com/dvtate/dvtate.github.io/master/dls/perm/corki-roles.png",
+            width: 94, height: 188
+        }
+}};
