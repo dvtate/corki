@@ -116,7 +116,7 @@ To self-assign a role you can use the command \`-iam <role>\`
                     .split(",")                 // take each role (separated by commas)
                         .map(r => r.trim());    // reomve excess whitespace
 
-            roles.foreach(role => {
+            roles.forEach(role => {
                 const r = msg.guild.roles.find("name", role);
                 if (!r)
                     msg.channel.send(`invalid role "${role}" ignored`);
