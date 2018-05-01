@@ -9,7 +9,7 @@ module.exports = [
 
     { // a specific summoner's mastery of a specific champ
         condition: function (msg) {
-            return msg.content.match(/^\-mastery (\S+) (\S+) (.+)/)
+            return msg.content.match(/^(?:-mastery|-lol mastery) (\S+) (\S+) (.+)/)
         },
         act: async function (msg) {
             const match = msg.content.match(/^\-mastery (\S+) (\S+) (.+)/);
@@ -46,26 +46,55 @@ module.exports = [
         }
     },
 
-    { // -mastery help
+    {
         condition: function (msg) {
-            return msg.content.match(/^\-mastery/);
+            return msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!([0-9]+)>/);
         },
         act: async function (msg) {
-            msg.channel.send("For now, the format of `-mastery` is: `-mastery <champ> <server> <summoner-name>`");
+            const match = msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!([0-9]+)>/);
+            const champName = match[1];
+            const champID = teemo.champIDs[champName];
+            const id = match[2];
+
+            lol.getUserMastery(id, champID).then(pts => {
+                msg.channel.send(`<@!${id}> has ${pts} points on ${champName}`);
+            });
+
+        }
+    },
+
+    {
+        condition: function (msg) {
+            return msg.content.match(/^(?:-mastery|-lol mastery) (\S+)/)
+        },
+        act: async function (msg) {
+            const champName = msg.content.match(/^(?:-mastery|-lol mastery) (\S+)/)[1];
+            const champID =  teemo.champIDs[champName];
+
+            lol.getUserMastery(msg.author.id, champID).then(pts => {
+                msg.channel.send(`You have ${pts} points on ${champName}`);
+            });
         }
 
     },
 
-
+    { // -mastery help
+        condition: function (msg) {
+            return msg.content.match(/^(?:-mastery|-lol mastery)/);
+        },
+        act: async function (msg) {
+            msg.channel.send("For now, the format of `-mastery` is: `-mastery <champ> <server> <summoner-name>`");
+        }
+    },
 
     { // add acct
         condition: function (msg) {
-            return msg.content.match(/^\-add-lol (\S+) (.+)/);
+            return msg.content.match(/^\-lol add (\S+) (.+)/);
         },
         act: async function (msg) {
             logCmd(msg, "linked an LoL acct (-add-lol)");
 
-            const match = msg.content.match(/-add-lol (\S+) (.+)/);
+            const match = msg.content.match(/-lol add (\S+) (.+)/);
             const server = teemo.serverNames[match[1]];
             const summoner = match[2];
 
@@ -75,16 +104,37 @@ module.exports = [
 
     },
 
+    { // list another user's accts
+        condition: function (msg) {
+            return msg.content.match(/^-lol list <@!([0-9]+)>/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "listed a user's lol accts. (-list-lol)");
+
+
+            const id = msg.content.match(/^-lol list <@!([0-9]+)>/)[1];
+            const userObj = lol.getUserData(id);
+
+            var str = `<@!${id}> has ${userObj.accounts.length} accounts:\n`;
+            for (let i = 0; i < userObj.accounts.length; i++)
+                str += `[${i}]: ${userObj.accounts[i].server} ${userObj.accounts[i].name}\n`;
+
+            str += `main account: ${userObj.main}`;
+
+            msg.channel.send(str);
+        }
+    },
+
     { // list accts
         condition: function (msg) {
-            return msg.content.match(/^\-list-lol/);
+            return msg.content.match(/^\-lol list/);
         },
         act: async function (msg) {
             logCmd(msg, "listed lol accts. (-list-lol)")
             var userObj = lol.getUserData(msg.author.id);
 
             var str = `${msg.author} has ${userObj.accounts.length} accounts:\n`;
-            for (var i = 0; i < userObj.accounts.length; i++)
+            for (let i = 0; i < userObj.accounts.length; i++)
                 str += `[${i}]: ${userObj.accounts[i].server} ${userObj.accounts[i].name}\n`;
 
             str += `main account: ${userObj.main}`;
@@ -96,7 +146,7 @@ module.exports = [
 
     { // main acct
         condition: function (msg) {
-            return msg.content.match(/^-main-lol ([0-9])/);
+            return msg.content.match(/^-lol main ([0-9])/);
         },
         act: async function (msg) {
             logCmd(msg, "modified their main account");
@@ -105,8 +155,21 @@ module.exports = [
             lol.setUserData(msg.author.id, userObj);
             msg.channel.send("main account updated");
         }
-    }
+    },
 
+    {
+        condition: function (msg) {
+            return msg.content.match(/^-lol teemo ([\S\s]+)/);
+        },
+        act: function (msg) {
+
+            logCmd(msg, "made a call to teemo.js");
+            const args = msg.content.match(/^-lol teemo ([\S\s]+)/)[1].split(" ,\n");
+            teemo.riot.get.apply(teemo.riot, args).then(data => {
+                msg.channel.send(JSON.stringify(data));
+            });
+        }
+    }
 
 
 ];

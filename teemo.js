@@ -86,3 +86,11 @@ module.exports.champIDs = {
     "janna": 40, "nautilus": 111, "evelynn": 28, "gragas": 79, "zed": 238,
     "vi": 254, "kogmaw": 96, "ahri": 103, "quinn": 133, "leblanc": 7, "ezreal": 81
 };
+
+
+// champ names is the same as champ id's but key-value swapped
+var champNames = {};
+for (key in module.exports.champIDs)
+    champNames[module.exports.champIDs[key]] = key;
+
+module.exports.champNames = champNames;

@@ -40,8 +40,11 @@ module.exports.setupDir = setupDir;
     main: 0,
     accounts: [
         {
-            region: "",
-
+            name: "",
+            server: "",
+            id: "num num",
+            icon: num,
+            accountId:""
         }
     ]
 }
@@ -61,6 +64,26 @@ function getUserData (id) {
 module.exports.getUserData = getUserData;
 
 async function getUserMastery (id, champ, cb) {
+    return new Promise(async (resolve, reject) => {
+        var data = getUserData(id);
+        if (!data) {
+            reject("account not found :/");
+            return;
+        }
+
+        // total mastery from each of the user's accounts and return is
+        var mastery = 0;
+
+        for (let i = 0; i < data.accounts.length; i++) {
+
+            let acctMastery = await teemo.riot.get(data.accounts[i].server,
+                "championMastery.getChampionMastery", data.accounts[i].id, champ);
+
+            mastery += !!acctMastery ? acctMastery.championPoints : 0;
+        }
+
+        resolve(mastery);
+    });
 
 }
 
@@ -75,6 +98,7 @@ async function addUserAcct(msg, server, username) {
             name: summoner.name,
             server: server,
             id: summoner.id,
+            accountId: summoner.accountId,
             icon: summoner.profileIconId
         });
 
@@ -95,3 +119,14 @@ function setUserData(id, usrObj) {
     fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`, JSON.stringify(usrObj));
 }
 module.exports.setUserData = setUserData;
+
+
+
+
+
+/*
+async function postLeaderBoard() {
+
+
+}
+*/

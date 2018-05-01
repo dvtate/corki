@@ -11,7 +11,7 @@ const botAdmins = [ "253784341555970048",   // @ridderhoff
 module.exports.list = botAdmins;
 
 // is given user trustworthy
-module.exports.auth = id => !!botAdmins.find(adminID => id == adminID);
+module.exports.auth = id => botAdmins.includes(id); 
 
 
 const root = [ "253784341555970048" ]; // @ridderhoff
