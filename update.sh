@@ -18,4 +18,4 @@ sh "setup.sh"
 
 # kill and revive steve
 printf "spawning new Corki..."
-./corki.sh
+node index.js

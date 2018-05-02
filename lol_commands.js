@@ -1,7 +1,7 @@
 const teemo = require("./teemo.js");
 const lol = require("./lol_stuff.js");
 const logCmd = require("./logging.js");
-
+const lol_lb = require("./lol_leaderboard.js");
 
 
 module.exports = [
@@ -100,7 +100,7 @@ module.exports = [
             const summoner = match[2];
 
             lol.addUserAcct(msg, server, summoner).then(() =>
-                msg.channel.send(`${msg.author} is also ${username}`)
+                msg.channel.send(`${msg.author} is also ${summoner}`)
             ).catch(err =>
                 msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err}\n\`\`\``)
             );
@@ -117,7 +117,7 @@ module.exports = [
             logCmd(msg, "listed a user's lol accts. (-list-lol)");
 
 
-            const id = msg.content.match(/^-lol list <@!([0-9]+)>/)[1];
+            const id = msg.content.match(/^-lol list <@!?([0-9]+)>/)[1];
             const userObj = lol.getUserData(id);
 
             var str = `<@!${id}> has ${userObj.accounts.length} accounts:\n`;
@@ -166,13 +166,31 @@ module.exports = [
         condition: function (msg) {
             return msg.content.match(/^-lol api ([\S\s]+)/);
         },
-        act: function (msg) {
+        act: async function (msg) {
             logCmd(msg, "made a call to teemo.js");
 
             const args = msg.content.match(/^-lol api ([\S\s]+)/)[1].split(" ");
             teemo.riot.get.apply(teemo.riot, args)
                 .then(data => msg.channel.send(JSON.stringify(data)))
                 .catch(err => msg.channel.send(`err: ${err}`) );
+
+        }
+    },
+
+    {
+        condition: function (msg) {
+            return msg.content.match(/^-lol leaderboard (\S+)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "generated leaderboard");
+
+            const champName = msg.content.match(/^-lol leaderboard (\S+)/)[1];
+            const champID = teemo.champIDs[champName];
+
+            lol_lb.getLeaderBoard(msg.guild.members, champID).then(data =>
+                msg.channel.send(lol_lb.formatLeaderBoard(data, champName)));
+
+
 
         }
     }

@@ -4,18 +4,21 @@
 ## to be run upon cloning the repo
 
 # make everything runable
-printf "marking scripts as runable..."
+echo "marking scripts as runable..."
 chmod +x *.sh
-printf " done\n"
 
 
 echo "setting up configuration directory..."
-mkdir "$HOME/.corki"
-mkdir "$HOME/.corki/reddit"
-mkdir "$HOME/.corki/users"
-mkdir "$HOME/.corki/servers"
-touch "$HOME/.corki/reddit/clist"
-echo "done"
+mkdir "$HOME/.corki"			# bot config directory
+
+mkdir "$HOME/.corki/reddit"			# reddit stuff
+touch "$HOME/.corki/reddit/clist"		# reddit channel forwarding
+
+mkdir "$HOME/.corki/users"			# user directories
+mkdir "$HOME/.corki/servers"		# server directories
+
+mkdir "$HOME/.corki/lb"				# leaderboard
+
 
 
 # if token wasn't exported by update.sh or steve.sh

@@ -66,7 +66,7 @@ function getUserData (id) {
 module.exports.getUserData = getUserData;
 
 // total number of mastery points on a specific champ across multiple accts
-async function getUserMastery (id, champ, cb) {
+function getUserMastery (id, champ, cb) {
     return new Promise(async (resolve, reject) => {
 
         // get their acct list
