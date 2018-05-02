@@ -33,7 +33,6 @@ async function sendNewStories (item) {
     channelList.forEach(channel => {
         if (channel.length > 5)
             global.client.channels.find("id", channel).send(`${item.title} ${item.link}`);
-        global.client.channels[channel];
     });
 
 }

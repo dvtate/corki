@@ -48,10 +48,10 @@ module.exports = [
 
     {
         condition: function (msg) {
-            return msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!([0-9]+)>/);
+            return msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!?([0-9]+)>/);
         },
         act: async function (msg) {
-            const match = msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!([0-9]+)>/);
+            const match = msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!?([0-9]+)>/);
             const champName = match[1];
             const champID = teemo.champIDs[champName];
             const id = match[2];
@@ -83,7 +83,8 @@ module.exports = [
             return msg.content.match(/^(?:-mastery|-lol mastery)/);
         },
         act: async function (msg) {
-            msg.channel.send("For now, the format of `-mastery` is: `-mastery <champ> <server> <summoner-name>`");
+            logCmd(msg, "got help with `-lol mastery`");
+            msg.channel.send(masteryHelpInfo);
         }
     },
 
@@ -98,7 +99,11 @@ module.exports = [
             const server = teemo.serverNames[match[1]];
             const summoner = match[2];
 
-            lol.addUserAcct(msg, server, summoner);
+            lol.addUserAcct(msg, server, summoner).then(() =>
+                msg.channel.send(`${msg.author} is also ${username}`)
+            ).catch(err =>
+                msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err}\n\`\`\``)
+            );
 
         }
 
@@ -106,7 +111,7 @@ module.exports = [
 
     { // list another user's accts
         condition: function (msg) {
-            return msg.content.match(/^-lol list <@!([0-9]+)>/);
+            return msg.content.match(/^-lol list <@!?([0-9]+)>/);
         },
         act: async function (msg) {
             logCmd(msg, "listed a user's lol accts. (-list-lol)");
@@ -159,17 +164,41 @@ module.exports = [
 
     {
         condition: function (msg) {
-            return msg.content.match(/^-lol teemo ([\S\s]+)/);
+            return msg.content.match(/^-lol api ([\S\s]+)/);
         },
         act: function (msg) {
-
             logCmd(msg, "made a call to teemo.js");
-            const args = msg.content.match(/^-lol teemo ([\S\s]+)/)[1].split(" ,\n");
-            teemo.riot.get.apply(teemo.riot, args).then(data => {
-                msg.channel.send(JSON.stringify(data));
-            });
+
+            const args = msg.content.match(/^-lol api ([\S\s]+)/)[1].split(" ");
+            teemo.riot.get.apply(teemo.riot, args)
+                .then(data => msg.channel.send(JSON.stringify(data)))
+                .catch(err => msg.channel.send(`err: ${err}`) );
+
         }
     }
 
 
 ];
+
+
+const masteryHelpInfo = { embed: {
+    title: "-mastery information",
+    description: "There are a variety of tools for checking your mastery points on a champion. Note champion names and usernames should omit spaces",
+    fields: [
+        {
+            name: "Argument format",
+            value: `There are 3 possible forms for arguments:
+\`-lol mastery <championname>\`: show your mastery of a specific champion
+\`-lol mastery <champtionname> @userMention\`: show another user's mastery of a specific champion
+\`-lol mastery <championname> <server> <summonername>\`: show a summoners mastery of a champion`
+        }, {
+            name: "examples",
+            value: `
+\`-lol mastery missfortune\`: show my points on Miss Fortune
+\`-lol mastery drmundo @testuser\`: show <@436612406400122881>'s points on Dr. Mundo
+\`-lol mastery zed kr hideonbush\`: show faker's points on zed`
+        }
+
+    ]
+
+}}

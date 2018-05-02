@@ -24,9 +24,11 @@ const champgg = teemo.champgg;
 
 // configures a user directory
 function setupDir(id, channel) {
+    // see if they already have a user file
     if (fs.existsSync(`${process.env.HOME}/.corki/users/${id}`))
         return true;
 
+    // make a user file
     fs.mkdirSync(`${process.env.HOME}/.corki/users/${id}`);
     fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`, "{ \"main\":0, \"accounts\": [] }");
 
@@ -63,70 +65,67 @@ function getUserData (id) {
 }
 module.exports.getUserData = getUserData;
 
+// total number of mastery points on a specific champ across multiple accts
 async function getUserMastery (id, champ, cb) {
     return new Promise(async (resolve, reject) => {
+
+        // get their acct list
         var data = getUserData(id);
         if (!data) {
             reject("account not found :/");
             return;
         }
 
-        // total mastery from each of the user's accounts and return is
+        // total mastery from each of the user's accounts
         var mastery = 0;
 
         for (let i = 0; i < data.accounts.length; i++) {
 
-            let acctMastery = await teemo.riot.get(data.accounts[i].server,
+            const acctMastery = await teemo.riot.get(data.accounts[i].server,
                 "championMastery.getChampionMastery", data.accounts[i].id, champ);
 
             mastery += !!acctMastery ? acctMastery.championPoints : 0;
         }
-
+        // return total
         resolve(mastery);
+
     });
 
 }
 
 module.exports.getUserMastery = getUserMastery;
 
+// associate a new acct with user
 async function addUserAcct(msg, server, username) {
-    setupDir(msg.author.id, msg.channel);
-    var usrObj = getUserData(msg.author.id);
+    return new Promise((resolve, reject) => {
+        // get user info
+        setupDir(msg.author.id, msg.channel);
+        var usrObj = getUserData(msg.author.id);
 
-    teemo.riot.get(server, "summoner.getBySummonerName", username).then(summoner => {
-        usrObj.accounts = usrObj.accounts.concat({
-            name: summoner.name,
-            server: server,
-            id: summoner.id,
-            accountId: summoner.accountId,
-            icon: summoner.profileIconId
-        });
+        // get account info
+        teemo.riot.get(server, "summoner.getBySummonerName", username).then(summoner => {
+            usrObj.accounts = usrObj.accounts.concat({
+                name: summoner.name,
+                server: server,
+                id: summoner.id,
+                accountId: summoner.accountId,
+                icon: summoner.profileIconId
+            });
 
-        setUserData(msg.author.id, usrObj);
-        msg.channel.send(`${msg.author} is also ${username}`);
+            // write account info
+            setUserData(msg.author.id, usrObj);
+            resolve();
 
-    }).catch(err => {
-        msg.channel.send(`"${username} wasn't found on ${server}"`);
+        // catch errors
+        }).catch(err => reject(err));
     });
-
 }
 
 module.exports.addUserAcct = addUserAcct;
 
 
-
+// write changes to user file
 function setUserData(id, usrObj) {
     fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`, JSON.stringify(usrObj));
 }
 module.exports.setUserData = setUserData;
-
-
-
-
-
-/*
-async function postLeaderBoard() {
-
-
-}
-*/
