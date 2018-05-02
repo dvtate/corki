@@ -54,7 +54,8 @@ function getLeaderBoard(members, champ) {
                 }
                 data = data.concat({
                     id: users[i],
-                    pts: pts
+                    pts: pts,
+                    name: members.get(users[i]).user.username
                 });
             }
         }
@@ -71,8 +72,7 @@ module.exports.getLeaderBoard = getLeaderBoard;
 function formatLeaderBoard(arr, cname) {
     var ret = `Top ${cname} Players in this Server\n`;
     for (let i = 0; i < 10 && i < arr.length; i++)
-        ret += `[${i+1}] <@${arr[i].id}>: ${arr[i].pts} points\n`;
-
+        ret += `[${i+1}] **${arr[i].name}**: ${arr[i].pts} points\n`;
     return ret;
 }
 
