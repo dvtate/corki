@@ -93,7 +93,7 @@ module.exports = [
 
     },
 
-    {
+    { // log help if no args
         condition: function (msg) {
             return msg.content.match(/^\-log(?:$|\s)/);
         },
@@ -137,7 +137,8 @@ module.exports = [
         },
         act: async function (msg) {
             logCmd(msg, `found a -bug: ${msg.content.match(/^\-bug (.+)/)[1]}`);
-            msg.channel.send("Thank you for the bug report!");
+            msg.channel.send("Thank you for the bug report! <@332958493722017792> \
+is an open-source project, feel free to contribute. https://github.com/dvtate/corki-bot/");
 
             // forward to tate's personal server
             global.client.channels.find("id", "435548322120335360")
@@ -146,7 +147,7 @@ module.exports = [
         }
     },
 
-    {
+    { // run sh
         condition: function (msg) {
             return msg.content.match(/^\-system (.+)/);
         },
