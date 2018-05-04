@@ -22,6 +22,7 @@ const riot = teemo.riot;
 const champgg = teemo.champgg;
 
 
+
 // configures a user directory
 function setupDir(id, channel) {
     // see if they already have a user file
@@ -104,20 +105,22 @@ async function addUserAcct(msg, server, username) {
 
         // get account info
         teemo.riot.get(server, "summoner.getBySummonerName", username).then(summoner => {
-            usrObj.accounts = usrObj.accounts.concat({
-                name: summoner.name,
-                server: server,
-                id: summoner.id,
-                accountId: summoner.accountId,
-                icon: summoner.profileIconId
-            });
+            if (!usrObj.accounts.find(acct => acct.id == summoner.id)) {
+                usrObj.accounts = usrObj.accounts.concat({
+                    name: summoner.name,
+                    server: server,
+                    id: summoner.id,
+                    accountId: summoner.accountId,
+                    icon: summoner.profileIconId
+                });
 
-            // write account info
-            setUserData(msg.author.id, usrObj);
+                // write account info
+                setUserData(msg.author.id, usrObj);
+            }
             resolve();
 
         // catch errors
-        }).catch(err => reject(err));
+        })//.catch(err => reject(err));
     });
 }
 

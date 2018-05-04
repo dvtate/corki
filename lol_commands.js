@@ -1,7 +1,11 @@
+const logCmd = require("./logging.js");
+
 const teemo = require("./teemo.js");
 const lol = require("./lol_stuff.js");
-const logCmd = require("./logging.js");
+
 const lol_lb = require("./lol_leaderboard.js");
+lol_lb.configure();
+
 
 
 module.exports = [
@@ -52,7 +56,7 @@ module.exports = [
         },
         act: async function (msg) {
             const match = msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!?([0-9]+)>/);
-            const champName = match[1];
+            const champName = match[1].toLowerCase();
             const champID = teemo.champIDs[champName];
             const id = match[2];
 
@@ -68,7 +72,7 @@ module.exports = [
             return msg.content.match(/^(?:-mastery|-lol mastery) (\S+)/)
         },
         act: async function (msg) {
-            const champName = msg.content.match(/^(?:-mastery|-lol mastery) (\S+)/)[1];
+            const champName = msg.content.match(/^(?:-mastery|-lol mastery) (\S+)/)[1].toLowerCase();
             const champID =  teemo.champIDs[champName];
 
             lol.getUserMastery(msg.author.id, champID).then(pts => {
@@ -188,8 +192,7 @@ module.exports = [
             const champID = teemo.champIDs[champName];
 
             lol_lb.getLeaderBoard(msg.guild.members, champID).then(data =>
-                msg.channel.send(lol_lb.formatLeaderBoard(data, champName)));
-
+                msg.channel.send(lol_lb.formatLeaderBoard(data, `**${champName} Mastery Leaderboard:**`)));
 
 
         }
