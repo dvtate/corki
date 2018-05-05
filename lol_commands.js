@@ -13,52 +13,54 @@ module.exports = [
 
     { // a specific summoner's mastery of a specific champ
         condition: function (msg) {
-            return msg.content.match(/^(?:-mastery|-lol mastery) (\S+) (\S+) (.+)/)
+            return msg.content.match(/^-(?:mastery|lol mastery) (\S+) (\S+) (.+)/)
         },
         act: async function (msg) {
-            const match = msg.content.match(/^\-mastery (\S+) (\S+) (.+)/);
+            const match = msg.content.match(/^\-(?:mastery|lol mastery) (\S+) (\S+) (.+)/);
 
             const champ = teemo.champIDs[match[1].toLowerCase()];
             const server = teemo.serverNames[match[2].toLowerCase()];
 
             if (!champ) {
-                msg.channel.send("invalid champion");
+                msg.channel.send("invalid champion (run `-lol mastery help` for more)");
                 return;
             }
             if (!server) {
-                msg.channel.send("invalid server");
+                msg.channel.send("invalid server (run `-lol mastery help` for more)");
                 return;
             }
 
+            // get summoner id
             teemo.riot.get(server, "summoner.getBySummonerName", match[3]).then(summoner => {
-
-                console.log(summoner);
-
-
+                // get champ mastery
                 teemo.riot.get(server, "championMastery.getChampionMastery", summoner.id, champ).then(data => {
+                    // send mastery to channel
                     if (!data)
                         msg.channel.send(`${summoner.name} has never played ${match[1].toLowerCase()}`);
                     else
                         msg.channel.send(`${summoner.name} has mastery level ${data.championLevel} with ${data.championPoints} points on ${match[1].toLowerCase()}`);
-
-
-                })
+                });
 
             }).catch(err => {
-                msg.channel.send(`"${match[3]} wasn't found on ${match[2]}"`);
+                msg.channel.send(`${match[3]} wasn't found on ${match[2]} (run \`-lol mastery help\` for more)`);
             });
         }
     },
 
-    {
+    { // mastery of a different user
         condition: function (msg) {
-            return msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!?([0-9]+)>/);
+            return msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/);
         },
         act: async function (msg) {
-            const match = msg.content.match(/^(?:-mastery|-lol mastery) (\S+) <@!?([0-9]+)>/);
+            const match = msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/);
             const champName = match[1].toLowerCase();
             const champID = teemo.champIDs[champName];
             const id = match[2];
+
+            if (!champID) {
+                msg.channel.send("invalid champion (run `-lol mastery help` for more)");
+                return;
+            }
 
             lol.getUserMastery(id, champID).then(pts => {
                 msg.channel.send(`<@!${id}> has ${pts} points on ${champName}`);
@@ -67,13 +69,28 @@ module.exports = [
         }
     },
 
-    {
+    { // -mastery help
         condition: function (msg) {
-            return msg.content.match(/^(?:-mastery|-lol mastery) (\S+)/)
+            return msg.content.match(/^-(?:mastery|lol mastery) help/);
         },
         act: async function (msg) {
-            const champName = msg.content.match(/^(?:-mastery|-lol mastery) (\S+)/)[1].toLowerCase();
+            logCmd(msg, "got help with `-lol mastery`");
+            msg.channel.send(masteryHelpInfo);
+        }
+    },
+
+    { // self mastery of a champ
+        condition: function (msg) {
+            return msg.content.match(/^-(?:mastery|lol mastery) (\S+)/)
+        },
+        act: async function (msg) {
+            const champName = msg.content.match(/^-(?:mastery|lol mastery) (\S+)/)[1].toLowerCase();
             const champID =  teemo.champIDs[champName];
+
+            if (!champID) {
+                msg.channel.send("invalid champion (run `-lol mastery help` for more)");
+                return;
+            }
 
             lol.getUserMastery(msg.author.id, champID).then(pts => {
                 msg.channel.send(`You have ${pts} points on ${champName}`);
@@ -84,7 +101,7 @@ module.exports = [
 
     { // -mastery help
         condition: function (msg) {
-            return msg.content.match(/^(?:-mastery|-lol mastery)/);
+            return msg.content.match(/^-(?:mastery|lol mastery)/);
         },
         act: async function (msg) {
             logCmd(msg, "got help with `-lol mastery`");
@@ -216,7 +233,7 @@ const masteryHelpInfo = { embed: {
             name: "examples",
             value: `
 \`-lol mastery missfortune\`: show my points on Miss Fortune
-\`-lol mastery drmundo @testuser\`: show <@436612406400122881>'s points on Dr. Mundo
+\`-lol mastery drmundo @testuser\`: show [@testuser]()'s points on Dr. Mundo
 \`-lol mastery zed kr hideonbush\`: show faker's points on zed`
         }
 

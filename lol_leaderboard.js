@@ -81,40 +81,57 @@ function formatLeaderBoard(arr) {
 
 module.exports.formatLeaderBoard = formatLeaderBoard;
 
+// returns a list with each member set to the difference in pts since last week
 function lb_delta(lb) {
+    // last weeks leaderboard
     const prev = getPrevData();
+
+    // ret
     let delta = [];
 
+    // for each member on this weeks leaderboard
     lb.forEach(user => {
+        // find them on last weeks
         let match = prev.find(e => e.id == user.id);
+        // if they weren't here last week they have added all of their
+        // points in the past week (new register)
         if (!match)
             match = user;
         else
             match.pts = user.pts - match.pts;
 
+        // add to ret
         delta = delta.concat(match);
     });
 
 
-    // put list in order from greatest to least
+    // put list in order from greatest to least (most improved)
     delta.sort((a, b) => b.pts - a.pts);
 
-
+    // 
     return delta;
 
 }
+
+
+// weekly post of leaderboard to #mastery in corkimains server
 async function postLeaderBoard() {
+    // make sure it's been a week
     if (!cd())
         return;
 
+    console.log("sent weekly leaderboard to #mastery");
+
+    // members of server
     const members = global.client.channels.get(chanID).guild.members;
 
-    const data = await getLeaderBoard(members, 42); // corki
+    // mastery leaderboard
+    const data = await getLeaderBoard(members, 42); // 42 = corki-id
+
+    // changes since last week
     const delta = lb_delta(data);
 
-    let msg = formatLeaderBoard(data) + '\n';
-    msg += formatLeaderBoard(delta);
-
+    // post leaderboard
     global.client.channels.get(chanID).send({embed: {
         title: "Corki Mastery Leaderboard",
         fields: [
@@ -126,13 +143,17 @@ async function postLeaderBoard() {
                 value: formatLeaderBoard(delta)
             }
         ],
+
+        // corki champ icon
         thumbnail: {
            url: "https://raw.githubusercontent.com/dvtate/dvtate.github.io/master/imgs/corki.png"
         }
     }});
 
 
+    // so that we can calculate deltas for next week too
     writePrevData(data);
+    // don't post again until next weeek
     resetcd();
 }
 
@@ -140,7 +161,6 @@ async function postLeaderBoard() {
 // calls loadFeed every 10 mins
 function refresh() {
     postLeaderBoard();
-    //console.log("checked subreddit");
-    setTimeout(refresh, 10000);
+    setTimeout(refresh, 120000); // every 2 mins
 }
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
