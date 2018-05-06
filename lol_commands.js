@@ -205,16 +205,21 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "generated leaderboard");
 
-            const champName = msg.content.match(/^-lol leaderboard (\S+)/)[1];
-            const champID = teemo.champIDs[champName];
+            const champName = msg.content.match(/^-lol leaderboard (\S+)/)[1].replace(/\s/g, '');
+            const champID = teemo.champIDs[champName.toLowerCase()];
+
+
+            if (!champID) {
+                msg.channel.send("invalid champion name (make sure to remove spaces)");
+                return;
+            }
 
             lol_lb.getLeaderBoard(msg.guild.members, champID).then(data =>
-                msg.channel.send(lol_lb.formatLeaderBoard(data, `**${champName} Mastery Leaderboard:**`)));
+                msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data)));
 
 
         }
     }
-
 
 ];
 

@@ -31,11 +31,12 @@ module.exports = [
                     }, {
                         name: "League of Legends related commands",
                         value: `
-\`-add-lol <region-code> <summoner-name>\`: link your LoL acct to your discord account.
-\`-list-lol\`: list the League of legends accounts linked to your discord account.
-\`-main-lol <account-number>\`: set an account as your main (use index from \`-list-lol\`)
-\`-mastery <args>\`: champion mastery information [WIP]`
-                    }, {                        name: "International Commands",
+\`-lol add <region-code> <summoner-name>\`: link your LoL acct to your discord account.
+\`-lol list\`: list the League of legends accounts linked to your discord account.
+\`-lol main <account-number>\`: set an account as your main (use index from \`-list-lol\`)
+\`-lol mastery <args>\`: champion mastery information [WIP]`
+                    }, {
+                        name: "International Commands",
                         value: `
 \`-exchange <amount> <from> <to>\`: convert between currencies.
 \`-timezone <unix-tz>\`: gives local time in given unix timezone.`

@@ -5,7 +5,7 @@ const logCmd = require("./logging.js");
 const fs = require("fs");
 
 function makeServer(serverID) {
-    if (fs.existsSync(`${process.env.HOME}/.corki/servers/${serverID}`))
+    if (fs.existsSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`))
         return true;
 
     fs.mkdirSync(`${process.env.HOME}/.corki/servers/${serverID}`);
