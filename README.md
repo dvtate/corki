@@ -1,2 +1,2 @@
-# corki-bot
-A Discord bot for the CorkiMains server
+# corki-bot / gh-pages
+A site to promote the bot
