@@ -1,0 +1,23 @@
+html {
+    padding: 0;
+    margin: 0;
+}
+body {
+    font-family: 'Open Sans', Helvetica, sans-serif;
+    background-image: linear-gradient(to bottom right,#002f4b,#602235);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding: 0; margin: 0;
+}
+
+
+div.page-slice {
+    width: 100%;
+    margin: 0;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Open Sans Light', 'Open Sans', sans-serif;
+    font-weight: 100;
+}
