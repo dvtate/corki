@@ -64,6 +64,8 @@ module.exports = [
 
             lol.getUserMastery(id, champID).then(pts => {
                 msg.channel.send(`<@!${id}> has ${pts} points on ${champName}`);
+            }).catch(err => {
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
             });
 
         }
@@ -94,6 +96,8 @@ module.exports = [
 
             lol.getUserMastery(msg.author.id, champID).then(pts => {
                 msg.channel.send(`You have ${pts} points on ${champName}`);
+            }).catch(err => {
+                msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
             });
         }
 
@@ -111,13 +115,13 @@ module.exports = [
 
     { // add acct
         condition: function (msg) {
-            return msg.content.match(/^\-lol add (\S+) (.+)/);
+            return msg.content.match(/^-lol add (\S+) (.+)/);
         },
         act: async function (msg) {
             logCmd(msg, "linked an LoL acct (-add-lol)");
 
             const match = msg.content.match(/-lol add (\S+) (.+)/);
-            const server = teemo.serverNames[match[1]];
+            const server = teemo.serverNames[match[1].toLowerCase()];
             const summoner = match[2];
 
             lol.addUserAcct(msg, server, summoner).then(() =>
@@ -126,6 +130,18 @@ module.exports = [
                 msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err}\n\`\`\``)
             );
 
+        }
+
+    },
+
+    { // reset accounts list
+        condition: function (msg) {
+            return msg.content.match(/^-lol reset/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "reset lol data (-lol reset)");
+            lol.removeDir(msg.author.id);
+            msg.channel.send("unlinked your accounts!");
         }
 
     },
@@ -141,6 +157,10 @@ module.exports = [
             const id = msg.content.match(/^-lol list <@!?([0-9]+)>/)[1];
             const userObj = lol.getUserData(id);
 
+            if (!userObj) {
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+                return;
+            }
             var str = `<@!${id}> has ${userObj.accounts.length} accounts:\n`;
             for (let i = 0; i < userObj.accounts.length; i++)
                 str += `[${i}]: ${userObj.accounts[i].server} ${userObj.accounts[i].name}\n`;
@@ -158,7 +178,10 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "listed lol accts. (-list-lol)")
             var userObj = lol.getUserData(msg.author.id);
-
+            if (!userObj) {
+                msg.channel.send("You don't have any linked accounts. use `-lol add` to link your account(s)");
+                return;
+            }
             var str = `${msg.author} has ${userObj.accounts.length} accounts:\n`;
             for (let i = 0; i < userObj.accounts.length; i++)
                 str += `[${i}]: ${userObj.accounts[i].server} ${userObj.accounts[i].name}\n`;
@@ -168,7 +191,6 @@ module.exports = [
             msg.channel.send(str);
         }
     },
-
 
     { // main acct
         condition: function (msg) {

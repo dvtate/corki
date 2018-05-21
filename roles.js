@@ -71,7 +71,7 @@ module.exports = [
 
             var roles = msg.content
                 .match(/^-iam (.+)/)[1]         // find roles argument
-                    .split(",")                 // take each role (separated by commas)
+                    .split(',')                 // take each role (separated by commas)
                         .map(r => r.trim());    // trim whitespace
 
             // verify the roles are valid

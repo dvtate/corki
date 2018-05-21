@@ -6,13 +6,28 @@ module.exports = [
 
     { // 8ball
         condition: function (msg) {
-            return msg.content.match(/^\-8ball(?:$|\s)/);
+            return msg.content.match(/^-8ball(?:$|\s)/);
         },
 
         act: async function (msg) {
             logCmd(msg, "shook -8ball");
+
             // send random response from [yes,no, maybe]
             msg.channel.send(["yes", "no", "maybe"] [Math.floor(Math.random() * 3)]);
+
+            /*
+            // all the responses on standard 8ball, i think this is too much tho
+            const responses = [ "It is certain", "It is decidedly so", "Without a doubt",
+              "Yes definitely", "You may rely on it", "As I see it, yes",
+              "Most likely", "Outlook good", "Yes", "Signs point to yes",
+              "Reply hazy try again", "Ask again later",
+              "Better not tell you now", "Cannot predict now",
+              "Concentrate and ask again", "Don't count on it",
+              "My reply is no", "My sources say no", "Outlook not so good",
+              "Very doubtful"];
+
+            msg.channel.send(responses[Math.floor(Math.random() * responses.length)]);
+            */
         }
     },
 
@@ -24,14 +39,14 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "caused an -echo");
 
-            const content = msg.content.match(/^\-echo (.+)/)[1];
+            const content = msg.content.match(/^-echo (.+)/)[1];
             msg.channel.send(content);
         }
     },
 
     { // echo help
         condition: function (msg) {
-            return msg.content.match(/^\-echo(?:$|\s)/);
+            return msg.content.match(/^-echo(?:$|\s)/);
         },
         act: async function (msg) {
             msg.channel.send("-echo expected a message");
@@ -40,7 +55,7 @@ module.exports = [
 
     { // coin flip
         condition: function (msg) {
-            return msg.content.match(/^\-coinflip(?:$|\s)/);
+            return msg.content.match(/^-coinflip(?:$|\s)/);
         },
 
         act: async function (msg) {
@@ -51,13 +66,13 @@ module.exports = [
 
     { // random
         condition: function (msg) {
-            return msg.content.match(/^\-random (.+)/);
+            return msg.content.match(/^-random (.+)/);
         },
 
         act: async function (msg) {
             logCmd(msg, "used RNG");
 
-            const args = msg.content.match(/^\-random (.+)/)[1];
+            const args = msg.content.match(/^-random (.+)/)[1];
         	var lims = args.split(/ |,|\n/);
         	//logCmd(msg, `random :: ${lims}`);
 
@@ -83,7 +98,7 @@ module.exports = [
 
     { // random help
         condition: function (msg) {
-            return msg.content.match(/^\-random(?:$|\s)/);
+            return msg.content.match(/^-random(?:$|\s)/);
         },
         act: async function (msg) {
             msg.channel.send(randomHelpInfo);
@@ -93,15 +108,15 @@ module.exports = [
 
     { // xkcd with options
         condition: function (msg) {
-            return msg.content.match(/^\-xkcd (.+)/);
+            return msg.content.match(/^-xkcd (.+)/);
         },
 
         act: async function (msg) {
 
             logCmd(msg, "read -xkcd");
 
-            const num = msg.content.match(/^\-xkcd (.+)/)[1];
-            const url = `https://xkcd.com/${num === "latest" ? "" : num}`;
+            const num = msg.content.match(/^-xkcd (.+)/)[1];
+            const url = `https://xkcd.com/${num == "latest" ? "" : num}`;
 
 
             request(url, (error, response, body) => {
@@ -131,7 +146,7 @@ module.exports = [
 
     { // xkcd
         condition: function (msg) {
-            return msg.content.match(/^\-xkcd(?:$|\s)/);
+            return msg.content.match(/^-xkcd(?:$|\s)/);
         },
 
         act: async function (msg) {

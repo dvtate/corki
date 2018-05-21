@@ -121,7 +121,7 @@ const exchangeHelpInfo = { embed: {
     description: "-exchange accesses real time exchange rates to make prices in the desired units",
     fields: [
         {
-            name: "Useage",
+            name: "Usage",
             value: "`-exchange <quantity> <from> <to>`"
         }, {
             name: "Examples",
@@ -142,7 +142,7 @@ const timezoneHelpInfo = { embed: {
     description: "-timezone tells the local time in a given timezone",
     fields: [
         {
-            name: "Useage",
+            name: "Usage",
             value: "`-timezone <timezone>`"
         }, {
             name: "Examples",

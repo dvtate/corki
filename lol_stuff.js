@@ -24,7 +24,7 @@ const champgg = teemo.champgg;
 
 
 // configures a user directory
-function setupDir(id, channel) {
+function setupDir(id) {
     // see if they already have a user file
     if (fs.existsSync(`${process.env.HOME}/.corki/users/${id}`))
         return true;
@@ -36,6 +36,19 @@ function setupDir(id, channel) {
     return false;
 }
 module.exports.setupDir = setupDir;
+
+function removeDir(id) {
+    // if they don't already have a dir
+    if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}`))
+        return true;
+
+    // remove user file
+    fs.unlink(`${process.env.HOME}/.corki/users/${id}/lol.json`, e => {
+        if (e)
+            console.log(e);
+    });
+}
+module.exports.removeDir = removeDir;
 
 /*
 
@@ -61,7 +74,9 @@ function getUserData (id) {
     if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}/lol.json`))
         return null;
 
-    return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`));
+    let data = fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`);
+
+    return JSON.parse();
 
 }
 module.exports.getUserData = getUserData;
@@ -100,7 +115,7 @@ module.exports.getUserMastery = getUserMastery;
 async function addUserAcct(msg, server, username) {
     return new Promise((resolve, reject) => {
         // get user info
-        setupDir(msg.author.id, msg.channel);
+        setupDir(msg.author.id);
         var usrObj = getUserData(msg.author.id);
 
         // get account info
