@@ -76,7 +76,7 @@ function getUserData (id) {
 
     let data = fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`);
 
-    return JSON.parse();
+    return JSON.parse(data);
 
 }
 module.exports.getUserData = getUserData;
