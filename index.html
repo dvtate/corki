@@ -13,13 +13,33 @@
         <style>
             .page-slice {
                 color: lightgrey;
+                margin:0;
             }
             .page-slice div.card {
                 color: black;
             }
-            div#main-title-sect {
+            body {
+                margin:0;
+                background-image: url(http://www.lol-wallpapers.com/wp-content/uploads/2017/04/Dragonwing-Corki-by-AlexisRayne-HD-Wallpaper-Fan-Art-Artwork-League-of-Legends-lol.jpg);
+                background-attachment: fixed;
+                background-position: center;
+                background-size: 100% auto;
+                background-repeat: no-repeat;;
             }
 
+
+            #about_blurb {
+                background-color: lightgrey;
+                color: black;
+            }
+            .pad10 { padding: 10px; }
+            .pad20 { padding: 20px; }
+
+            #footer {
+                background-color: black;
+                color: white;
+                margin:0;
+            }
         </style>
 
         <script>
@@ -28,58 +48,182 @@
 
     </head>
     <body>
-        <div class="page-slice" id="main-title-sect">
-            <center><h1 style="font-size:70px">Corki Bot</h1></center>
+        <center><h1 style="font-size:70px">Corki Bot</h1></center>
 
-            <div class="row">
+        <div class="row">
 
-                <div class="col-sm-12 col-md-4 col-lg-3">
-                    <div class="card fluid">
-                        <img class="section media" src="roles_demo.png" />
-                        <div class="section">
-                            <h3>Commands</h3>
-                            Click here to figure out how to use corki bot to its full capacity
-                        </div>
-                        <a href="#commands"><div class="button">See Commands</div></a>
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="card fluid">
+                    <img class="section media" src="roles_demo.png" />
+                    <div class="section">
+                        <h3>Commands</h3>
+                        Click here to figure out how to use corki bot to its full capacity
                     </div>
+                    <a href="#commands"><div class="button">See Commands</div></a>
                 </div>
+            </div>
 
-                <div class="col-sm-12 col-md-4 col-lg-3">
-                    <div class="card fluid">
-                        <img class="section media" src="corki_profile.png" />
-                        <div class="section">
-                            <h3>Add to server</h3>
-                            Corki bot provides functionality which could be useful for any Discord server.
-                        </div>
-                        <a href="https://discordapp.com/oauth2/authorize?client_id=332958493722017792&permissions=66186303&scope=bot"><div class="button">Add Bot</div></a>
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="card fluid">
+                    <img class="section media" src="corki_profile.png" />
+                    <div class="section">
+                        <h3>Add to server</h3>
+                        Corki bot provides functionality which could be useful for any Discord server.
                     </div>
+                    <a href="https://discordapp.com/oauth2/authorize?client_id=332958493722017792&permissions=66186303&scope=bot"><div class="button">Add Bot</div></a>
                 </div>
+            </div>
 
-                <div class="col-sm-12 col-md-4 col-lg-3">
-                    <div class="card fluid">
-                        <img class="section media" src="code_demo.png" />
-                        <div class="section">
-                            <h3>View On Github</h3>
-                            Corki bot is a open source project. Feel free to open a pull request or an issue
-                        </div>
-                        <a href="https://github.com/dvtate/corki-bot"><div class="button">View Code</div></a>
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="card fluid">
+                    <img class="section media" src="code_demo.png" />
+                    <div class="section">
+                        <h3>View On Github</h3>
+                        Corki bot is a open source project. Feel free to open a pull request or an issue
                     </div>
+                    <a href="https://github.com/dvtate/corki-bot"><div class="button">View Code</div></a>
                 </div>
+            </div>
 
-                <div class="col-sm-12 col-sm-offset-0 col-md-offset-4 col-md-4 col-lg-3 col-lg-offset-0">
-                    <div class="card fluid">
-                        <img class="section media" src="help_server.png" />
-                        <div class="section">
-                            <h3>Join Dedicated Server</h3>
-                            Join a server with bot dev and others if you ever need help with the bot or are just lonely
-                        </div>
-                        <a href="https://discord.gg/cXcXSmy"><div class="button">Join Server</div></a>
+            <div class="col-sm-12 col-sm-offset-0 col-md-offset-4 col-md-4 col-lg-3 col-lg-offset-0">
+                <div class="card fluid">
+                    <img class="section media" src="help_server.png" />
+                    <div class="section">
+                        <h3>Join Dedicated Server</h3>
+                        Join a server with bot dev and others if you ever need help with the bot or are just lonely
                     </div>
+                    <a href="https://discord.gg/cXcXSmy"><div class="button">Join Server</div></a>
                 </div>
             </div>
         </div>
-        <div class="page-slice">
-            <p>More coming soon...
+
+        <div class="page-slice" id="about_blurb">
+            <div class="pad20">
+                <h2>About</h2>
+                <p>Corki bot was created by <a href="https://me.dvtate.com/">a member</a> of the <a href="https://discord.gg/q7CK7Ty">CorkiMains Discord server</a> in order to provide features not found on other bots and to improve on the featuresets of other bots</p>
+            </div>
         </div>
+
+        <style>
+            #commands-list {
+                background-color: #423; margin:0;
+            }
+            #cmd-col-labels {
+                background-color: purple;
+                padding: 10px;
+                font-size: 150%;
+            }
+            #cmd-col-labels * {
+                font-size: 110%;
+            }
+
+            #cmd-categories {
+                padding: 0;
+                background-color: transparent;
+                border: 0;
+            }
+            #cmd-categories > fieldset {
+                padding: 0;
+                padding-left: 5px;
+                padding-bottom: 2px;
+            }
+
+            .cmd-cat {
+                padding: 0;
+                padding-left: 6px;
+                border: 1px solid grey;
+                border-radius: 8px;
+            }
+
+            .cmd-row {
+                background-color: #22111a;
+                padding-top: 10px;
+                border-bottom: 1px solid #101
+            }
+
+            .cmd-col {
+                padding-left: 5px;
+                border-right: 1px solid #101;
+            }
+        </style>
+        <div class="page-slice" id="commands-list">
+            <div class="container pad10">
+                <h2  id="commands">Command List</h2>
+
+                <form id="cmd-categories">
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-general" value="general" tabindex="0" />
+                            <label for="cat-general">General</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-fun" value="fun" tabindex="0" />
+                            <label for="cat-fun">Fun</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-lol" value="lol" tabindex="0" />
+                            <label for="cat-lol">League of Legends</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-international" value="international" tabindex="0"/>
+                            <label for="cat-international">International</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-sam" value="sam" tabindex="0" />
+                            <label for="cat-sam">Server Automation & Management</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-text" value="text" tabindex="0" />
+                            <label for="cat-text">Text Tools</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-devtools" value="devtools" tabindex="0" />
+                            <label for="cat-devtools">Developer Tools</label>
+                        </div>
+                </form>
+
+                <div class="row" id="cmd-col-labels">
+                    <div class="col-sm">Command</div>
+                    <div class="col-sm">Usage</div>
+                    <div class="col-sm">Arguments</div>
+                    <div class="col-sm">Examples</div>
+                </div>
+
+                <div class="cmdlist">
+                    <div class="row cmd-row">
+                        <div class="col-sm cmd-col">
+                            <kbd>-help</kbd>
+                        </div>
+                        <div class="col-sm cmd-col">
+                            <p>View a list of help commands to help you get started with the bot</p>
+                        </div>
+                        <div class="col-sm cmd-col">
+                            takes no arguments
+                        </div>
+                        <div class="col-sm cmd-col">
+                            <kbd>-help</kdb>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <script src="commands.js"></script>
+            <script>
+                // actually make list work
+            </script>
+
+        </div>
+
+        <div class="page-slice" id="footer">
+            <div class="pad10">
+                <p>Corki Bot isn’t endorsed by Riot Games and doesn’t reflect the
+                     views or opinions of Riot Games or anyone officially involved
+                     in producing or managing League of Legends. League of Legends
+                     and Riot Games are trademarks or registered trademarks of Riot
+                     Games, Inc. League of Legends © Riot Games, Inc.</p>
+            </div>
+        </div>
+
+
     </body>
 </html>
