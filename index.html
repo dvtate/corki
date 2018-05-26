@@ -23,7 +23,7 @@
                 background-image: url(http://www.lol-wallpapers.com/wp-content/uploads/2017/04/Dragonwing-Corki-by-AlexisRayne-HD-Wallpaper-Fan-Art-Artwork-League-of-Legends-lol.jpg);
                 background-attachment: fixed;
                 background-position: center;
-                background-size: 100% auto;
+                background-size: cover;
                 background-repeat: no-repeat;;
             }
 
@@ -47,7 +47,7 @@
         </script>
 
     </head>
-    <body>
+    <body onload="chkin()">
         <center><h1 style="font-size:70px">Corki Bot</h1></center>
 
         <div class="row">
@@ -105,6 +105,10 @@
         </div>
 
         <style>
+            #commands-list code {
+                color: black;
+            }
+
             #commands-list {
                 background-color: #423; margin:0;
             }
@@ -132,7 +136,12 @@
                 padding: 0;
                 padding-left: 6px;
                 border: 1px solid grey;
+                transition: border-color 0.5s;
                 border-radius: 8px;
+            }
+
+            .cmd-cat:hover {
+                border-color: green;
             }
 
             .cmd-row {
@@ -152,31 +161,31 @@
 
                 <form id="cmd-categories">
                         <div class="input-group cmd-cat">
-                            <input type="checkbox" class="category-select" id="cat-general" value="general" tabindex="0" />
+                            <input type="checkbox" class="category-select" id="cat-general" onclick="chkin()" checked="true" value="general" tabindex="0" />
                             <label for="cat-general">General</label>
                         </div>
                         <div class="input-group cmd-cat">
-                            <input type="checkbox" class="category-select" id="cat-fun" value="fun" tabindex="0" />
+                            <input type="checkbox" class="category-select" id="cat-fun"  onclick="chkin()" value="fun" tabindex="0" />
                             <label for="cat-fun">Fun</label>
                         </div>
                         <div class="input-group cmd-cat">
-                            <input type="checkbox" class="category-select" id="cat-lol" value="lol" tabindex="0" />
+                            <input type="checkbox" class="category-select" id="cat-lol" onclick="chkin()" value="lol" tabindex="0" />
                             <label for="cat-lol">League of Legends</label>
                         </div>
                         <div class="input-group cmd-cat">
-                            <input type="checkbox" class="category-select" id="cat-international" value="international" tabindex="0"/>
+                            <input type="checkbox" class="category-select" id="cat-international" onclick="chkin()" value="international" tabindex="0"/>
                             <label for="cat-international">International</label>
                         </div>
                         <div class="input-group cmd-cat">
-                            <input type="checkbox" class="category-select" id="cat-sam" value="sam" tabindex="0" />
+                            <input type="checkbox" class="category-select" id="cat-sam" onclick="chkin()" value="sam" tabindex="0" />
                             <label for="cat-sam">Server Automation & Management</label>
                         </div>
                         <div class="input-group cmd-cat">
-                            <input type="checkbox" class="category-select" id="cat-text" value="text" tabindex="0" />
+                            <input type="checkbox" class="category-select" id="cat-text" onclick="chkin()" value="text" tabindex="0" />
                             <label for="cat-text">Text Tools</label>
                         </div>
                         <div class="input-group cmd-cat">
-                            <input type="checkbox" class="category-select" id="cat-devtools" value="devtools" tabindex="0" />
+                            <input type="checkbox" class="category-select" id="cat-devtools" onclick="chkin()" value="devtools" tabindex="0" />
                             <label for="cat-devtools">Developer Tools</label>
                         </div>
                 </form>
@@ -188,7 +197,7 @@
                     <div class="col-sm">Examples</div>
                 </div>
 
-                <div class="cmdlist">
+                <div class="cmdlist" id="cmdlist">
                     <div class="row cmd-row">
                         <div class="col-sm cmd-col">
                             <kbd>-help</kbd>
@@ -207,9 +216,47 @@
 
             </div>
 
-            <script src="commands.js"></script>
+            <script src="commands.js">
+                var commands;
+            </script>
             <script>
                 // actually make list work
+
+                function chkin(){
+
+                    // generate list from checkboxes
+                    let cmds = [];
+                    Array.from(document.getElementsByClassName("category-select")).forEach(e => {
+                        if (e.checked)
+                            cmds = cmds.concat(commands[e.value]);
+                    });
+
+                    // sort alphabetically
+                    cmds.sort((a,b) =>
+                        (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
+
+                    // generate list hmtl
+                    let html = "";
+                    cmds.forEach(c => {
+                        html += `<div class="row cmd-row">
+                                    <div class="col-sm cmd-col">
+                                        <kbd>${c.name}</kbd>
+                                    </div>
+                                    <div class="col-sm cmd-col">
+                                        ${c.usage}
+                                    </div>
+                                    <div class="col-sm cmd-col">
+                                        ${c.args}
+                                    </div>
+                                    <div class="col-sm cmd-col">
+                                        ${c.example}
+                                    </div>
+                                </div>`
+                    });
+
+                    // add list to site
+                    document.getElementById("cmdlist").innerHTML = html;
+                }
             </script>
 
         </div>

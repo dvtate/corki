@@ -1,25 +1,268 @@
 
-let commands = [
-
+const c_general = [
     {
-        category: "general",
         name: "-help",
         usage: "<p>View a list of help commands to help you get started with the bot</p>",
         args: "takes no arguments",
         example: "<kbd>-help</kbd>"
     }, {
-        category: "fun",
+        name: "-echo",
+        usage: "<p>repeats a given message</p>",
+        args: "message to repeat<br><kbd>-echo &lt;message></kbd>",
+        example: "<kbd>-echo repeat after me</kbd><br><kbd>-echo -echo -echo hehe x3</kbd>"
+    }, {
+        name: "-coinflip",
+        usage: "<p>sentds heads or tails</p>",
+        args: "takes no arguments",
+        example: "<kbd>-coinflip heads i win tails u loose</kbd><br><kbd>-coinflip</kbd>"
+    }, {
+        name: "-random",
+        usage: "<p>Use an RNG to generate a whole number on a given range</p>",
+        args: `
+<kbd>-random &lt;a> &lt;b></kbd>: generate a random number between a & b inclusive <br/>
+<kbd>-random &lt;a></kbd>: generate a random number n where 0 &le; n &lt; a <br/>
+<ul>
+    <li>running this command without arguments provides this help entry</li>
+    <li>arguments can be separated by spaces or commas</li>
+</ul>
+        `,
+        example: `
+<kbd>-random 10</kbd>: random base 10 numeral<br/>
+<kbd>-random 0 100</kbd>: random test grade<br/>
+<kbd>-random 0,100</kbd>: same as above but commas
+        `
+    }
+];
+
+const c_fun = [
+    {
         name: "-8ball",
         usage: "<p>answers yes, no or maybe</p>",
         args: "optional question<br/><kbd>-8ball [question]</kbd>",
         example: "<kbd>-8ball Are yordles better than humans?</kbd>"
     }, {
-        category: "general",
-        name: "-echo",
-        usage: "<p>repeats a given message</p>",
-        args: "message to repeat<br><kbd>-echo &lt;message></kbd>",
-        example: "<kbd>-echo repeat after me</kbd><br><kbd>-echo -echo -echo hehe x3</kbd>"
+        name: "-xkcd",
+        usage: "<p>sends comic from <a href=\"https://xkcd.com\">xkcd.com</a></p>",
+        args: `<kbd>-xkcd [comic# | latest]</kbd>
+<ul>
+    <li><b>no arguments:</b> sends a random comic</li>
+    <li><b>number:</b> sends given comic number</li>
+    <li><b>"latest":</b> sends most recent comic</li>
+</ul>
+        `,
+        example: `
+<kbd>-xkcd</kbd><br/>
+<kbd>-xkcd 221</kbd><br/>
+<kbd>-xkcd latest</kbd>
+        `
+    }
+];
+
+
+const c_lol = [
+    {
+        name: "-lol add",
+        usage: "<p>Make Corki associate the given League of Legends account with you</p>",
+        args: `<kbd>-lol add &lt;region-code> &lt;summoner name></kbd>
+<ul>
+    <li><b>region code:</b> server the account is on (na, euw, lan, las, eune, kr, jp, oce, tr, etc.)</li>
+    <li><b>summoner name:</b> user ign</li>
+</ul>`,
+        example: `
+        <kbd>-lol add na imaqtpie</kbd><br/>
+        <kbd>-lol add kr hide on bush</kbd><br/>
+        <kbd>-lol add kr hideonbush</kbd>`
+    }, {
+        name: "-lol list",
+        usage: "<p>List League of Legends accounts corki associates with your account (or someone elses)",
+        args: "no argumets to list your accounts or you can @mention someone to show their accounts",
+        example: "<kbd>-lol list</kbd><br/><kbd>-lol list @testuser</kbd>"
+    }, {
+        name: "-lol main",
+        usage: "<p>Tell corki which account is your main account</p>",
+        args: "account number (use <kbd>-lol list</kbd> to get)",
+        example: "<kbd>-lol main 0</kbd>"
+    }, {
+        name: "-lol mastery",
+        usage: "<p>Provides champion mastery info</p>",
+        args: `
+<kbd>-lol mastery &lt;champion-name></kbd>: your total mastery points on a champion<br/>
+<kbd>-lol mastery &lt;champion-name> @mention</kbd>: total mastery points of @mention'd user<br/>
+<kbd>-lol mastery &lt;champion-name> &lt;server-code> &lt;summonername></kbd>: specific user's champion mastery<br/>
+<kbd>-lol mastery</kbd>: omit arguments to see command help info<br/>
+<ul>
+    <li>champion names should omit spaces and special characters (ie- kaisa, drmundo, missfortune)</li>
+</ul>`,
+        example: `
+            <kbd>-lol mastery corki</kbd><br/>
+            <kbd>-lol mastery janna @testuser</kbd><br/>
+            <kbd>-lol msatery zed kr hide on bush</kbd>`
+    }, {
+        name: "-lol reset",
+        usage: "<p>unlink all League of Legends accounts</p>",
+        args: "takes no arguments",
+        example: "<kbd>-lol reset</kbd>"
+    }, {
+        name: "-lol leaderboard",
+        usage: "Ranks server members by mastery points on given champion and shows top ten",
+        args: "champion name<br/><kbd>-lol leaderboard &lt;championname></kbd>",
+        example: "<kbd>-lol leaderboard corki</kbd>"
     }
 
+];
+const c_international = [
+    {
+        name: "-exchange",
+        usage: "<p>Uses real time exchange rates to convert prices to the desired currency</p>",
+        args: `<kbd>-exchange &lt;quantity> &lt;from> &lt;to></kbd><br/>
+<ul>
+    <li><b>quantity:</b> quantity of given currency</li>
+    <li><b>from:</b> given currency <a href="https://oxr.readme.io/docs/supported-currencies">symbol</a></li>
+    <li><b>to:</b> desired currency <a href="https://oxr.readme.io/docs/supported-currencies">symbol</a></li>
+    <li><a href="https://oxr.readme.io/docs/supported-currencies">currency symbols</a> aren't case-sensitive and don't need to be separated</li>
+</ul>
+        `,
+        example: `
+<kbd>-exchange 20 USD to EUR</kbd><br/>
+<kbd>-exchange 1 btc usd</kbd><br/>
+<kbd>-exchange 50gbpusd</kbd>
+        `
+    }, {
+        name: "-timezone",
+        usage: "<p>Tells local time in given timezone</p>",
+        args: `desired timezone<br/><kbd>-timezone &lt;timezone></kbd>
+<ul>
+    <li>Timezone can be in <a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List">tz database</a></li>
+    <li>Timezone can be an offset of UTC/GMT</li>
+</ul>`,
+        example: `
+<kbd>-timezone America/New_York</kbd><br/>
+<kbd>-timezone UTC+5</kbd><br/>
+<kbd>-timezone GMT-5</kbd><br/>
+<kbd>-timezone Cuba</kbd>
+        `
+    }
+];
 
-]
+// server automation and management commands
+const c_sam = [
+    {
+        name: "-iam",
+        usage: "<p>Self-assign server role</p>",
+        args: `Desired server role(s)<br/>
+<kbd>-iam &lt;role(s)></kbd><br/>
+<b>note:</b> roles are case-sensitive`,
+        example: `<kbd>-iam Gamer</kbd><br/>
+<kbd>-iam Nerd, Geek</kbd>`
+    }, {
+        name: "-iamnot",
+        usage: "<p>remove self-assignable role</p>",
+        args: `Un-desired server role(s)<br/>
+<kbd>-iamnot &lt;role(s)></kbd><br/>
+<b>note:</b> roles are case-sensitive`,
+        example: `<kbd>-iamnot weeaboo</kbd><br/>
+<kbd>-iamnot Scammer, Unicorn Lover</kbd>`
+    }, {
+        name: "-add-assignable-role",
+        usage: "<p>makes given role self-assignable</p><b>(requires MANAGE_ROLES permission)</b>",
+        args: "self-assignable role(s)<br><kbd>-add-assignable-role &lt;role(s)>",
+        example: `<kbd>-add-assignable-role dota2</kbd><br/>
+        <kbd>-add-assignable-role NA, EUW, LAN, LAS</kbd>`
+    }, {
+        name: "-subreddit-link",
+        usage: "<p>forward all new posts from <a href=\"https://reddit.com/r/corkimains\">/r/corkimains</a> here</p>",
+        args: "takes no arguments",
+        example: "<kbd>-subreddit-link</kbd>"
+    }, {
+        name: "subreddit-unlink",
+        usage: "<p>Stop forwarding reddit posts here</p>",
+        args: "takes no arguments",
+        example: "<kbd>-subreddit-unlink</kbd>"
+    }
+
+];
+
+
+const c_text = [
+    {
+        name: "-spell",
+        usage: "<p>Uses the military phonetic alphabet to spell a given word</p>",
+        args: "given word<br/><kbd>-spell &lt;word></kbd>",
+        example: "<kbd>-spell kappa</kbd>"
+    }, {
+        name: "-vaporwave",
+        usage: "<p>Applies vaporwave aesthetic to given text, converting it to full-width</p>",
+        args: "given text<br/><kbd>-vaporwave &lt;text></kbd>",
+        example: "<kbd>-vaporwave aesthetic</kbd>"
+    }, {
+        name: "-glitch",
+        usage: "<p>Adds characters to given text to make text appear glitchy",
+        args: "given text<br/><kbd>-glitch &lt;text></kbd>",
+        example: "<kbd>-glitch 4edgy 2me</kbd>"
+    }, {
+        name: "-flip",
+        usage: "<p>Flips given text upside down</p>",
+        args: "given text<br/><kbd>-flip &lt;text></kbd>",
+        example: "<kbd>-flip my life</kbd>"
+    }, {
+        name: "-tinycaps",
+        usage: "<p>Writes text in tinycaps</p>",
+        args: "given text<br/><kbd>-tinycaps &lt;text></kbd>",
+        example: "<kbd>-tinycaps I'm quietly screaming</kbd>"
+    }, {
+        name: "-mirror",
+        usage: "<p>Sends the mirror image of your text, (as text)</p>",
+        args: "given text<br/><kbd>-mirror &lt;text></kbd>",
+        example: "<kbd>-mirror something</kbd>"
+    }
+];
+
+const c_devtools = [
+    {
+        name: "-log",
+        usage: "<p>Share commonly needed information which the bot has access to</p>",
+        args: `<kbd>-log [help|channel|author|msgid]</kbd>
+<p>Different arguments produce different information</p>`,
+        example: "<kbd>-log help</kbd>"
+    }, {
+        name: "-ping",
+        usage: "<p>Used to make sure the bot is online and/or to test a connection",
+        args: "takes no arguments",
+        example: "<kbd>-ping</kbd>"
+    }, {
+        name: "-msg",
+        usage: "<p>Use the bot to send a message to a different channel</p>",
+        args: `<kbd>-msg &lt;channel> &lt;message></kbd><br/>
+<ul>
+    <li><b>channel:</b> the channel id of the destination channel (use <code>-log channel</code> to find)</li>
+    <li><b>message:</b> message contents</li>
+</ul>`,
+        example: "<kbd>-msg 1234 hello there</kbd>"
+    }, {
+        name: "-bug",
+        usage: "<p>Alerts the bot developers that something needs to be fixed</p>",
+        args: "message to the developer to give an idea of whats wrong and/or what you want to see",
+        example: "<kbd>-bug the bot isn't responding to -ping and shows as offline</kbd>"
+    }, {
+        name: "-system",
+        usage: "<p>Runs BASH code on the bot's server</p><br/><b>(requires BotAdmin priveleges)</b>",
+        args: "requires shell command to run",
+        example: "<kbd>-system uname -a</kbd>"
+    }, {
+        name: "-eval",
+        usage: "<p>Runs Node.JS code, useful for prototyping commands</p><br/>\
+<b>(requires BotAdmin priveleges)</b>",
+        args: "JavaScript code",
+        example: "<kbd>-eval console.log(Date.now())</kbd>"
+    }
+];
+
+commands = {
+    "general" : c_general,
+    "fun" : c_fun,
+    "lol" : c_lol,
+    "international" : c_international,
+    "sam" : c_sam,
+    "text" : c_text,
+    "devtools" : c_devtools
+};
