@@ -4,10 +4,10 @@
 const logCmd = require("./logging.js");
 
 // Import the discord.js module
-const Discord = require("discord.js");
+global.Discord = require("discord.js");
 
 // Create an instance of a Discord client
-global.client = new Discord.Client();
+global.client = new global.Discord.Client();
 
 // bot will only start reacting to information
 // from Discord _after_ ready is emitted

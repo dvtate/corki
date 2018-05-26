@@ -48,6 +48,11 @@ module.exports = [
 
             logCmd(msg, "added a self-assignable role");
 
+            if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES)) {
+                msg.channel.send("you are not authorized to use this command here");
+                return;
+            }
+
             msg.content
                 .match(/^-add-assignable-role (.+)/)[1] // find roles argument
                     .split(",")                         // take each role (separated by commas)
@@ -116,9 +121,11 @@ To self-assign a role you can use the command \`-iam <role>\`
                     .split(",")                 // take each role (separated by commas)
                         .map(r => r.trim());    // reomve excess whitespace
 
+            const serverRoles = getRoles(msg.guild.id);
+
             roles.forEach(role => {
                 const r = msg.guild.roles.find("name", role);
-                if (!r)
+                if (!r || !serverRoles.includes(roles[i]))
                     msg.channel.send(`invalid role "${role}" ignored`);
                 else
                     msg.member.removeRole(r).catch(console.error);
@@ -128,6 +135,7 @@ To self-assign a role you can use the command \`-iam <role>\`
 
         }
     },
+
 
 ];
 

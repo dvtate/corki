@@ -9,13 +9,12 @@ module.exports = [
         },
         act: async function (msg) {
 
-            logCmd(msg, "asked for -help");
+            logCmd(msg, "asked for -commands");
 
             msg.channel.send({ embed: {
                 color: 0x3498db,
-                title: "Corki Bot",
-                description: " Corki is a bot designed by and for Corki mains to provide a variety of functionality.\n"
-                    + "If you don't know how to format arguments to a command try running it without them.",
+                title: "Corki Bot Commands list",
+                description: "If you don't know how to format arguments to a command try running it without them. For better list see [corki.js.org](https://corki.js.org/#commands)",
 
                 fields: [
                     {
@@ -33,8 +32,10 @@ module.exports = [
                         value: `
 \`-lol add <region-code> <summoner-name>\`: link your LoL acct to your discord account.
 \`-lol list\`: list the League of legends accounts linked to your discord account.
-\`-lol main <account-number>\`: set an account as your main (use index from \`-list-lol\`)
-\`-lol mastery <args>\`: champion mastery information [WIP]`
+\`-lol main <account-number>\`: set an account as your main (use index from \`-lol list\`)
+\`-lol mastery <args>\`: champion mastery information (run \`-lol mastery\` for help)
+\`-lol reset\`: remove all linked accounts
+\`-lol leaderboard <champion>\`: gives mastery points leaderboard for server`
                     }, {
                         name: "International Commands",
                         value: `

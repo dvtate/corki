@@ -222,7 +222,7 @@ module.exports = [
 
     {
         condition: function (msg) {
-            return msg.content.match(/^-lol leaderboard (\S+)/);
+            return msg.content.match(/^-lol (?:leaderboard|lb) (\S+)/);
         },
         act: async function (msg) {
             logCmd(msg, "generated leaderboard");

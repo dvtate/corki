@@ -73,7 +73,7 @@ module.exports = [
             logCmd(msg, "used RNG");
 
             const args = msg.content.match(/^-random (.+)/)[1];
-        	var lims = args.split(/ |,|\n/);
+        	var lims = args.split(/ |,|\n|, /);
         	//logCmd(msg, `random :: ${lims}`);
 
         	var rand;
@@ -181,14 +181,14 @@ const randomHelpInfo = { embed: {
         {
             name: "Argument Formats",
             value: `Different argument formats give different outputs
-* \`-random <a> <b>\`: a random integer between a and b inclusive --- [a, b]
-* \`-random <a>\`: a random number n where 0 <= n < a --- [0, a)`
+\`-random <a> <b>\`: a random integer between a and b inclusive --- [a, b]
+\`-random <a>\`: a random number n where 0 <= n < a --- [0, a)`
         }, {
             name: "Examples",
             value: `
-* \`-random 10\`: to rate someones performance.
-* \`-random 1 100\`: I'm thinking of a number.
-* \`-random 1,100\`: same as above but commas.`
+\`-random 10\`: to rate someones performance.
+\`-random 1 100\`: I'm thinking of a number.
+\`-random 1,100\`: same as above but commas.`
         }
     ]
 }};
