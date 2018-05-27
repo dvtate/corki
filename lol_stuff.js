@@ -74,9 +74,7 @@ function getUserData (id) {
     if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}/lol.json`))
         return null;
 
-    let data = fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`);
-
-    return JSON.parse();
+    return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`));
 
 }
 module.exports.getUserData = getUserData;
