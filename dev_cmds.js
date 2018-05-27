@@ -126,7 +126,9 @@ module.exports = [
             } catch (e) {
                 msg.channel.send("that didn't work.. probably wrong channel id");
                 console.log(e);
+                return;
             }
+            msg.channel.send("Done!");
 
         }
 
