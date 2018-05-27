@@ -95,7 +95,7 @@ module.exports = [
 
     { // log help if no args
         condition: function (msg) {
-            return msg.content.match(/^\-log(?:$|\s)/);
+            return msg.content.match(/^\-log(?:$|\s)|^-help log(?:$|\s)/);
         },
         act: async function (msg) {
             msg.channel.send(logHelpInfo);

@@ -98,7 +98,7 @@ module.exports = [
 
     { // random help
         condition: function (msg) {
-            return msg.content.match(/^-random(?:$|\s)/);
+            return msg.content.match(/^-random(?:$|\s)|^-help random(?:$|\s)/);
         },
         act: async function (msg) {
             msg.channel.send(randomHelpInfo);

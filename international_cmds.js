@@ -52,7 +52,7 @@ module.exports = [
 
     { // exchange help
         condition: function (msg) {
-            return msg.content.match(/^\-exchange(?:\s|$)/);
+            return msg.content.match(/^\-exchange(?:\s|$)|-help exchange(?:$|\s)/);
         },
         act: async function (msg) {
             msg.channel.send(exchangeHelpInfo);
@@ -105,7 +105,7 @@ module.exports = [
 
     { // exchange help
         condition: function (msg) {
-            return msg.content.match(/^\-timezone(?:\s|$)/);
+            return msg.content.match(/^\-timezone(?:\s|$)|^-help timezone(?:$|\s)/);
         },
         act: async function (msg) {
             msg.channel.send(timezoneHelpInfo);

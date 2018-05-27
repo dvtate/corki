@@ -3,9 +3,118 @@
 const logCmd = require("./logging.js");
 
 module.exports = [
-    { // help
+
+    { // -help general
         condition: function (msg) {
-            return msg.content.match(/^-help/);
+            return msg.content.match(/^-help general(?:$|\s)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "asked for -help(general)");
+
+            msg.channel.send({ embed: {
+                color: 0x3498db,
+                title: "Corki Bot Help",
+                description: "For a complete list of commands, their help info, and more please visit [corki.js.org](https://corki.js.org/#commands)",
+
+                fields: [
+                    {
+                        name: "`-coinflip`",
+                        value: "sends the results of a fair coinflip (heads or tails)"
+                    }, {
+                        name: "`-echo <message>`",
+                        value: "repeats given message"
+                    }, {
+                        name: "`-help`",
+                        value: "view table of contents for help commands"
+                    }, {
+                        name: "-random <args>",
+                        value: "RNG command, use `-help random` for more info"
+                    }
+                ]
+            }});
+        }
+    },
+
+    { // -help fun
+        condition: function (msg) {
+            return msg.content.match(/^-help fun(?:$|\s)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "asked for -help(general)");
+
+            msg.channel.send({ embed: {
+                color: 0x3498db,
+                title: "Corki Bot Help",
+                description: "For a complete list of commands, their help info, and more please visit [corki.js.org](https://corki.js.org/#commands)",
+
+                fields: [
+                    {
+                        name: "`-coinflip`",
+                        value: "sends the results of a fair coinflip (heads or tails)"
+                    }, {
+                        name: "`-echo <message>`",
+                        value: "repeats given message"
+                    }, {
+                        name: "`-help`",
+                        value: "view table of contents for help commands"
+                    }, {
+                        name: "-random <args>",
+                        value: "RNG command, use `-help random` for more info"
+                    }
+                ]
+            }});
+        }
+    },
+
+
+    { // help overview (table of contents)
+        condition: function (msg) {
+            return msg.content.match(/^-help(?:$|\s)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "asked for -help");
+
+            msg.channel.send({ embed : {
+                color: 0x3498db,
+                title: "Corki Bot Help",
+                description: "For a complete list of commands, their help info, and more please visit [corki.js.org](https://corki.js.org/#commands)",
+
+                fields: [
+                    {
+                        name: "General Commands",
+                        value: "Use `-help general` for help with general commands. These commands are fairly common and aren't very specialized."
+                    }, {
+                        name: "Fun Commands",
+                        value: "Use `-help fun` for help with fun commands. These commands help make group chats more fun."
+                    }, {
+                        name: "League of Legends Commands",
+                        value: "Use `help lol` for help with League commands. These commands are useful for League of Legends players."
+                    }, {
+                        name: "International Commands",
+                        value: "Use `-help international` for help with international commands. These are useful for servers with memebers all around the world."
+                    }, {
+                        name: "Server Automation & Management",
+                        value: "Use `-help sam` for help with server automation and management commands. These commands are useul for reducing the load on server mods and admins and can also add features to the server."
+                    }, {
+                        name: "Text Tools",
+                        value: "Use `-help text` for help with text tools. These commands are useful for formatting text."
+                    }, {
+                        name: "Developer Tools",
+                        value: "Use `-help devtools` for help with developer tools. These commands are useful for discord bot delevopers"
+                    }
+                ],
+
+                footer: {
+                    text: "corki - corki.js.org"
+                }
+            }})
+        }
+
+    },
+
+    { // commands list (depricated)
+        condition: function (msg) {
+            return msg.content.match(/^-commands/);
         },
         act: async function (msg) {
 
@@ -15,6 +124,7 @@ module.exports = [
                 color: 0x3498db,
                 title: "Corki Bot Commands list",
                 description: "If you don't know how to format arguments to a command try running it without them. For better list see [corki.js.org](https://corki.js.org/#commands)",
+
 
                 fields: [
                     {
@@ -75,10 +185,10 @@ module.exports = [
                     }
                 ],
 
-                timestamp: new Date(),
+                timestamp: "2018-05-27T20:04:50.607Z",
 
                 footer: {
-                    text: "Corki"
+                    text: "Corki - corki.js.org"
                 }
 
             }});

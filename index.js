@@ -13,6 +13,16 @@ global.client = new global.Discord.Client();
 // from Discord _after_ ready is emitted
 global.client.on("ready", () => {
 	console.log("Ready to fly!");
+/*
+
+	//global.client.user.setActivity("-for help").then(console.log).catch(console.error);
+	global.client.user.localPresence.game = {
+		name: "corki.js.org",
+		url: "https://corki.js.org",
+	};
+
+	*/
+	console.log(global.client.user);
 });
 
 
