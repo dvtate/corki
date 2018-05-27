@@ -12,7 +12,7 @@ const c_general = [
         example: "<kbd>-echo repeat after me</kbd><br><kbd>-echo -echo -echo hehe x3</kbd>"
     }, {
         name: "-coinflip",
-        usage: "<p>sentds heads or tails</p>",
+        usage: "<p>sends heads or tails</p>",
         args: "takes no arguments",
         example: "<kbd>-coinflip heads i win tails u loose</kbd><br><kbd>-coinflip</kbd>"
     }, {
@@ -31,6 +31,11 @@ const c_general = [
 <kbd>-random 0 100</kbd>: random test grade<br/>
 <kbd>-random 0,100</kbd>: same as above but commas
         `
+    }, {
+        name: "-commands",
+        usage: "<p>Show a list of commmands the bot is capable of (website more up to date)",
+        args: "takes no arguments",
+        example: "<kbd>-commands</kbd>"
     }
 ];
 
@@ -75,7 +80,10 @@ const c_lol = [
     }, {
         name: "-lol list",
         usage: "<p>List League of Legends accounts corki associates with your account (or someone elses)",
-        args: "no argumets to list your accounts or you can @mention someone to show their accounts",
+        args:`<ul>
+    <li>no arguments: list your accounts</li>
+    <li>@mention: list another users accounts</li>
+</ul>`,
         example: "<kbd>-lol list</kbd><br/><kbd>-lol list @testuser</kbd>"
     }, {
         name: "-lol main",
