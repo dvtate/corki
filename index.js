@@ -21,8 +21,6 @@ global.client.on("ready", () => {
 		}
 	}).catch(console.error);
 
-
-	console.log(global.client.user);
 });
 
 

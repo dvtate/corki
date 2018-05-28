@@ -61,7 +61,15 @@ module.exports = [
                         name: "-random <args>",
                         value: "RNG command, use `-help random` for more info"
                     }
-                ]
+                ],
+
+
+                timestamp: "2018-05-27T20:04:50.607Z",
+
+                footer: {
+                    text: "Corki - corki.js.org"
+                }
+
             }});
         }
     },
@@ -104,8 +112,11 @@ module.exports = [
                     }
                 ],
 
+
+                timestamp: "2018-05-27T20:04:50.607Z",
+
                 footer: {
-                    text: "corki - corki.js.org"
+                    text: "Corki - corki.js.org"
                 }
             }})
         }

@@ -241,6 +241,102 @@ module.exports = [
 
 
         }
+    },
+
+    {
+        condition: function (msg) {
+            return msg.content.match(/^-lol rank (\S+) (.+)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "checked an account's -lol rank");
+
+            const match = msg.content.match(/^-lol rank (\S+) (.+)/);
+            const server = teemo.serverNames[match[1].toLowerCase()];
+
+            if (!server) {
+                msg.channel.send("invalid server (run `-lol servers` for more)");
+                return;
+            }
+
+
+            // get summoner id
+            teemo.riot.get(server, "summoner.getBySummonerName", match[2]).then(summoner => {
+                teemo.riot.get(server, "league.getAllLeaguePositionsForSummoner", summoner.id).then(rank => {
+                    lol.makeRankSummary(summoner.name, summoner.name, rank)
+                        .then(summary => msg.channel.send(summary)).catch(console.error)
+
+                }).catch(err => {
+                    console.log(err);
+                });
+            }).catch(err => {
+                console.log(err);
+                msg.channel.send(`${match[2]} wasn't found on ${match[1]} (run \`-lol servers\` for more)`);
+            });
+
+
+        }
+    },
+
+    {
+        condition: function (msg) {
+            return msg.content.match(/^-lol rank <@!?([0-9]+)>/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "checked a user's -lol rank");
+
+            const id = msg.content.match(/^-lol rank <@!?([0-9]+)>/)[1];
+            let userObj = lol.getUserData(id);
+
+            if (!userObj) {
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+                return;
+            }
+
+            let main = userObj.accounts[userObj.main];
+
+            teemo.riot.get(main.server, "league.getAllLeaguePositionsForSummoner", main.id).then(rank => {
+                lol.makeRankSummary(msg.client.users.get(id).username, main.name, rank)
+                    .then(summary => msg.channel.send(summary)).catch(console.error)
+            }).catch(err => {
+                console.log(err);
+            });
+        }
+    },
+
+    {
+        condition: function (msg) {
+            return msg.content.match(/^-lol rank(?:$|\s)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "checked their -lol rank");
+            let userObj = lol.getUserData(msg.author.id);
+
+            if (!userObj) {
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+                return;
+            }
+
+            let main = userObj.accounts[userObj.main];
+
+            teemo.riot.get(main.server, "league.getAllLeaguePositionsForSummoner", main.id).then(rank => {
+                lol.makeRankSummary(msg.client.users.get(msg.author.id).username, main.name, rank)
+                    .then(summary => msg.channel.send(summary)).catch(console.error)
+            }).catch(err => {
+                console.log(err);
+            });
+
+        }
+    },
+
+    { // list supported server names
+        condition: function (msg) {
+            return msg.content.match(/^-lol servers(?:$|\s)/);
+        },
+        act: async function (msg) {
+            logCmd(msg, "asked for -lol servers");
+            msg.channel.send("Corki supports LoL accounts on the following servers: "
+                + Object.keys(teemo.serverNames).join(", "));
+        }
     }
 
 ];

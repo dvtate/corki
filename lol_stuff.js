@@ -26,15 +26,14 @@ const champgg = teemo.champgg;
 // configures a user directory
 function setupDir(id) {
     // see if they already have a user file
-    if (fs.existsSync(`${process.env.HOME}/.corki/users/${id}`))
-        return true;
+    if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}`))
+        fs.mkdirSync(`${process.env.HOME}/.corki/users/${id}`);
 
-    // make a user file
-    fs.mkdirSync(`${process.env.HOME}/.corki/users/${id}`);
-    fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`, "{ \"main\":0, \"accounts\": [] }");
+    if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}/lol.json`))
+        fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`, "{ \"main\":0, \"accounts\": [] }");
 
-    return false;
 }
+
 module.exports.setupDir = setupDir;
 
 function removeDir(id) {
@@ -80,7 +79,7 @@ function getUserData (id) {
 module.exports.getUserData = getUserData;
 
 // total number of mastery points on a specific champ across multiple accts
-function getUserMastery (id, champ, cb) {
+function getUserMastery (id, champ) {
     return new Promise(async (resolve, reject) => {
 
         // get their acct list
@@ -108,6 +107,8 @@ function getUserMastery (id, champ, cb) {
 }
 
 module.exports.getUserMastery = getUserMastery;
+
+
 
 // associate a new acct with user
 async function addUserAcct(msg, server, username) {
@@ -145,3 +146,58 @@ function setUserData(id, usrObj) {
     fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`, JSON.stringify(usrObj));
 }
 module.exports.setUserData = setUserData;
+
+
+
+
+
+const queues = {
+    "RANKED_FLEX_SR" : "Flex 5:5",
+    "RANKED_SOLO_5x5" : "Solo Queue",
+    "RANKED_FLEX_TT" : "Flex 3:3"
+};
+
+function captitalizeFirstLetter(string){
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+
+async function makeRankSummary(name, acctName, rank, ) {
+    return new Promise((resolve, reject) => {
+
+        if (rank.length == 0) {
+            resolve(name + " is unranked");
+        } else {
+
+            let summary = { embed: {
+                title: `${name}'s Rank`,
+                description: `${name} has played `,
+                fields: []
+            }};
+
+            let wins = 0, losses = 0;
+
+            rank.forEach(q => {
+                wins += q.wins;
+                losses += q.losses;
+
+
+                summary.embed.fields = summary.embed.fields.concat({
+                    name: `${queues[q.queueType]} - ${captitalizeFirstLetter(q.tier)} ${q.rank} ${q.leaguePoints}LP`,
+                    value: `${q.wins}W ${q.losses}L ${Math.round(q.wins / (q.wins + q.losses) * 1000)/10}%` +
+                        ( !!q.miniSeries ? `\nSeries: (${q.miniSeries.progress.split("").join(") (")})` : "" )
+
+                });
+            });
+
+            summary.embed.description += `${wins + losses} games this season ${name != acctName ? "on their account" + acctName : ""}`;
+
+            if (name != acctName)
+                summary.embed.footer = { text: "to change your main account use \`-lol main\`" };
+
+            resolve(summary);
+        }
+    });
+}
+
+module.exports.makeRankSummary = makeRankSummary;
