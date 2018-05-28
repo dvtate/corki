@@ -96,15 +96,29 @@ const c_lol = [
         args: `
 <kbd>-lol mastery &lt;champion-name></kbd>: your total mastery points on a champion<br/>
 <kbd>-lol mastery &lt;champion-name> @mention</kbd>: total mastery points of @mention'd user<br/>
-<kbd>-lol mastery &lt;champion-name> &lt;server-code> &lt;summonername></kbd>: specific user's champion mastery<br/>
+<kbd>-lol mastery &lt;champion-name> &lt;server-name> &lt;summoner-name></kbd>: specific summoner's champion mastery<br/>
 <kbd>-lol mastery</kbd>: omit arguments to see command help info<br/>
 <ul>
+    <li>for a list of server names use <code>lol -servers</code></li>
     <li>champion names should omit spaces and special characters (ie- kaisa, drmundo, missfortune)</li>
 </ul>`,
         example: `
             <kbd>-lol mastery corki</kbd><br/>
             <kbd>-lol mastery janna @testuser</kbd><br/>
             <kbd>-lol msatery zed kr hide on bush</kbd>`
+    }, {
+        name: "-lol rank",
+        usage: "<p>Show ranked progress</p>",
+        args: `
+<kbd>-lol rank</kbd>: ranked info for your main account<br/>
+<kbd>-lol rank @mention</kbd>: ranked info for @mention'd user<br/>
+<kbd>-lol rank &lt;server-name> &lt;summoner-name></kbd>: ranked info for a specific summoner
+<ul><li>for a list of server names use <code>lol -servers</code></li></ul>
+        `,
+        example: `
+            <kbd>-lol rank</kbd><br/>
+            <kbd>-lol rank @testuser</kbd><br/>
+            <kbd>-lol rank na TF Blade</kbd>`
     }, {
         name: "-lol reset",
         usage: "<p>unlink all League of Legends accounts</p>",
@@ -115,8 +129,13 @@ const c_lol = [
         usage: "Ranks server members by mastery points on given champion and shows top ten",
         args: "champion name<br/><kbd>-lol leaderboard &lt;championname></kbd>",
         example: "<kbd>-lol leaderboard corki</kbd>"
+    }, {
+        name: "-lol servers",
+        usage: "<p>Shows a list of supported League of Legends servers</p>",
+        args: "takes no arguments",
+        example: "<kbd>-lol servers</kbd>"
     }
-
+    
 ];
 const c_international = [
     {
