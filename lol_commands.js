@@ -105,7 +105,7 @@ module.exports = [
 
     { // -mastery help
         condition: function (msg) {
-            return msg.content.match(/^-(?:mastery|lol mastery)/);
+            return msg.content.match(/^-(?:mastery|lol mastery|help lol mastery)(?:$|\s)/);
         },
         act: async function (msg) {
             logCmd(msg, "got help with `-lol mastery`");

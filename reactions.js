@@ -4,13 +4,13 @@
 module.exports = [
     {
         condition: function (msg) {
-            return msg.content.match(/corki is (?:so|a|a little|very|kinda|pretty)? (?:weak|underpowered|useless|pointless|lame|trash|shit(?:ty)?|stupid)/);
+            return msg.content.match(/corki is (?:so|a(?: little)?|very|kinda|pretty|such a|quite(?: a)?)? (?:weak|underpowered|useless|pointless|lame|trash|(?:dog)shit(?:ty)?|stupid)/);
         },
         act: async function (msg) {
             msg.react("❓");
         }
     },
 
-    
+
 
 ]

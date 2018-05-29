@@ -14,7 +14,7 @@ global.client = new global.Discord.Client();
 global.client.on("ready", () => {
 	console.log("Ready to fly!");
 
-	global.client.user.setActivity("corki.js.org", {
+	global.client.user.setActivity("corki.js.org | -help", {
 		game: {
 			url: "https://corki.js.org",
 			type: "PLAYING"

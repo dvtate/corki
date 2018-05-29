@@ -48,7 +48,8 @@ module.exports = [
 
             logCmd(msg, "added a self-assignable role");
 
-            if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES)) {
+            // if they don't have roles priveleges or are a bot then stop them
+            if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES) || msg.author.bot) {
                 msg.channel.send("you are not authorized to use this command here");
                 return;
             }

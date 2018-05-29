@@ -75,7 +75,7 @@ module.exports.getLeaderBoard = getLeaderBoard;
 function formatLeaderBoard(arr) {
     let ret = "";
     for (let i = 0; i < 10 && i < arr.length; i++)
-        ret += `[${i+1}] **${arr[i].name}**: ${arr[i].pts} points\n`;
+        ret += `[${i + 1}] **${arr[i].name}**: ${arr[i].pts} points\n`;
     return ret;
 }
 
@@ -108,7 +108,7 @@ function lb_delta(lb) {
     // put list in order from greatest to least (most improved)
     delta.sort((a, b) => b.pts - a.pts);
 
-    // 
+    //
     return delta;
 
 }
