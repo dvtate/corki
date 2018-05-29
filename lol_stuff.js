@@ -183,7 +183,7 @@ async function makeRankSummary(name, acctName, rank, ) {
 
 
                 summary.embed.fields = summary.embed.fields.concat({
-                    name: `${queues[q.queueType]} - ${captitalizeFirstLetter(q.tier)} ${q.rank} ${q.leaguePoints}LP`,
+                    name: `${queues[q.queueType]} - ${captitalizeFirstLetter(q.tier.toLowerCase())} ${q.rank} ${q.leaguePoints}LP`,
                     value: `${q.wins}W ${q.losses}L ${Math.round(q.wins / (q.wins + q.losses) * 1000)/10}%` +
                         ( !!q.miniSeries ? `\nSeries: (${q.miniSeries.progress.split("").join(") (")})` : "" )
 
