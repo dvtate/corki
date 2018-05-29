@@ -190,7 +190,7 @@ async function makeRankSummary(name, acctName, rank, ) {
                 });
             });
 
-            summary.embed.description += `${wins + losses} games this season ${name != acctName ? "on their account" + acctName : ""}`;
+            summary.embed.description += `${wins + losses} games this season ${name != acctName ? "on their account " + acctName : ""}`;
 
             if (name != acctName)
                 summary.embed.footer = { text: "to change your main account use \`-lol main\`" };
