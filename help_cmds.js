@@ -113,11 +113,17 @@ module.exports = [
                         name: "`-lol mastery <champname> [<@mention> | <region> <summoner name>]`",
                         value: "show how many mastery points you, a @mention'd user, or a specific summoner has on a champion (`-help lol mastery` for more)"
                     }, {
+                        name: "`-lol matchup [role] <champ1name> <champ2name>`",
+                        value: "show matchup statistics for given champions"
+                    }, {
                         name: "`-lol rank [<@mention> | <region> <summoner name>]`",
                         value: "show rank of you, a @mention'd user, or a specific summmoner"
                     }, {
                         name: "`-lol reset`",
                         value: "make corki unassociate all League of Legends accounts with your discord account"
+                    }, {
+                        name: "`-lol wr <champname>`",
+                        value: "show average winrate for given champion"
                     }
                 ],
 

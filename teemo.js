@@ -53,7 +53,7 @@ module.exports.serverNames = {
     "jp"  : "jp1", "kr"  : "kr",   "lan" : "la1",
     "las" : "la2",  "na" : "na1",  "oce" : "oc1",
     "tr"  : "tr1", "ru"  : "ru1",  "pbe" : "pbe1"
-}
+};
 
 
 // edit when new champs come out
@@ -85,7 +85,7 @@ module.exports.champIDs = {
     "jarvaniv" : 59, "nami" : 267, "jhin" : 202, "soraka" : 16, "veigar" : 45,
     "janna" : 40, "nautilus" : 111, "evelynn" : 28, "gragas" : 79, "zed" : 238,
     "vi" : 254, "kogmaw" : 96, "ahri" : 103, "quinn" : 133, "leblanc" : 7, "ezreal" : 81,
-    "pyke" : 555
+    "pyke" : 555, "jarvan4" : 59
 };
 
 

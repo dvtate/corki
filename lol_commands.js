@@ -391,7 +391,7 @@ module.exports = [
                         foundMatchup = true;
                         msg.channel.send({ embed: {
                             title: `${match[2]} vs ${match[3]} as ${e.role.toLowerCase()}`,
-                            description: `According to [champion.gg](https://champion.gg), ${match[2]} has a weighted score of ${Math.round(e.champ1.weighedScore)} and ${match[3]} has a weightedScore of ${Math.round(e.champ2.weighedScore)}.`,
+                            description: `According to [champion.gg](https://champion.gg), ${match[2]} has a weighed score of ${Math.round(e.champ1.weighedScore)} and ${match[3]} has a weighedScore of ${Math.round(e.champ2.weighedScore)}.`,
                             fields: [
                                 {
                                     name: "Income",
@@ -425,8 +425,11 @@ module.exports = [
                 });
 
 
-                if (!foundMatchup)
-                    msg.channel.send("that matchup was not found, try swapping the order of the champions if you think this matchup is meta");
+                if (!foundMatchup && !msg.author.bot)
+                    msg.channel.send(`-lol matchup ${match[1]} ${match[3]} ${match[2]}`);
+                else if (!foundMatchup)
+                    msg.channel.send("not enough data for that matchup :/");
+
             }).catch(console.error);
 
         }
@@ -455,7 +458,7 @@ module.exports = [
                         foundMatchup = true;
                         msg.channel.send({ embed: {
                             title: `${match[1]} vs ${match[2]} as ${e.role.toLowerCase()}`,
-                            description: `According to [champion.gg](https://champion.gg), ${match[1]} has a weighted score of ${Math.round(e.champ1.weighedScore)} and ${match[2]} has a weightedScore of ${Math.round(e.champ2.weighedScore)}.`,
+                            description: `According to [champion.gg](https://champion.gg), ${match[1]} has a weighed score of ${Math.round(e.champ1.weighedScore)} and ${match[2]} has a weighedScore of ${Math.round(e.champ2.weighedScore)}.`,
                             fields: [
                                 {
                                     name: "Income",
@@ -485,8 +488,10 @@ module.exports = [
                     }
                 });
 
-                if (!foundMatchup)
-                    msg.channel.send("that matchup was not found, try swapping the order of the champions if you think this matchup is meta");
+                if (!foundMatchup && !msg.author.bot)
+                    msg.channel.send(`-lol matchup ${match[2]} ${match[1]}`);
+                else if (!foundMatchup)
+                    msg.channel.send("not enough data for that matchup :/");
 
             }).catch(console.error);
 
