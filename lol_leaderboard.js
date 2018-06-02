@@ -159,8 +159,8 @@ async function postLeaderBoard() {
 
 
 // calls loadFeed every 10 mins
-function refresh() {
+function lbrefresh() {
     postLeaderBoard();
-    setTimeout(refresh, 120000); // every 2 mins
+    setTimeout(lbrefresh, 120000); // every 2 mins
 }
-setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
+setTimeout(lbrefresh, 10000); // give 10 seconds for bot to start before checking

@@ -26,13 +26,17 @@ module.exports.configure = configure;
 
 
 // send story out to all channels
-async function sendNewStories (item) {
+function sendNewStories (item) {
     console.log("forwarding subreddit post");
     // post to relevant channels
 
     channelList.forEach(channel => {
-        if (channel.length > 5)
-            global.client.channels.find("id", channel).send(`${item.title} ${item.link}`);
+        if (!!channel && channel.length > 5)
+            try {
+                global.client.channels.get(channel).send(`${item.title} ${item.link}`);
+            } catch (e) {
+                removeChannel(channel);
+            }
     });
 
 }
@@ -56,6 +60,7 @@ async function loadFeed () {
     feed.items.forEach(item => {
 
         if (Date.parse(item.pubDate) > recentDate) {
+
             sendNewStories(item);
             // update latest post time
             latest = Date.parse(item.pubDate) > latest ? Date.parse(item.pubDate) : latest;
@@ -77,6 +82,19 @@ function refresh() {
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
 
 
+function removeChannel(chanID) {
+    var clist = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit/clist`)}`;
+    var clist_cpy;
+    do {
+        clist_cpy = clist;
+        clist = clist.replace(chanID + '\n', "");
+    } while (clist_cpy != clist);
+
+    fs.writeFileSync(`${process.env.HOME}/.corki/reddit/clist`, clist.trim());
+
+    configure();
+
+}
 
 module.exports.commands = [
 
@@ -112,19 +130,9 @@ module.exports.commands = [
         act: async function (msg) {
             logCmd(msg, "unlinked subreddit to channel");
 
-            var clist = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit/clist`)}`;
-            var clist_cpy;
-            do {
-                clist_cpy = clist;
-                clist = clist.replace(msg.channel.id + '\n', "");
-            } while (clist_cpy != clist);
-
-            fs.writeFileSync(`${process.env.HOME}/.corki/reddit/clist`, clist);
-
-            configure();
+            removeChannel(msg.channel.id);
 
             msg.channel.send("reddit posts will no longer be forwarded here");
-
 
         }
 
