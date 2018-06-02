@@ -143,7 +143,7 @@ const c_lol = [
         name: "-lol matchup",
         usage: "<p>Give statistics to for different lane matchups</p>",
         args: `
-<kbd>-lol matchup &lt;lane/role> &lt;champ1-name> &lt;champ2-name></kbd>: matchup for specific role
+<kbd>-lol matchup &lt;lane/role> &lt;champ1-name> &lt;champ2-name></kbd>: matchup for specific role<br/>
 <kbd>-lol matchup &lt;champ1-name> &lt;champ2-name></kbd>: all matchups
         `,
         example: "<kbd>-lol matchup mid zed yasuo</kbd><br/><kbd>-lol matchup lucian zed</kbd><br/><kbd>-lol matchup anivia vs. corki</kbd>"
