@@ -126,7 +126,7 @@ const c_lol = [
         example: "<kbd>-lol reset</kbd>"
     }, {
         name: "-lol leaderboard",
-        usage: "Ranks server members by mastery points on given champion and shows top ten",
+        usage: "<p>Ranks server members by mastery points on given champion and shows top ten</p>",
         args: "champion name<br/><kbd>-lol leaderboard &lt;championname></kbd>",
         example: "<kbd>-lol leaderboard corki</kbd>"
     }, {
@@ -134,8 +134,21 @@ const c_lol = [
         usage: "<p>Shows a list of supported League of Legends servers</p>",
         args: "takes no arguments",
         example: "<kbd>-lol servers</kbd>"
+    }, {
+        name: "-lol wr",
+        usage: "<p>Show average winrate for a given champion using data from <a href=\"https://champion.gg/\">champion.gg</a>.</p>",
+        args: "champion name (excluding spaces and special characters)<br/><kbd>-lol wr &lt;champ-name></kbd>",
+        example: "<kbd>-lol wr corki</kbd>"
+    }, {
+        name: "-lol matchup",
+        usage: "<p>Give statistics to for different lane matchups</p>",
+        args: `
+<kbd>-lol matchup <lane/role> <champ1-name> <champ2-name></kbd>: matchup for specific role
+<kbd>-lol matchup <champ1-name> <champ2-name></kbd>: all matchups
+        `,
+        example: "<kbd>-lol matchup mid zed yasuo</kbd><br/><kbd>-lol matchup lucian zed</kbd><br/><kbd>-lol matchup anivia vs. corki</kbd>"
     }
-    
+
 ];
 const c_international = [
     {
