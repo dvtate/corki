@@ -44,7 +44,13 @@ async function loadFeed () {
 
     const parser = new Parser();
 
-    let feed = await parser.parseURL('https://www.reddit.com/r/corkimains/new/.rss');
+    let feed;
+    try {
+        feed = await parser.parseURL('https://www.reddit.com/r/corkimains/new/.rss');
+    } catch (e) {
+        console.error("rss err..");
+        console.error(e);
+    }
 
     var latest = 0;
     feed.items.forEach(item => {

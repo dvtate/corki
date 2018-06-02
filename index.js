@@ -45,13 +45,18 @@ commands = commands.concat(require("./help_cmds.js"));
 //commands.concat(require("./.js");
 
 // message event listener
-global.client.on('message', msg => {
+global.client.on('message', async msg => {
 
 	// check each possible command
 	for (var i = 0; i < commands.length; i++)
 		// if it matches, run it
 		if (commands[i].condition(msg)) {
-			commands[i].act(msg);
+			try {
+				await commands[i].act(msg);
+			} catch (e) {
+				msg.channel.send("sorry, that error'd please send a `-bug` report\n```" + e + "\n```");
+				console.error(`err (${msg.content}):${e}`);
+			}
 			break; // we're done here
 		}
 
