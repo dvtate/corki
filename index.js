@@ -25,7 +25,7 @@ global.client.on("ready", () => {
 
 
 // set up our list of commands
-var commands = [];
+let commands = [];
 commands = commands.concat(require("./dev_cmds.js"));
 commands = commands.concat(require("./basic_cmds.js"));
 commands = commands.concat(require("./international_cmds.js"));
@@ -51,12 +51,11 @@ global.client.on('message', async msg => {
 	for (var i = 0; i < commands.length; i++)
 		// if it matches, run it
 		if (commands[i].condition(msg)) {
-			try {
-				await commands[i].act(msg);
-			} catch (e) {
-				msg.channel.send("sorry, that error'd please send a `-bug` report\n```" + e + "\n```");
-				console.error(`err (${msg.content}):${e}`);
-			}
+			commands[i].act(msg).then(() => {})
+				.catch(e => {
+					msg.channel.send("sorry, that error'd please send a `-bug` report\n```" + e + "\n```");
+					console.error(`err (${msg.content}):${e}`);
+				});
 			break; // we're done here
 		}
 
@@ -66,7 +65,9 @@ global.client.on('message', async msg => {
 global.client.on("guildMemberAdd", member => {
 
     // server's new members channel
-    const channel = member.guild.channels.find("name", "new_members");
+    const channel = member.guild.channels.find("name", "new_members")
+		|| msg.guild.channels.find("name", "new-members")
+		|| msg.guild.channels.find("name", "welcome");
 
     // if not found give up
     if (!channel)

@@ -288,7 +288,7 @@ module.exports = [
 
     { // help overview (table of contents)
         condition: function (msg) {
-            return msg.content.match(/^-help(?:$|\s)/);
+            return msg.content.match(/^-h(?:elp)?(?:$|\s)/);
         },
         act: async function (msg) {
             logCmd(msg, "asked for -help");

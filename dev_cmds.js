@@ -19,7 +19,18 @@ module.exports = [
             logCmd(msg, "-ping'd");
             msg.channel.send("pong");
         }
+    },
 
+    { // generate an error
+            condition: function (msg) {
+                return msg.content.match(/^\-err (.+)/);
+            },
+
+            act: async function (msg) {
+                logCmd("-err'd");
+                const errmsg = msg.content.match(/^\-err (.+)/)[1]
+                throw errmsg;
+            }
     },
 
     { // log
