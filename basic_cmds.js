@@ -73,10 +73,10 @@ module.exports = [
             logCmd(msg, "used RNG");
 
             const args = msg.content.match(/^-random (.+)/)[1];
-        	var lims = args.split(/ |,|\n|, /);
+        	let lims = args.split(/ |,|\n|, /);
         	//logCmd(msg, `random :: ${lims}`);
 
-        	var rand;
+        	let rand;
         	if (lims.length == 1) {
         		const min = 0;
         		const max = Math.floor(Number(lims[0]))

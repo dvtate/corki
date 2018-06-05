@@ -8,10 +8,10 @@ const logCmd = require("./logging.js");
 const Parser = require("rss-parser");
 
 // channels we send new reddit posts to
-var channelList;
+let channelList;
 
 // date on most recent post
-var recentDate = Date.now();
+let recentDate = Date.now();
 
 
 async function configure(){
@@ -56,7 +56,7 @@ async function loadFeed () {
         console.error(e);
     }
 
-    var latest = 0;
+    let latest = 0;
     feed.items.forEach(item => {
 
         if (Date.parse(item.pubDate) > recentDate) {
@@ -83,8 +83,8 @@ setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
 
 
 function removeChannel(chanID) {
-    var clist = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit/clist`)}`;
-    var clist_cpy;
+    let clist = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit/clist`)}`;
+    let clist_cpy;
     do {
         clist_cpy = clist;
         clist = clist.replace(chanID + '\n', "");

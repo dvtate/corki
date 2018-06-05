@@ -64,7 +64,7 @@ module.exports = [
                 } else if (req[0] == "channel") {
 
                     // compile channel info
-                    var info = "**channel info:**\n"
+                    let info = "**channel info:**\n"
                             + `**type:** ${msg.channel.type}\n`
                             + `**id:** ${msg.channel.id}\n`;
 

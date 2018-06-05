@@ -83,14 +83,14 @@ function getUserMastery (id, champ) {
     return new Promise(async (resolve, reject) => {
 
         // get their acct list
-        var data = getUserData(id);
+        let data = getUserData(id);
         if (!data) {
             reject("account not found :/");
             return;
         }
 
         // total mastery from each of the user's accounts
-        var mastery = 0;
+        let mastery = 0;
 
         for (let i = 0; i < data.accounts.length; i++) {
 
@@ -115,7 +115,7 @@ async function addUserAcct(msg, server, username) {
     return new Promise((resolve, reject) => {
         // get user info
         setupDir(msg.author.id);
-        var usrObj = getUserData(msg.author.id);
+        let usrObj = getUserData(msg.author.id);
 
         // get account info
         teemo.riot.get(server, "summoner.getBySummonerName", username).then(summoner => {

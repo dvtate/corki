@@ -12,7 +12,7 @@ module.exports = [
 
             const match = msg.content.match(/^\-exchange ([0-9\.]+)\s?([a-zA-Z]{3})(?:\sto\s|\s)?([a-zA-Z]{3})(?:$|\s)/);
             // currency conversion api
-        	var exchange = require("open-exchange-rates"),
+        	let exchange = require("open-exchange-rates"),
         		fx = require("money");
         	exchange.set({ app_id : "2e7a1b340cc64e4a838c5f28309805da" });
 

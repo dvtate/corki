@@ -48,7 +48,7 @@ commands = commands.concat(require("./help_cmds.js"));
 global.client.on('message', async msg => {
 
 	// check each possible command
-	for (var i = 0; i < commands.length; i++)
+	for (let i = 0; i < commands.length; i++)
 		// if it matches, run it
 		if (commands[i].condition(msg)) {
 			commands[i].act(msg).then(() => {})
@@ -66,8 +66,7 @@ global.client.on("guildMemberAdd", member => {
 
     // server's new members channel
     const channel = member.guild.channels.find("name", "new_members")
-		|| msg.guild.channels.find("name", "new-members")
-		|| msg.guild.channels.find("name", "welcome");
+		|| msg.guild.channels.find("name", "new-members");
 
     // if not found give up
     if (!channel)

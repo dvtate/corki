@@ -93,7 +93,7 @@ module.exports = [
             const letters = msg.content.match(/^\-spell (.+)/)[1].toLowerCase().split('');
 
             // relpace each letter with its call-sign & recombine into string
-            var resp = letters.map(c => { return callLetters[c]; }).join(" ").trim();
+            let resp = letters.map(c => { return callLetters[c]; }).join(" ").trim();
 
             msg.channel.send(resp);
 

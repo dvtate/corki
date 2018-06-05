@@ -23,7 +23,7 @@ function addRole(role, serverID) {
     makeServer(serverID); // just to be safe
 
     // get roles from file
-    var roles = getRoles(serverID);
+    let roles = getRoles(serverID);
 
     // dont want same role in twice
     if (roles.includes(role))
@@ -75,13 +75,13 @@ module.exports = [
 
             const serverRoles = getRoles(msg.guild.id);
 
-            var roles = msg.content
+            let roles = msg.content
                 .match(/^-iam (.+)/)[1]         // find roles argument
                     .split(',')                 // take each role (separated by commas)
                         .map(r => r.trim());    // trim whitespace
 
             // verify the roles are valid
-            for (var i = 0; i < roles.length; i++)
+            for (let i = 0; i < roles.length; i++)
                 if (!serverRoles.includes(roles[i])) {
                     msg.channel.send(`Invalid role "${roles[i]}"`);
                     return;
@@ -117,7 +117,7 @@ To self-assign a role you can use the command \`-iam <role>\`
         },
 
         act: async function (msg) {
-            var roles = msg.content
+            let roles = msg.content
                 .match(/^-iamnot (.+)/)[1]      // find roles argument
                     .split(",")                 // take each role (separated by commas)
                         .map(r => r.trim());    // reomve excess whitespace

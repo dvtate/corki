@@ -161,7 +161,7 @@ module.exports = [
                 msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
                 return;
             }
-            var str = `<@!${id}> has ${userObj.accounts.length} accounts:\n`;
+            let str = `<@!${id}> has ${userObj.accounts.length} accounts:\n`;
             for (let i = 0; i < userObj.accounts.length; i++)
                 str += `[${i}]: ${userObj.accounts[i].server} ${userObj.accounts[i].name}\n`;
 
@@ -177,12 +177,12 @@ module.exports = [
         },
         act: async function (msg) {
             logCmd(msg, "listed lol accts. (-list-lol)")
-            var userObj = lol.getUserData(msg.author.id);
+            let userObj = lol.getUserData(msg.author.id);
             if (!userObj) {
                 msg.channel.send("You don't have any linked accounts. use `-lol add` to link your account(s)");
                 return;
             }
-            var str = `${msg.author} has ${userObj.accounts.length} accounts:\n`;
+            let str = `${msg.author} has ${userObj.accounts.length} accounts:\n`;
             for (let i = 0; i < userObj.accounts.length; i++)
                 str += `[${i}]: ${userObj.accounts[i].server} ${userObj.accounts[i].name}\n`;
 
@@ -198,7 +198,7 @@ module.exports = [
         },
         act: async function (msg) {
             logCmd(msg, "modified their main account");
-            var userObj = lol.getUserData(msg.author.id);
+            let userObj = lol.getUserData(msg.author.id);
             userObj.main = msg.content.match(/^-main-lol ([0-9])/)[1];
             lol.setUserData(msg.author.id, userObj);
             msg.channel.send("main account updated");
