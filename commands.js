@@ -105,7 +105,7 @@ const c_lol = [
         example: `
             <kbd>-lol mastery corki</kbd><br/>
             <kbd>-lol mastery janna @testuser</kbd><br/>
-            <kbd>-lol msatery zed kr hide on bush</kbd>`
+            <kbd>-lol mastery zed kr hide on bush</kbd>`
     }, {
         name: "-lol rank",
         usage: "<p>Show ranked progress</p>",
@@ -209,15 +209,15 @@ const c_sam = [
         example: `<kbd>-add-assignable-role dota2</kbd><br/>
         <kbd>-add-assignable-role NA, EUW, LAN, LAS</kbd>`
     }, {
-        name: "-subreddit-link",
-        usage: "<p>forward all new posts from <a href=\"https://reddit.com/r/corkimains\">/r/corkimains</a> here</p>",
-        args: "takes no arguments",
-        example: "<kbd>-subreddit-link</kbd>"
+        name: "-rss add",
+        usage: "<p>forward all new post from an rss feed to this channel</p>",
+        args: "rss feed url<br/><kbd>-rss &lt;url></kbd>",
+        example: "<kbd>-rss add https://reddit.com/r/leagueoflegends/new/.rss"
     }, {
-        name: "subreddit-unlink",
-        usage: "<p>Stop forwarding reddit posts here</p>",
+        name: "-rss reset",
+        usage: "<p>unsubscribe this channel from all rss feeds</p>",
         args: "takes no arguments",
-        example: "<kbd>-subreddit-unlink</kbd>"
+        example: "-rss reset"
     }
 
 ];
