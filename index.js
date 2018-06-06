@@ -37,9 +37,11 @@ commands = commands.concat(subreddit_fwd.commands);
 subreddit_fwd.configure();
 
 commands = commands.concat(require("./roles.js"));
-commands = commands.concat(require("./lol_commands.js"));
-commands = commands.concat(require("./reactions.js"));
+commands = commands.concat(require("./lol/lol_commands.js"));
 
+commands = commands.concat(require("./rss/rss_cmds.js"));
+
+commands = commands.concat(require("./reactions.js"));
 commands = commands.concat(require("./help_cmds.js"));
 
 //commands.concat(require("./.js");
