@@ -31,14 +31,12 @@ commands = commands.concat(require("./basic_cmds.js"));
 commands = commands.concat(require("./international_cmds.js"));
 commands = commands.concat(require("./text_cmds.js"));
 
-
-const subreddit_fwd = require("./subreddit_forward.js");
-commands = commands.concat(subreddit_fwd.commands);
-subreddit_fwd.configure();
-
 commands = commands.concat(require("./roles.js"));
+
+// LoL stuff
 commands = commands.concat(require("./lol/lol_commands.js"));
 
+// RSS feed used for reddit fwd
 commands = commands.concat(require("./rss/rss_cmds.js"));
 
 commands = commands.concat(require("./reactions.js"));
