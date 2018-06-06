@@ -56,7 +56,8 @@ global.client.on('message', async msg => {
 			commands[i].act(msg).then(() => {})
 				.catch(e => {
 					msg.channel.send("sorry, that error'd please send a `-bug` report\n```" + e + "\n```");
-					console.error(`err (${msg.content}):${e}`);
+					console.error(`err (${msg.content}):`);
+					console.error(e);
 				});
 			break; // we're done here
 		}

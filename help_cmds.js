@@ -193,11 +193,11 @@ module.exports = [
                         name: "`-iamnot <role(s)>`",
                         value: "unassign role(s) to self"
                     }, {
-                        name: "`-subreddit-link`",
-                        value: "begin forwarding all new posts to [/r/corkimains](https://reddit.com/r/corkimains) here"
+                        name: "`-rss add <feed-url>`",
+                        value: "forward all elements of an rss feed to this channel (see `-help rss` for more)",
                     }, {
-                        name: "`-subreddit-unlink`",
-                        value: "stop forwarding subreddit posts here"
+                        name: "`-rss reset`",
+                        value: "unsubscribe this channel from all rss feeds"
                     }
                 ],
 

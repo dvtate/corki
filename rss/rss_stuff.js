@@ -44,7 +44,7 @@ function addRule(channelID, url) {
     rules.push({
         channel: channelID,
         url: url,
-        latest: 0
+        latest: Date.now() // replace with zero if you want spam every time you add a sub
     });
     setRules(rules);
 }
@@ -53,10 +53,13 @@ module.exports.addRule = addRule;
 
 function removeChannel(channelID) {
     let rules = getRules();
-
+    let l = rules.length;
+    rules = rules.filter(r => r.channel != channelID);
+    setRules(rules);
+    return l - rules.length;
 }
 
-
+module.exports.removeChannel = removeChannel;
 
 
 
@@ -109,7 +112,7 @@ async function processRule(rule) {
 
 }
 
-
+// check feeds and forward new ones
 function checkFeeds() {
     let rules = getRules();
 
@@ -123,20 +126,34 @@ function checkFeeds() {
 
     // make request
     Promise.all(requests).then(results => {
+
+        // foreach rule
         for (let i = 0; i < results.length; i++) {
-            rules[i] = results[i].rule;
-            console.log(results[i].rule);
+            // update date on rule
+            rules[i].latest = results[i].rule.latest;
+
+             // forward items
             sendItems(results[i].items, results[i].rule.channel);
         }
 
+        // if someone added a new rule while we were posting
+        if (rules.length > getRules().length)
+            rules = rules.concat(getRules().slice(rules.length));
+
+        // someone removed a rule while we were posting
+        else if (rules.length < getRules().length)
+            ; // not sure how to implement yet
+
+
         setRules(rules);
+
     });
 }
 
 
 // checks for posts every 30s
 function refresh() {
-    checkFeeds();
-    setTimeout(refresh, 15000); // every 20 seconds
+    checkFeeds();               // check feeds and forward new ones
+    setTimeout(refresh, 30000); // every 30 seconds
 }
-setTimeout(refresh, 10000); // give 20 seconds for bot to start before checking
+setTimeout(refresh, 20000); // give 20 seconds for bot to start before checking
