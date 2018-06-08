@@ -130,6 +130,11 @@ const c_lol = [
         args: "champion name<br/><kbd>-lol leaderboard &lt;championname></kbd>",
         example: "<kbd>-lol leaderboard corki</kbd>"
     }, {
+        name: "-lol global leaderboard",
+        usage: "<p>Shows leaderboard for masterypoints on a champion including all of corki users with accounts</p>",
+        args: "champion name<br/><kbd>-lol leaderboard &lt;championname></kbd>",
+        example: "<kbd>-lol global leaderboard corki</kbd><br/><kbd>-lol glb leblanc</kbd>"
+    }, {
         name: "-lol servers",
         usage: "<p>Shows a list of supported League of Legends servers</p>",
         args: "takes no arguments",
@@ -210,14 +215,19 @@ const c_sam = [
         <kbd>-add-assignable-role NA, EUW, LAN, LAS</kbd>`
     }, {
         name: "-rss add",
-        usage: "<p>forward all new post from an rss feed to this channel</p>",
+        usage: "<p>forward all new post from an rss feed to this channel (see <kbd>-help rss</kbd> for more)</p>",
         args: "rss feed url<br/><kbd>-rss &lt;url></kbd>",
         example: "<kbd>-rss add https://reddit.com/r/leagueoflegends/new/.rss"
     }, {
         name: "-rss reset",
         usage: "<p>unsubscribe this channel from all rss feeds</p>",
         args: "takes no arguments",
-        example: "-rss reset"
+        example: "<kbd>-rss reset</kbd>"
+    }, {
+        name: "-rss list",
+        usage: "<p>show all subscriptions for current channel</p>",
+        args: "takes no arguments",
+        example: "<kbd>-rss list</kbd>"
     }
 
 ];
@@ -294,6 +304,11 @@ const c_devtools = [
 <b>(requires BotAdmin priveleges)</b>",
         args: "JavaScript code",
         example: "<kbd>-eval console.log(Date.now())</kbd>"
+    }, {
+        name: "-uptime",
+        usage: "<p>Shows how long Corki has been running since last restarted</p>",
+        args: "takes no arguments",
+        example: "<kbd>-uptime</kbd>"
     }
 ];
 
