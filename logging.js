@@ -11,7 +11,7 @@ const fs = require("fs");
 
 
 // Function to simplify logging
-module.exports = async function logCmd(msg, logMessage) {
+module.exports = async function (msg, logMessage) {
 
     // current date
     const timestamp = new Date(Date.now());

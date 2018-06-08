@@ -10,47 +10,29 @@ module.exports = [
     { // ping
 
         // returns true if command fits
-        condition: function (msg) {
-            return msg.content.match(/^\-ping/);
-        },
+        condition: msg => msg.content.match(/^\-ping/),
 
         // run to perform command
-        act: async function (msg) {
+        act: async msg => {
             logCmd(msg, "-ping'd");
-            msg.channel.send("pong");
+            msg.channel.send(`pong (lag: ${global.client.ping}ms)`);
         }
     },
 
     { // generate an error
-            condition: function (msg) {
-                return msg.content.match(/^\-err (.+)/);
-            },
+        condition: msg => msg.content.match(/^\-err (.+)/),
 
-            act: async function (msg) {
-                logCmd("-err'd");
-                const errmsg = msg.content.match(/^\-err (.+)/)[1]
-                throw errmsg;
-            }
-    },
-
-    { // log
-        condition: function (msg) {
-            return msg.content.match(/^\-logmsg(?:$|\s)/);
-        },
-
-        act: async function (msg) {
-            msg.channel.send(`logged msg to stdout`);
-            console.log(msg);
+        act: async msg => {
+            logCmd("-err'd");
+            const errmsg = msg.content.match(/^\-err (.+)/)[1]
+            throw errmsg;
         }
-
     },
 
     { // log info
       // useful for getting technical info on things
 
-        condition: function (msg) {
-            return msg.content.match(/^\-log (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-log (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "asked for a -log");
@@ -105,9 +87,7 @@ module.exports = [
     },
 
     { // log help if no args
-        condition: function (msg) {
-            return msg.content.match(/^\-log(?:$|\s)|^-help log(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^\-log(?:$|\s)|^-help log(?:$|\s)/),
         act: async function (msg) {
             msg.channel.send(logHelpInfo);
         }
@@ -115,9 +95,7 @@ module.exports = [
 
 
     { // msg - send a message to a channel
-        condition: function (msg) {
-            return msg.content.match(/^\-msg (\S+) ([\s\S]+)/);
-        },
+        condition: msg => msg.content.match(/^\-msg (\S+) ([\s\S]+)/),
         act: async function (msg) {
             if (!botAdmins.auth(msg.author.id)) {
                 msg.channel.send("You are not authorized to perform this action.\n"
@@ -146,9 +124,7 @@ module.exports = [
     },
 
     { // bug report
-        condition: function (msg) {
-            return msg.content.match(/^\-bug (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-bug (.+)/),
         act: async function (msg) {
             logCmd(msg, `found a -bug: ${msg.content.match(/^\-bug (.+)/)[1]}`);
             msg.channel.send("Thank you for the bug report! <@332958493722017792> \
@@ -162,9 +138,7 @@ is an open-source project, feel free to contribute. https://github.com/dvtate/co
     },
 
     { // run sh
-        condition: function (msg) {
-            return msg.content.match(/^\-system (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-system (.+)/),
         act: async function (msg) {
             // make sure they're authorized
             if (!botAdmins.auth(msg.author.id)) {
@@ -187,9 +161,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
 
     { // eval
       // instead of making a new command just use -eval :S
-        condition: function (msg) {
-            return msg.content.match(/^\-eval ([\s\S]+)/);
-        },
+        condition: msg => msg.content.match(/^\-eval ([\s\S]+)/),
         act: async function (msg) {
 
             // make sure they're authorized
@@ -209,6 +181,25 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
 
         }
 
+    },
+
+    { // how long has the bot been running?
+        start_time: process.hrtime(),
+
+        condition: msg => msg.content.match(/^-uptime(?:$|\s)/),
+
+        act: async function (msg) {
+            logCmd(msg, "checked -uptime");
+
+            let time = process.hrtime(this.start_time);
+            const ns_per_s = 1e9;
+            time = (time[0] * ns_per_s + time[1]) / (ns_per_s);
+
+            msg.channel.send(`Corki Bot has been online for \
+${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
+} hours, ${Math.floor(time / 60) % 60} minutes, and ${time % 60} seconds and counting`);
+
+        }
     }
 ];
 

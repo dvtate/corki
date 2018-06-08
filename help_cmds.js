@@ -5,9 +5,7 @@ const logCmd = require("./logging.js");
 module.exports = [
 
     { // -help general
-        condition: function (msg) {
-            return msg.content.match(/^-help general(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-help general(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -help(general)");
 
@@ -46,9 +44,7 @@ module.exports = [
     },
 
     { // -help fun
-        condition: function (msg) {
-            return msg.content.match(/^-help fun(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-help fun(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -help(fun)");
 
@@ -82,9 +78,7 @@ module.exports = [
 
 
     { // -help LoL
-        condition: function (msg) {
-            return msg.content.match(/^-(?:help lol|lol help)(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-(?:help lol|lol help)(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -help(lol))");
 
@@ -139,9 +133,7 @@ module.exports = [
 
 
     { // -help international
-        condition: function (msg) {
-            return msg.content.match(/^-help international(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-help international(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -help(international)");
 
@@ -171,9 +163,7 @@ module.exports = [
     },
 
     { // -help server automation and management
-        condition: function (msg) {
-            return msg.content.match(/^-help sam(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-help sam(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -help(sam)");
 
@@ -212,9 +202,7 @@ module.exports = [
     },
 
     { // -help text
-        condition: function (msg) {
-            return msg.content.match(/^-help text(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-help text(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -help(text)");
 
@@ -256,9 +244,7 @@ module.exports = [
     },
 
     { // -help devtools
-        condition: function (msg) {
-            return msg.content.match(/^-help devtools(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-help devtools(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -help(devtools)");
 
@@ -287,9 +273,7 @@ module.exports = [
 
 
     { // help overview (table of contents)
-        condition: function (msg) {
-            return msg.content.match(/^-h(?:elp)?(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-h(?:elp)?(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -help");
 
@@ -335,9 +319,7 @@ module.exports = [
     },
 
     { // commands list (depricated)
-        condition: function (msg) {
-            return msg.content.match(/^-commands/);
-        },
+        condition: msg => msg.content.match(/^-commands/),
         act: async function (msg) {
 
             logCmd(msg, "asked for -commands");

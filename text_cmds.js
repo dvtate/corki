@@ -7,9 +7,7 @@ module.exports = [
     { // vaporwave
 
         // if returns true then its correct command
-        condition: function (msg) {
-            return msg.content.match(/^\-vaporwave (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-vaporwave (.+)/),
 
         // run when command is triggered
         act: async function (msg) {
@@ -20,9 +18,7 @@ module.exports = [
     },
 
     { // glitch
-        condition: function (msg) {
-            return msg.content.match(/^\-glitch (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-glitch (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "-glitch'd text");
@@ -32,9 +28,7 @@ module.exports = [
     },
 
     { // tinycaps
-        condition: function (msg) {
-            return msg.content.match(/^\-tinycaps (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-tinycaps (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "made text into -tinycaps");
@@ -44,9 +38,7 @@ module.exports = [
     },
 
     { // mirror
-        condition: function (msg) {
-            return msg.content.match(/^\-mirror (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-mirror (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "reflected text with -mirror");
@@ -56,9 +48,7 @@ module.exports = [
     },
 
     { // flip
-        condition: function (msg) {
-            return msg.content.match(/^\-flip (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-flip (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "-flipped text");
@@ -68,9 +58,7 @@ module.exports = [
     },
 
     { // spell
-        condition: function (msg) {
-            return msg.content.match(/^\-spell (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-spell (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "-spell'd a word");
@@ -101,12 +89,12 @@ module.exports = [
     },
 
     { // help entry
-        condition: function (msg) {
-            return msg.content.match(/^\-vaporwave|^\-glitch|^\-flip|^\-mirror|^\-tinycaps|^\-spell/);
-        },
+        condition: msg => msg.content.match(/^\-(?:help )?(vaporwave|glitch|flip|mirror|tinycaps|spell)/),
         act: async function (msg) {
-            logCmd(msg, `doesn't know how to use ${msg.content}`);
-            msg.channel.send(`This command requires a text argument to act on\nexample: \`${msg.content} corki\``);
+            logCmd(msg, `got help with a text command`);
+            const cmd = msg.content.match(/^\-(?:help )?(vaporwave|glitch|flip|mirror|tinycaps|spell)/)[1];
+            msg.channel.send("This command requires a text argument to modify. For example: ");
+            msg.channel.send(`-${cmd} corki`);
         }
     }
 

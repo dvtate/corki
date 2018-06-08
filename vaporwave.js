@@ -1,8 +1,11 @@
 
 // returns text composed of full-width characters
-module.exports.toVaporwave = function(txt){
-	const chars = txt.split(''); // for each character
-	return chars.map(toFullWidth).join(''); // convert the character into full width version
+module.exports.toVaporwave = function (txt) {
+	// split into a char array
+	const chars = txt.split('');
+
+	// convert each character into full width version & recombine
+	return chars.map(toFullWidth).join('');
 }
 
 // returns the full-width version of the character c

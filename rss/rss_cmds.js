@@ -11,8 +11,17 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "added a -rss sub (-rss add)");
             const url = msg.content.match(/^-rss (?:add|sub) (\S+)/)[1];
-            rss.addRule(msg.channel.id, url);
-            msg.channel.send("Added an rss subscription to this channel, to stop rss subscriptions in this channel use `-rss reset`");
+            console.log(url);
+            if (!url.match(/\:\/\//)) {
+                msg.channel.send("Please include protocol in url. `https://` is optimal");
+                return;
+            }
+            rss.testFeedUrl(url).then(() => {
+                rss.addRule(msg.channel.id, url);
+                msg.channel.send("Added an rss subscription to this channel, to stop rss subscriptions in this channel use `-rss reset`");
+            }).catch(e => {
+                msg.channel.send("That feed couldn't be accessed, make sure the url you gave is correct and contains a valid rss feed\n`" + e + "`");
+            })
         }
     },
 
@@ -27,9 +36,26 @@ module.exports = [
     },
 
     {
+        condition: msg => msg.content.match(/^-rss list/),
+        act: async msg => {
+
+            // make the list of rules from rss.conf into a string
+            let rules = rss.getRules()                      // get rules from file
+                .filter(r => r.channel == msg.channel.id)   // take rules applicable to current channel
+                    .map(r => r.url)                        // take the urls for said rules
+                        .join(", ");                        // make a comma separated string of the urls
+
+            msg.channel.send("This channel is subscribed to the following rss feeds: " + rules);
+        }
+
+    },
+
+
+    { // -rss help
         condition: msg => msg.content.match(/^-(?:help rss|rss help|rss)(?:$|\s)/),
         act: async msg => msg.channel.send(rssHelpInfo)
-    }
+    },
+
 
 ];
 

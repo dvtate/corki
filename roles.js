@@ -40,9 +40,7 @@ function addRole(role, serverID) {
 module.exports = [
     { // mod add roles
 
-        condition: function (msg) {
-            return msg.content.match(/^-add-assignable-role (.+)/);
-        },
+        condition: msg => msg.content.match(/^-add-assignable-role (.+)/),
 
         act: async function (msg) {
 
@@ -65,9 +63,7 @@ module.exports = [
     },
 
     { // self assign role
-        condition: function (msg) {
-            return msg.content.match(/^-iam (.+)/);
-        },
+        condition: msg => msg.content.match(/^-iam (.+)/),
 
         act: async function (msg) {
 
@@ -101,11 +97,10 @@ module.exports = [
     },
 
     { // list roles
-        condition: function (msg) {
-            return msg.content.match(/^-(?:roles|iam)(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-(?:roles|iam)(?:$|\s)/),
 
         act: async function (msg) {
+            logCmd(msg, "checked available -roles");
             msg.channel.send(`Self-assignable roles on this server: ${getRoles(msg.guild.id).join(", ")}
 To self-assign a role you can use the command \`-iam <role>\`
             `);
@@ -113,9 +108,7 @@ To self-assign a role you can use the command \`-iam <role>\`
     },
 
     { // remove role
-        condition: function (msg) {
-            return msg.content.match(/^-iamnot (.+)/);
-        },
+        condition: msg => msg.content.match(/^-iamnot (.+)/),
 
         act: async function (msg) {
             let roles = msg.content

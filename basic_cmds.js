@@ -5,9 +5,7 @@ const request = require("request");
 module.exports = [
 
     { // 8ball
-        condition: function (msg) {
-            return msg.content.match(/^-8ball(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-8ball(?:$|\s)/),
 
         act: async function (msg) {
             logCmd(msg, "shook -8ball");
@@ -32,9 +30,7 @@ module.exports = [
     },
 
     { // echo
-        condition: function (msg) {
-            return msg.content.match(/^\-echo (.+)/);
-        },
+        condition: msg => msg.content.match(/^\-echo (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "caused an -echo");
@@ -45,18 +41,15 @@ module.exports = [
     },
 
     { // echo help
-        condition: function (msg) {
-            return msg.content.match(/^-echo(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-echo(?:$|\s)/),
         act: async function (msg) {
+            logCmd(msg, "-echo'd a message"),
             msg.channel.send("-echo expected a message");
         }
     },
 
     { // coin flip
-        condition: function (msg) {
-            return msg.content.match(/^-coinflip(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-coinflip(?:$|\s)/),
 
         act: async function (msg) {
             logCmd(msg, "flipped a coin");
@@ -65,9 +58,7 @@ module.exports = [
     },
 
     { // random
-        condition: function (msg) {
-            return msg.content.match(/^-random (.+)/);
-        },
+        condition: msg => msg.content.match(/^-random (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "used RNG");
@@ -97,19 +88,13 @@ module.exports = [
     },
 
     { // random help
-        condition: function (msg) {
-            return msg.content.match(/^-random(?:$|\s)|^-help random(?:$|\s)/);
-        },
-        act: async function (msg) {
-            msg.channel.send(randomHelpInfo);
-        }
+        condition: msg => msg.content.match(/^-random(?:$|\s)|^-help random(?:$|\s)/),
+        act: async msg => msg.channel.send(randomHelpInfo)
 
     },
 
     { // xkcd with options
-        condition: function (msg) {
-            return msg.content.match(/^-xkcd (.+)/);
-        },
+        condition: msg => msg.content.match(/^-xkcd (.+)/),
 
         act: async function (msg) {
 
@@ -145,9 +130,7 @@ module.exports = [
     },
 
     { // xkcd
-        condition: function (msg) {
-            return msg.content.match(/^-xkcd(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-xkcd(?:$|\s)/),
 
         act: async function (msg) {
             logCmd(msg, "read -xkcd");

@@ -26,7 +26,6 @@ rss-data: [
         fs.writeFileSync(`${process.env.HOME}/.corki/rss.conf`, "[]");
 })();
 
-
 function getRules() {
     try {
         return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/rss.conf`));
@@ -34,17 +33,35 @@ function getRules() {
         return [];
     }
 }
+module.exports.getRules = getRules;
 
 function setRules(rules) {
     fs.writeFileSync(`${process.env.HOME}/.corki/rss.conf`, JSON.stringify(rules));
 }
 
+async function testFeedUrl(url) {
+    return new Promise(async (resolve, reject) => {
+        const parser = new Parser();
+
+        let feed;
+        try {
+            feed = await parser.parseURL(url);
+        } catch (e) {
+            reject(e);
+            return;
+        }
+
+        resolve();
+    });
+}
+module.exports.testFeedUrl = testFeedUrl;
+
 function addRule(channelID, url) {
     let rules = getRules();
     rules.push({
-        channel: channelID,
-        url: url,
-        latest: Date.now() // replace with zero if you want spam every time you add a sub
+        channel : channelID,
+        url : url,
+        latest : Date.now() // replace with zero if you want spam every time you add a sub
     });
     setRules(rules);
 }
@@ -74,7 +91,7 @@ async function sendItems(items, channel) {
         const chan = global.client.channels.get(channel);
         items.forEach(e => chan.send(`${e.title} ${e.link}`));
     } catch (e) {
-
+        console.error(e);
     }
 
 }
@@ -89,6 +106,7 @@ async function processRule(rule) {
             feed = await parser.parseURL(rule.url);
         } catch (e) {
             reject(e);
+            return;
         }
 
         // idk where this coming from

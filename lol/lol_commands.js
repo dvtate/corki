@@ -12,9 +12,7 @@ module.exports = [
 
 
     { // a specific summoner's mastery of a specific champ
-        condition: function (msg) {
-            return msg.content.match(/^-(?:mastery|lol mastery) (\S+) (\S+) (.+)/)
-        },
+        condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+) (\S+) (.+)/),
         act: async function (msg) {
             const match = msg.content.match(/^\-(?:mastery|lol mastery) (\S+) (\S+) (.+)/);
 
@@ -48,9 +46,7 @@ module.exports = [
     },
 
     { // mastery of a different user
-        condition: function (msg) {
-            return msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/);
-        },
+        condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/),
         act: async function (msg) {
             const match = msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/);
             const champName = match[1].toLowerCase();
@@ -71,20 +67,9 @@ module.exports = [
         }
     },
 
-    { // -mastery help
-        condition: function (msg) {
-            return msg.content.match(/^-(?:mastery|lol mastery) help/);
-        },
-        act: async function (msg) {
-            logCmd(msg, "got help with `-lol mastery`");
-            msg.channel.send(masteryHelpInfo);
-        }
-    },
 
     { // self mastery of a champ
-        condition: function (msg) {
-            return msg.content.match(/^-(?:mastery|lol mastery) (\S+)/)
-        },
+        condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+)/),
         act: async function (msg) {
             const champName = msg.content.match(/^-(?:mastery|lol mastery) (\S+)/)[1].toLowerCase();
             const champID =  teemo.champIDs[champName];
@@ -104,9 +89,7 @@ module.exports = [
     },
 
     { // -mastery help
-        condition: function (msg) {
-            return msg.content.match(/^-(?:mastery|lol mastery|help lol mastery)(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-(?:mastery|lol mastery|help lol mastery)(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "got help with `-lol mastery`");
             msg.channel.send(masteryHelpInfo);
@@ -114,9 +97,7 @@ module.exports = [
     },
 
     { // add acct
-        condition: function (msg) {
-            return msg.content.match(/^-lol add (\S+) (.+)/);
-        },
+        condition: msg => msg.content.match(/^-lol add (\S+) (.+)/),
         act: async function (msg) {
             logCmd(msg, "linked an LoL acct (-add-lol)");
 
@@ -139,9 +120,7 @@ module.exports = [
     },
 
     { // reset accounts list
-        condition: function (msg) {
-            return msg.content.match(/^-lol reset/);
-        },
+        condition: msg => msg.content.match(/^-lol reset/),
         act: async function (msg) {
             logCmd(msg, "reset lol data (-lol reset)");
             lol.removeDir(msg.author.id);
@@ -151,9 +130,7 @@ module.exports = [
     },
 
     { // list another user's accts
-        condition: function (msg) {
-            return msg.content.match(/^-lol list <@!?([0-9]+)>/);
-        },
+        condition: msg => msg.content.match(/^-lol list <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "listed a user's lol accts. (-list-lol)");
 
@@ -176,9 +153,7 @@ module.exports = [
     },
 
     { // list accts
-        condition: function (msg) {
-            return msg.content.match(/^\-lol list/);
-        },
+        condition: msg => msg.content.match(/^\-lol list/),
         act: async function (msg) {
             logCmd(msg, "listed lol accts. (-list-lol)")
             let userObj = lol.getUserData(msg.author.id);
@@ -197,9 +172,7 @@ module.exports = [
     },
 
     { // main acct
-        condition: function (msg) {
-            return msg.content.match(/^-lol main ([0-9])/);
-        },
+        condition: msg => msg.content.match(/^-lol main ([0-9])/),
         act: async function (msg) {
             logCmd(msg, "modified their main account");
             let userObj = lol.getUserData(msg.author.id);
@@ -210,9 +183,7 @@ module.exports = [
     },
 
     {
-        condition: function (msg) {
-            return msg.content.match(/^-lol main/);
-        },
+        condition: msg => msg.content.match(/^-lol main/),
         act: async function (msg) {
             logCmd(msg, "checked their main -lol acct");
             let userObj = lol.getUserData(msg.author.id);
@@ -223,9 +194,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     {
-        condition: function (msg) {
-            return msg.content.match(/^-lol api ([\S\s]+)/);
-        },
+        condition: msg => msg.content.match(/^-lol api ([\S\s]+)/),
         act: async function (msg) {
             logCmd(msg, "made a call to teemo.js");
 
@@ -238,9 +207,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     {
-        condition: function (msg) {
-            return msg.content.match(/^-lol (?:leaderboard|lb) (\S+)/);
-        },
+        condition: msg => msg.content.match(/^-lol (?:leaderboard|lb) (\S+)/),
         act: async function (msg) {
             let timer = process.hrtime();
             logCmd(msg, "generated leaderboard");
@@ -258,7 +225,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
 
                 let time = process.hrtime(timer);
-                let ns_per_s = 1e9;
+                const ns_per_s = 1e9;
                 time = (time[0] * ns_per_s + time[1]) / (ns_per_s)
 
                 msg.channel.send(`that took ${time} seconds to complete`);
@@ -269,9 +236,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     {
-        condition: function (msg) {
-            return msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/);
-        },
+        condition: msg => msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/),
         act: function (msg) {
 
                 let timer = process.hrtime();
@@ -301,9 +266,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     {
-        condition: function (msg) {
-            return msg.content.match(/^-lol rank (\S+) (.+)/);
-        },
+        condition: msg => msg.content.match(/^-lol rank (\S+) (.+)/),
         act: async function (msg) {
             logCmd(msg, "checked an account's -lol rank");
 
@@ -335,9 +298,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     {
-        condition: function (msg) {
-            return msg.content.match(/^-lol rank <@!?([0-9]+)>/);
-        },
+        condition: msg => msg.content.match(/^-lol rank <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "checked a user's -lol rank");
 
@@ -361,9 +322,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     {
-        condition: function (msg) {
-            return msg.content.match(/^-lol rank(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-lol rank(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "checked their -lol rank");
             let userObj = lol.getUserData(msg.author.id);
@@ -386,9 +345,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // list supported server names
-        condition: function (msg) {
-            return msg.content.match(/^-lol servers(?:$|\s)/);
-        },
+        condition: msg => msg.content.match(/^-lol servers(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -lol servers");
             msg.channel.send("Corki supports LoL accounts on the following servers: "
@@ -398,10 +355,10 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
 
     { // champgg matchup
-        condition: function (msg) {
+        condition: msg =>
             // -lol matchup <champ1> vs. <champ2> [elo]
-            return msg.content.match(/^-lol matchup (\S+) (?:vs?\.? )?(\S+)/);
-        },
+            msg.content.match(/^-lol matchup (\S+) (?:vs?\.? )?(\S+)/),
+
         act: async function (msg) {
             logCmd(msg, "asked about a matchup");
             const match = msg.content.match(/^-lol matchup (\S+) (?:vs?\.? )?(\S+)/);
@@ -470,10 +427,10 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
 
     { // champgg matchup
-        condition: function (msg) {
+        condition: msg =>
             // -lol matchup <role> <champ1> vs. <champ2> [elo]
-            return msg.content.match(/^-lol matchup (\S+) (\S+) (?:vs?\.? )?(\S+)/i);
-        },
+            msg.content.match(/^-lol matchup (\S+) (\S+) (?:vs?\.? )?(\S+)/i),
+
         act: async function (msg) {
             logCmd(msg, "asked about a matchup");
             const match = msg.content.match(/^-lol matchup (\S+) (\S+) (?:vs?\.? )?(\S+)/);
@@ -574,9 +531,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // champgg winrate
-        condition: function (msg) {
-            return msg.content.match(/^-lol wr (\S+)/);
-        },
+        condition: msg => msg.content.match(/^-lol wr (\S+)/),
         act: async function (msg) {
             const champName = msg.content.match(/^-lol wr (\S+)/)[1];
             const champ = teemo.champIDs[champName.toLowerCase()];
@@ -594,9 +549,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // convert champ name/id
-        condition: function (msg) {
-            return msg.content.match(/^-lol c (\S+)/);
-        },
+        condition: msg => msg.content.match(/^-lol c (\S+)/),
         act: async function (msg) {
             logCmd("got a champ name/id (-lol c)");
             msg.channel.send(teemo.champs[msg.content.match(/^-lol c (\S+)/)[1].toLowerCase()]);

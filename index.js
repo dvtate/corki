@@ -60,7 +60,7 @@ global.client.on('message', async msg => {
 		}
 
 	// temporary solution, hardcoded to make things easier
-	if (msg.channel.id == "422561032393850881")
+	if (msg.channel.id == "253963101416849408")
 		msg.client.channels.get("454330249665314837").send(msg.content);
 
 });
@@ -70,7 +70,8 @@ global.client.on("guildMemberAdd", member => {
 
     // server's new members channel
     const channel = member.guild.channels.find("name", "new_members")
-		|| member.guild.channels.find("name", "new-members");
+		|| member.guild.channels.find("name", "new-members")
+		|| member.guild.channels.find("name", "member-log");
 
     // if not found give up
     if (!channel)
