@@ -39,14 +39,13 @@ function writePrevData(data){
 async function getLeaderBoard(members, champ) {
     return new Promise( async (resolve, reject) => {
 
-        let data = [];
-
         // get list of users with linked LoL accts
         let users = fs.readdirSync(`${process.env.HOME}/.corki/users`);
 
         // filter list to only include members of current server
         users = users.filter(u => members.exists("id", u));
 
+        // generates an object containing user name, id and mastery points asynchroniously
         const getDataPoint = async u =>
             new Promise(async (resolve, reject) => {
                 let pts;
@@ -64,7 +63,7 @@ async function getLeaderBoard(members, champ) {
             });
 
 
-
+        // fill an array with datapoint requests
         const req = users.map(user =>
             getDataPoint(user).catch(e => {
                 console.error("lb err..");
@@ -76,16 +75,18 @@ async function getLeaderBoard(members, champ) {
             })
         );
 
+        // get all the datapoints at once
         Promise.all(req).then(data => {
             // put list in order from greatest to least
             data.sort((a, b) => b.pts - a.pts);
-            resolve(data);
+
+            resolve(data); // ret
         });
-
-
 
     });
 }
+
+
 
 module.exports.getLeaderBoard = getLeaderBoard;
 

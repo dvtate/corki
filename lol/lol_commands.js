@@ -245,7 +245,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let timer = process.hrtime();
             logCmd(msg, "generated leaderboard");
 
-            const champName = msg.content.match(/^-lol leaderboard (\S+)/)[1].replace(/\s/g, '');
+            const champName = msg.content.match(/^-lol (?:leaderboard|lb) (\S+)/)[1].replace(/\s/g, '');
             const champID = teemo.champIDs[champName.toLowerCase()];
 
 
@@ -266,6 +266,38 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
 
         }
+    },
+
+    {
+        condition: function (msg) {
+            return msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/);
+        },
+        act: function (msg) {
+
+                let timer = process.hrtime();
+                logCmd(msg, "generated leaderboard");
+
+                const champName = msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/)[1].replace(/\s/g, '');
+                const champID = teemo.champIDs[champName.toLowerCase()];
+
+
+                if (!champID) {
+                    msg.channel.send("invalid champion name (make sure to remove spaces)");
+                    return;
+                }
+
+                lol_lb.getLeaderBoard(msg.client.members, champID).then(data => {
+                    msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
+
+                    let time = process.hrtime(timer);
+                    let ns_per_s = 1e9;
+                    time = (time[0] * ns_per_s + time[1]) / (ns_per_s)
+
+                    msg.channel.send(`that took ${time} seconds to complete`);
+                });
+
+        }
+
     },
 
     {
