@@ -242,6 +242,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             return msg.content.match(/^-lol (?:leaderboard|lb) (\S+)/);
         },
         act: async function (msg) {
+            let timer = process.hrtime();
             logCmd(msg, "generated leaderboard");
 
             const champName = msg.content.match(/^-lol leaderboard (\S+)/)[1].replace(/\s/g, '');
@@ -253,8 +254,15 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 return;
             }
 
-            lol_lb.getLeaderBoard(msg.guild.members, champID).then(data =>
-                msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data)));
+            lol_lb.getLeaderBoard(msg.guild.members, champID).then(data => {
+                msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
+
+                let time = process.hrtime(timer);
+                let ns_per_s = 1e9;
+                time = (time[0] * ns_per_s + time[1]) / (ns_per_s)
+
+                msg.channel.send(`that took ${time} seconds to complete`);
+            });
 
 
         }
