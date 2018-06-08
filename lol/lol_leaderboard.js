@@ -41,32 +41,49 @@ async function getLeaderBoard(members, champ) {
 
         let data = [];
 
-        // get list of users with LoL accts
-        const users = fs.readdirSync(`${process.env.HOME}/.corki/users`);
+        // get list of users with linked LoL accts
+        let users = fs.readdirSync(`${process.env.HOME}/.corki/users`);
 
-        // for each user
-        for (let i = 0; i < users.length; i++) {
+        // filter list to only include members of current server
+        users = users.filter(u => members.exists("id", u));
 
-            // if they are also in this server, add them to the leaderboard
-            if (members.exists("id", users[i])) {
+        const getDataPoint = async u =>
+            new Promise(async (resolve, reject) => {
                 let pts;
                 try {
                     pts = await lol.getUserMastery(users[i], champ);
                 } catch (e) {
-                    continue;
+                    pts = 0;
                 }
-                data = data.concat({
-                    id: users[i],
-                    pts: pts,
-                    name: members.get(users[i]).user.username
+
+                resolve({
+                    id: u, pts: pts,
+                    name: members.get(u).user.username
                 });
-            }
-        }
 
-        // put list in order from greatest to least
-        data.sort((a, b) => b.pts - a.pts);
+            });
 
-        resolve(data);
+
+
+        const req = users.map(user =>
+            getDataPoint(user).catch(e => {
+                console.error("lb err..");
+                console.error(e);
+                return {
+                    id: user, pts: 0,
+                    name: members.get(u).user.username
+                };
+            })
+        );
+
+        Promise.all(req).then(data => {
+            // put list in order from greatest to least
+            data.sort((a, b) => b.pts - a.pts);
+            resolve(data);
+        });
+
+
+
     });
 }
 

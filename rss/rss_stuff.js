@@ -107,7 +107,6 @@ async function processRule(rule) {
                 // update latest post time
                 latest = Date.parse(item.pubDate) > latest ? Date.parse(item.pubDate) : latest;
             }
-
         });
 
         // update latest post time
@@ -122,15 +121,13 @@ async function processRule(rule) {
 function checkFeeds() {
     let rules = getRules();
 
-    const rss_err = e => {
-        console.error("rss error..");
-        console.error(e);
-        return { items : [], rule : r };
-    };
-
     // make an array full of promises of new rss elements
     let requests = rules.map(r =>
-        processRule(r).catch(rss_err)
+        processRule(r).catch(e => {
+            console.error("rss error..");
+            console.error(e);
+            return { items : [], rule : r };
+        })
     );
 
     // make request
