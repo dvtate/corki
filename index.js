@@ -35,7 +35,6 @@ commands = commands.concat(require("./roles.js"));
 
 // LoL stuff
 commands = commands.concat(require("./lol/lol_commands.js"));
-
 // RSS feed used for reddit fwd
 commands = commands.concat(require("./rss/rss_cmds.js"));
 
@@ -60,6 +59,10 @@ global.client.on('message', async msg => {
 			break; // we're done here
 		}
 
+	// temporary solution, hardcoded to make things easier
+	if (msg.channel.id == "422561032393850881")
+		msg.client.channels.get("454330249665314837").send(msg.content);
+
 });
 
 // welcome new members to the server
@@ -67,7 +70,7 @@ global.client.on("guildMemberAdd", member => {
 
     // server's new members channel
     const channel = member.guild.channels.find("name", "new_members")
-		|| msg.guild.channels.find("name", "new-members");
+		|| member.guild.channels.find("name", "new-members");
 
     // if not found give up
     if (!channel)

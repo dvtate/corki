@@ -73,6 +73,7 @@ module.exports = [
 
             logCmd(msg, "added a role via -iam");
 
+            // designated self assignable roles for server
             const serverRoles = getRoles(msg.guild.id);
 
             let roles = msg.content
@@ -122,6 +123,8 @@ To self-assign a role you can use the command \`-iam <role>\`
                     .split(",")                 // take each role (separated by commas)
                         .map(r => r.trim());    // reomve excess whitespace
 
+
+            // designated self assignable roles for server
             const serverRoles = getRoles(msg.guild.id);
 
             roles.forEach(role => {

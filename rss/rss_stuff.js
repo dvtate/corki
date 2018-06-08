@@ -91,6 +91,12 @@ async function processRule(rule) {
             reject(e);
         }
 
+        // idk where this coming from
+        if (!feed) {
+            return;
+            console.err("no feed");
+        }
+
         let ret = [];
         let latest = 0;
         feed.items.forEach(item => {
@@ -116,12 +122,15 @@ async function processRule(rule) {
 function checkFeeds() {
     let rules = getRules();
 
+    const rss_err = e => {
+        console.error("rss error..");
+        console.error(e);
+        return { items : [], rule : r };
+    };
+
     // make an array full of promises of new rss elements
     let requests = rules.map(r =>
-        processRule(r).catch(e => {
-            console.error(e.Error);
-            return { items : [], rule : r };
-        })
+        processRule(r).catch(rss_err)
     );
 
     // make request
