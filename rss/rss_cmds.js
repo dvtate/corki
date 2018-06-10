@@ -46,6 +46,7 @@ module.exports = [
                         .join(", ");                        // make a comma separated string of the urls
 
             msg.channel.send("This channel is subscribed to the following rss feeds: " + rules);
+
         }
 
     },

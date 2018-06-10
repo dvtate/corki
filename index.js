@@ -52,16 +52,13 @@ global.client.on('message', async msg => {
 		if (commands[i].condition(msg)) {
 			commands[i].act(msg).then(() => {})
 				.catch(e => {
-					msg.channel.send("sorry, that error'd please send a `-bug` report\n```" + e + "\n```");
-					console.error(`err (${msg.content}):`);
-					console.error(e);
+					msg.channel.send(`Sorry, that errored please send a \`-bug\` report\n\`\`\`\n${e.stack}\n\`\`\``);
+					require("./bot_admins.js").sendBugReport(msg, ` Error:\n\`\`\`\n${e.stack}\n\`\`\``);
+					console.error(`Error(${msg.content}):`);
+					console.error(e.stack);
 				});
 			break; // we're done here
 		}
-
-	// temporary solution, hardcoded to make things easier
-	if (msg.channel.id == "253963101416849408")
-		msg.client.channels.get("454330249665314837").send(msg.content);
 
 });
 

@@ -3,7 +3,11 @@ const logCmd = require("./logging.js");
 
 const botAdmins = require("./bot_admins.js");
 
-
+function jsonDump(object) {
+    const circularJSON = require("circular-json");
+    const fs = require("fs");
+    fs.writeFileSync("/tmp/corki.json", circularJSON.stringify(object));
+}
 
 module.exports = [
 
@@ -23,9 +27,8 @@ module.exports = [
         condition: msg => msg.content.match(/^\-err (.+)/),
 
         act: async msg => {
-            logCmd("-err'd");
-            const errmsg = msg.content.match(/^\-err (.+)/)[1]
-            throw errmsg;
+            logCmd(msg, "-err'd");
+            throw new Error(msg.content.match(/^\-err (.+)/)[1]);
         }
     },
 
@@ -127,12 +130,10 @@ module.exports = [
         condition: msg => msg.content.match(/^\-bug (.+)/),
         act: async function (msg) {
             logCmd(msg, `found a -bug: ${msg.content.match(/^\-bug (.+)/)[1]}`);
-            msg.channel.send("Thank you for the bug report! <@332958493722017792> \
-is an open-source project, feel free to contribute. https://github.com/dvtate/corki-bot/");
+            msg.channel.send(`Thank you for the bug report! ${global.client.user} \
+is an open-source project, feel free to contribute. https://github.com/dvtate/corki-bot/`);
 
-            // forward to tate's personal server
-            global.client.channels.find("id", "435548322120335360")
-                .send(`@${msg.author.username}#${msg.author.discriminator} found a bug ${msg.content.match(/^\-bug (.+)/)[1]}`);
+            botAdmins.sendBugReport(msg.content.match(/^\-bug (.+)/)[1]);
 
         }
     },
