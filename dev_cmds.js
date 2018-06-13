@@ -135,8 +135,7 @@ module.exports = [
             msg.channel.send(`Thank you for the bug report! ${global.client.user} \
 is an open-source project, feel free to contribute. https://github.com/dvtate/corki-bot/`);
 
-            botAdmins.sendBugReport(msg.content.match(/^\-bug (.+)/)[1]);
-
+            botAdmins.sendBugReport(msg, msg.content.match(/^\-bug (.+)/)[1]);
         }
     },
 
