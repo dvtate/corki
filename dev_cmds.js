@@ -83,7 +83,9 @@ module.exports = [
                     msg.channel.send("error: malformated -log command");
                     msg.channel.send(logHelpInfo);
                 }
-
+            else {
+                console.log(msg.contents);
+            }
 
         }
 

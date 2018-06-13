@@ -61,7 +61,7 @@ module.exports = [
             lol.getUserMastery(id, champID).then(pts => {
                 msg.channel.send(`<@!${id}> has ${pts} points on ${champName}`);
             }).catch(err => {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add <region> <summonername>` to link their account(s)");
             });
 
         }
@@ -82,7 +82,7 @@ module.exports = [
             lol.getUserMastery(msg.author.id, champID).then(pts => {
                 msg.channel.send(`You have ${pts} points on ${champName}`);
             }).catch(err => {
-                msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
+                msg.channel.send("you don't have any linked accounts. you should use `-lol add <region> <summonername>` to link your account(s)");
             });
         }
 
@@ -139,7 +139,7 @@ module.exports = [
             const userObj = lol.getUserData(id);
 
             if (!userObj) {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add <region> <summonername>` to link their account(s)");
                 return;
             }
             let str = `<@!${id}> has ${userObj.accounts.length} accounts:\n`;
@@ -158,7 +158,7 @@ module.exports = [
             logCmd(msg, "listed lol accts. (-list-lol)")
             let userObj = lol.getUserData(msg.author.id);
             if (!userObj) {
-                msg.channel.send("You don't have any linked accounts. use `-lol add` to link your account(s)");
+                msg.channel.send("You don't have any linked accounts. use `-lol add <region> <summonername>` to link your account(s)");
                 return;
             }
             let str = `${msg.author} has ${userObj.accounts.length} accounts:\n`;
@@ -193,7 +193,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         }
     },
 
-    {
+    { // dev tool
         condition: msg => msg.content.match(/^-lol api ([\S\s]+)/),
         act: async function (msg) {
             logCmd(msg, "made a call to teemo.js");
@@ -206,7 +206,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         }
     },
 
-    {
+    { // mastery leaderboard for server members
         condition: msg => msg.content.match(/^-lol (?:leaderboard|lb) (\S+)/),
         act: async function (msg) {
             let timer = process.hrtime();
@@ -235,7 +235,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         }
     },
 
-    {
+    { // mastery leaderboard for all of the bot's users
         condition: msg => msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/),
         act: function (msg) {
 
@@ -265,7 +265,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
     },
 
-    {
+    { // given summoner's rank
         condition: msg => msg.content.match(/^-lol rank (\S+) (.+)/),
         act: async function (msg) {
             logCmd(msg, "checked an account's -lol rank");
@@ -297,7 +297,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         }
     },
 
-    {
+    { // other user's rank
         condition: msg => msg.content.match(/^-lol rank <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "checked a user's -lol rank");
@@ -306,7 +306,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let userObj = lol.getUserData(id);
 
             if (!userObj) {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add <region> <summonername>` to link their account(s)");
                 return;
             }
 
@@ -321,14 +321,14 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         }
     },
 
-    {
+    { // self rank
         condition: msg => msg.content.match(/^-lol rank(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "checked their -lol rank");
             let userObj = lol.getUserData(msg.author.id);
 
             if (!userObj) {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+                msg.channel.send("You don't have any linked accounts. You should use `-lol add <region> <summonername>` to link your account(s)");
                 return;
             }
 
@@ -551,8 +551,51 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     { // convert champ name/id
         condition: msg => msg.content.match(/^-lol c (\S+)/),
         act: async function (msg) {
-            logCmd("got a champ name/id (-lol c)");
+            logCmd(msg, "got a champ name/id (-lol c)");
             msg.channel.send(teemo.champs[msg.content.match(/^-lol c (\S+)/)[1].toLowerCase()]);
+        }
+    },
+
+    {
+        condition: msg => msg.content.match(/^-lol masteries(?:$|\s)/),
+        act: async msg => {
+            logCmd(msg, "got mastery info");
+
+            let userObj = lol.getUserData(msg.author.id);
+
+            if (!userObj) {
+                msg.channel.send("You don't have any linked accounts. You should use `-lol add <region> <summonername>` to link your account(s)");
+                return;
+            }
+
+            let main = userObj.accounts[userObj.main];
+
+            let score = await teemo.riot.get(main.server, "championMastery.getChampionMasteryScore", main.id);
+
+            teemo.riot.get(main.server, "championMastery.getAllChampionMasteries", main.id).then(data => {
+                let totalPoints = 0;
+                data.forEach(c => totalPoints += c.championPoints);
+
+                let summary = { embed: {
+                    title: "Champion Mastery Summary",
+                    description: `${msg.author.username} has aquired ${totalPoints} mastery points their main account ${main.name}, which has a mastery score of ${score}`,
+                    fields: []
+                }};
+
+                for (let i = 0; i < 10 && i < data.length; i++)
+                    summary.embed.fields.push({
+                        name: teemo.champs[data[i].championId],
+                        value: `mastery level: ${data[i].championLevel}, ${data[i].championPoints} points
+chest: ${data[i].chestGranted}${
+    data[i].championLevel == 7 || data[i].championLevel < 5 ? ""
+    : "\ntokens: " + data[i].tokensEarned}
+last played: ${Date(data[i].lastPlayTime)}`
+                    });
+
+                msg.channel.send(summary);
+            });
+
+
         }
 
     }

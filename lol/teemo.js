@@ -94,4 +94,5 @@ module.exports.champNames = {};
 for (key in module.exports.champIDs)
     module.exports.champNames[module.exports.champIDs[key]] = key;
 
+// both sides of the dict
 module.exports.champs = Object.assign({}, module.exports.champIDs, module.exports.champNames);
