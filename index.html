@@ -25,8 +25,7 @@
             }
         </style>
 
-    </head>
-    <body onload="chkin()">
+    </head><body>
         <center><h1 style="font-size:70px">Corki Bot</h1></center>
 
         <div class="row">
@@ -216,7 +215,7 @@
 
                     // generate list hmtl
                     let html = "";
-                    cmds.forEach(c => {
+                    cmds.forEach(c =>
                         html += `<div class="row cmd-row">
                                     <div class="col-sm cmd-col">
                                         <kbd>${c.name}</kbd>
@@ -231,11 +230,12 @@
                                         ${c.example}
                                     </div>
                                 </div>`
-                    });
+                    );
 
                     // add list to site
                     document.getElementById("cmdlist").innerHTML = html;
                 }
+                chkin();
             </script>
 
         </div>

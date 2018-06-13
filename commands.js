@@ -309,6 +309,11 @@ const c_devtools = [
         usage: "<p>Shows how long Corki has been running since last restarted</p>",
         args: "takes no arguments",
         example: "<kbd>-uptime</kbd>"
+    }, {
+        name: "-lol api",
+        usage: "<p>Make a Riot API call through corki</p>",
+        args: "api call arguments",
+        example: "<kbd>-lol api na1 summoner.getBySummonerName ridderhoff</kbd>"
     }
 ];
 
