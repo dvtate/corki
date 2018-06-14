@@ -48,6 +48,8 @@ async function getLeaderBoard(members, champ) {
         // generates an object containing user name, id and mastery points asynchroniously
         const getDataPoint = async u =>
             new Promise(async (resolve, reject) => {
+
+                // get mastery pts
                 let pts;
                 try {
                     pts = await lol.getUserMastery(u, champ);
@@ -55,6 +57,7 @@ async function getLeaderBoard(members, champ) {
                     pts = 0;
                 }
 
+                // return relevant data/entry
                 resolve({
                     id: u, pts: pts,
                     name: members.get(u).user.username
@@ -63,8 +66,9 @@ async function getLeaderBoard(members, champ) {
             });
 
 
-        // fill an array with datapoint requests
+        // fill an array with datapoint request promises
         const req = users.map(user =>
+            // .catch gives them zero points on error
             getDataPoint(user).catch(e => {
                 console.error("lb err..");
                 console.error(e);
@@ -165,6 +169,11 @@ async function postLeaderBoard() {
         // corki champ icon
         thumbnail: {
            url: "https://raw.githubusercontent.com/dvtate/dvtate.github.io/master/imgs/corki.png"
+        }
+
+        // more linked accounts == more lag (w/e)
+        footer: {
+            text: "To get on the board use `-lol add <region> <summoner>` to link your account"
         }
     }});
 

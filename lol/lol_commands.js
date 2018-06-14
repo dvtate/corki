@@ -221,6 +221,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 return;
             }
 
+            msg.channel.send("This could take a few seconds");
+
             lol_lb.getLeaderBoard(msg.guild.members, champID).then(data => {
                 msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
 
@@ -250,8 +252,9 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                     msg.channel.send("invalid champion name (make sure to remove spaces)");
                     return;
                 }
+                msg.channel.send("This could take a few seconds");
 
-                lol_lb.getLeaderBoard(msg.client.members, champID).then(data => {
+                lol_lb.getLeaderBoard(msg.client.users, champID).then(data => {
                     msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
 
                     let time = process.hrtime(timer);
@@ -556,11 +559,12 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         }
     },
 
-    {
+    { // summary of user champion mastery levels
         condition: msg => msg.content.match(/^-lol masteries(?:$|\s)/),
         act: async msg => {
             logCmd(msg, "got mastery info");
 
+            // get their main account
             let userObj = lol.getUserData(msg.author.id);
 
             if (!userObj) {
