@@ -19,9 +19,9 @@ module.exports.configure = async function () {
 
 }
 
-// cooldown of approximately a week/5 days
+// cooldown of approximately a week
 function cd() {
-    return Date.now() - fs.readFileSync(`${process.env.HOME}/.corki/lb/cd`) > 500000000;
+    return Date.now() - fs.readFileSync(`${process.env.HOME}/.corki/lb/cd`) > 604800000;
 }
 function resetcd(){
     fs.writeFileSync(`${process.env.HOME}/.corki/lb/cd`, Date.now());
@@ -169,7 +169,7 @@ async function postLeaderBoard() {
         // corki champ icon
         thumbnail: {
            url: "https://raw.githubusercontent.com/dvtate/dvtate.github.io/master/imgs/corki.png"
-        }
+       },
 
         // more linked accounts == more lag (w/e)
         footer: {
@@ -180,6 +180,7 @@ async function postLeaderBoard() {
 
     // so that we can calculate deltas for next week too
     writePrevData(data);
+
     // don't post again until next weeek
     resetcd();
 }

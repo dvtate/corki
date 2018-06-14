@@ -59,7 +59,7 @@ module.exports.serverNames = {
 // edit when new champs come out
 // this might actually have flaws, maybe ``[{ key, id }, {}, ...]` better
 module.exports.champIDs = {
-	"wukong" : 62, "jax" : 24, "fiddlesticks" : 9, "shaco" : 35, "warwick" : 19, "ww" : 19
+	"wukong" : 62, "jax" : 24, "fiddlesticks" : 9, "shaco" : 35, "warwick" : 19, "ww" : 19,
     "xayah" : 498, "nidalee" : 76, "zyra" : 143, "kled" : 240, "brand" : 63, "rammus" : 33,
     "illaoi" : 420, "corki" : 42, "braum" : 201, "darius" : 122, "tryndamere" : 23,
     "missfortune" : 21, "yorick" : 83, "xerath" : 101, "sivir" : 15, "riven" : 92,
@@ -89,16 +89,23 @@ module.exports.champIDs = {
 };
 
 // inverse of champIDs
+/*
 module.exports.champNames = {
     62: "Wukong", 24 : "Jax", 9 : "Fiddlesticks", 35 : "Shaco", 19 : "Warwick",
     498 : "Xayah", 76 : "Nidalee", 143 : "Zyra", 240 : "Kled", 63 : "Brand",
     33 : "Rammus", 420 : "Illaoi", 42 : "Corki", 201 : "Braum", 122 : "Darius",
     23 : "Tryndamere", 21 : "Miss Fortune", 83 : "Yorick", 101 : "Xerath",
     15 : "Sivir", 92 : "Riven", 61 : "Orianna", 41 : "Gangplank", 54 : "Malphite",
-    78 : "Poppy", 127 : "Lissandra", 126 : "Jayce",
+    78 : "Poppy", 127 : "Lissandra", 126 : "Jayce", 20 : "Nunu", 48 : "Trundle",
+    30 : "Karthus", 104 : "Graves", 142 : "Zoe", 150 : "Gnar", 99 : "Lux",
+    102 : "Shyvana", 58 : "Renekton", 114 : "Fiora", 222 : "Jinx", 429 : "Kalista",
+    105 : "Fizz", 38 : "Kassadin", 37 : "Sona", 39 : "Irelia", 112 : "Viktor",
+    497 : "Rakan",
 };
-//for (key in module.exports.champIDs)
-//    module.exports.champNames[module.exports.champIDs[key]] = key;
+*/
+module.exports.champNames = {};
+for (key in module.exports.champIDs)
+    module.exports.champNames[module.exports.champIDs[key]] = key;
 
 // both sides of the dict
 module.exports.champs = Object.assign({}, module.exports.champIDs, module.exports.champNames);

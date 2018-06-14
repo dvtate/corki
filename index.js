@@ -50,7 +50,7 @@ global.client.on('message', async msg => {
 	for (let i = 0; i < commands.length; i++)
 		// if it matches, run it
 		if (commands[i].condition(msg)) {
-			commands[i].act(msg).then(() => {})
+			commands[i].act(msg)
 				.catch(e => {
 					msg.channel.send(`Sorry, that errored please send a \`-bug\` report\n\`\`\`\n${e.stack}\n\`\`\``);
 					require("./bot_admins.js").sendBugReport(msg, ` Error:\n\`\`\`\n${e.stack}\n\`\`\``);

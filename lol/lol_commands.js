@@ -252,6 +252,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                     msg.channel.send("invalid champion name (make sure to remove spaces)");
                     return;
                 }
+                
                 msg.channel.send("This could take a few seconds");
 
                 lol_lb.getLeaderBoard(msg.client.users, champID).then(data => {
