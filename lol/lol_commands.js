@@ -99,7 +99,7 @@ module.exports = [
     { // add acct
         condition: msg => msg.content.match(/^-lol add (\S+) (.+)/),
         act: async function (msg) {
-            logCmd(msg, "linked an LoL acct (-add-lol)");
+            logCmd(msg, "linked an LoL acct (-lol add)");
 
             const match = msg.content.match(/-lol add (\S+) (.+)/);
             const server = teemo.serverNames[match[1].toLowerCase()];
@@ -117,6 +117,12 @@ module.exports = [
 
         }
 
+    },
+
+    { // -lol add help
+        condition: msg => msg.content.match(/^-lol add(?:$|\s)/),
+        act: msg => msg.channel.send("To add your account you need to include your \
+region and summoner name\nFor example: `-lol add na ridderhoff`")
     },
 
     { // reset accounts list
@@ -252,7 +258,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                     msg.channel.send("invalid champion name (make sure to remove spaces)");
                     return;
                 }
-                
+
                 msg.channel.send("This could take a few seconds");
 
                 lol_lb.getLeaderBoard(msg.client.users, champID).then(data => {
