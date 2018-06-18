@@ -34,9 +34,9 @@ module.exports = [
                 teemo.riot.get(server, "championMastery.getChampionMastery", summoner.id, champ).then(data => {
                     // send mastery to channel
                     if (!data)
-                        msg.channel.send(`${summoner.name} has never played ${match[1].toLowerCase()}`);
+                        msg.channel.send(`${summoner.name} has never played ${teemo.champs[champ]}`);
                     else
-                        msg.channel.send(`${summoner.name} has mastery level ${data.championLevel} with ${data.championPoints} points on ${match[1].toLowerCase()}`);
+                        msg.channel.send(`${summoner.name} has mastery level ${data.championLevel} with ${data.championPoints} points on ${teemo.champs[champ]}`);
                 });
 
             }).catch(err => {
@@ -59,9 +59,9 @@ module.exports = [
             }
 
             lol.getUserMastery(id, champID).then(pts => {
-                msg.channel.send(`<@!${id}> has ${pts} points on ${champName}`);
+                msg.channel.send(`<@!${id}> has ${pts} points on ${teemo.champs[champID]}`);
             }).catch(err => {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add <region> <summonername>` to link their account(s)");
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
             });
 
         }
@@ -80,9 +80,9 @@ module.exports = [
             }
 
             lol.getUserMastery(msg.author.id, champID).then(pts => {
-                msg.channel.send(`You have ${pts} points on ${champName}`);
+                msg.channel.send(`You have ${pts} points on ${teemo.champs[champID]}`);
             }).catch(err => {
-                msg.channel.send("you don't have any linked accounts. you should use `-lol add <region> <summonername>` to link your account(s)");
+                msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
             });
         }
 
@@ -145,7 +145,7 @@ region and summoner name\nFor example: `-lol add na ridderhoff`")
             const userObj = lol.getUserData(id);
 
             if (!userObj) {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add <region> <summonername>` to link their account(s)");
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
                 return;
             }
             let str = `<@!${id}> has ${userObj.accounts.length} accounts:\n`;
@@ -164,7 +164,7 @@ region and summoner name\nFor example: `-lol add na ridderhoff`")
             logCmd(msg, "listed lol accts. (-list-lol)")
             let userObj = lol.getUserData(msg.author.id);
             if (!userObj) {
-                msg.channel.send("You don't have any linked accounts. use `-lol add <region> <summonername>` to link your account(s)");
+                msg.channel.send("You don't have any linked accounts. use `-lol add` to link your account(s)");
                 return;
             }
             let str = `${msg.author} has ${userObj.accounts.length} accounts:\n`;
@@ -316,7 +316,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let userObj = lol.getUserData(id);
 
             if (!userObj) {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add <region> <summonername>` to link their account(s)");
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
                 return;
             }
 
@@ -338,7 +338,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let userObj = lol.getUserData(msg.author.id);
 
             if (!userObj) {
-                msg.channel.send("You don't have any linked accounts. You should use `-lol add <region> <summonername>` to link your account(s)");
+                msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
                 return;
             }
 
@@ -393,30 +393,30 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                     if (e.champ2_id == champ2id) {
                         foundMatchup = true;
                         msg.channel.send({ embed: {
-                            title: `${match[1]} vs ${match[2]} as ${e.role.toLowerCase()}`,
-                            description: `According to [champion.gg](https://champion.gg), ${match[1]} has a weighed score of ${Math.round(e.champ1.weighedScore)} and ${match[2]} has a weighedScore of ${Math.round(e.champ2.weighedScore)}.`,
+                            title: `${teemo.champs[champ1id]} vs ${teemo.champs[champ2id]} as ${e.role.toLowerCase()}`,
+                            description: `According to [champion.gg](https://champion.gg), ${teemo.champs[champ1id]} has a weighed score of ${Math.round(e.champ1.weighedScore)} and ${teemo.champs[champ2id]} has a weighedScore of ${Math.round(e.champ2.weighedScore)}.`,
                             fields: [
                                 {
                                     name: "Income",
                                     value:
-`**${match[1]}:** ${Math.round(e.champ1.goldEarned)} g, ${Math.round(e.champ1.minionsKilled)} cs, ${Math.round(e.champ1.neutralMinionsKilledTeamJungle)} jungle camps
-**${match[2]}:** ${Math.round(e.champ2.goldEarned)} g, ${Math.round(e.champ2.minionsKilled)} cs, ${Math.round(e.champ2.neutralMinionsKilledTeamJungle)} jungle camps`
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.goldEarned)} g, ${Math.round(e.champ1.minionsKilled)} cs, ${Math.round(e.champ1.neutralMinionsKilledTeamJungle)} jungle camps
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.goldEarned)} g, ${Math.round(e.champ2.minionsKilled)} cs, ${Math.round(e.champ2.neutralMinionsKilledTeamJungle)} jungle camps`
                                 }, {
                                     name: "KDA",
                                     // todo add killingSpreees
                                     value:
-`**${match[1]}:** ${Math.round(e.champ1.kills * 1000) / 1000} / ${Math.round(e.champ1.deaths * 1000) / 1000} / ${Math.round(e.champ1.assists * 1000) / 1000}
-**${match[2]}:** ${Math.round(e.champ2.kills * 1000) / 1000} / ${Math.round(e.champ2.deaths * 1000) / 1000} / ${Math.round(e.champ2.assists * 1000) / 1000}`
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.kills * 1000) / 1000} / ${Math.round(e.champ1.deaths * 1000) / 1000} / ${Math.round(e.champ1.assists * 1000) / 1000}
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.kills * 1000) / 1000} / ${Math.round(e.champ2.deaths * 1000) / 1000} / ${Math.round(e.champ2.assists * 1000) / 1000}`
                                 }, {
                                     name: "Damage",
                                     value:
-`**${match[1]}:** ${Math.round(e.champ1.totalDamageDealtToChampions)} damage dealt to champions
-**${match[2]}:** ${Math.round(e.champ2.totalDamageDealtToChampions)} damage dealt to champions`
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.totalDamageDealtToChampions)} damage dealt to champions
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.totalDamageDealtToChampions)} damage dealt to champions`
                                 }, {
                                     name: "Winrates",
                                     value:
-`**${match[1]}:** ${Math.round(e.champ1.winrate * 100 * 1000) / 1000}% winrate (${e.champ1.wins} wins)
-**${match[2]}:** ${Math.round(e.champ2.winrate * 100 * 1000) / 1000}% winrate (${e.champ2.wins} wins)`
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.winrate * 100 * 1000) / 1000}% winrate (${e.champ1.wins} wins)
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.winrate * 100 * 1000) / 1000}% winrate (${e.champ2.wins} wins)`
                                 }
 
                             ]
@@ -495,32 +495,32 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                     if (e._id.champ2_id == champ2id) {
                         foundMatchup = true;
                         msg.channel.send({ embed: {
-                            title: `${match[2]} vs ${match[3]} as ${e.role.toLowerCase()}`,
-                            description: `According to [champion.gg](https://champion.gg), ${match[2]} has a weighed score of ${Math.round(e.champ1.weighedScore)} and ${match[3]} has a weighedScore of ${Math.round(e.champ2.weighedScore)}.`,
+                            title: `${teemo.champs[champ1id]} vs ${teemo.champs[champ2id]} as ${e.role.toLowerCase()}`,
+                            description: `According to [champion.gg](https://champion.gg), ${teemo.champs[champ1id]} has a weighed score of ${Math.round(e.champ1.weighedScore)} and ${teemo.champs[champ2id]} has a weighedScore of ${Math.round(e.champ2.weighedScore)}.`,
                             fields: [
                                 {
                                     name: "Income",
                                     value:
-`**${match[2]}:** ${Math.round(e.champ1.goldEarned)} g, ${Math.round(e.champ1.minionsKilled)} cs, ${Math.round(e.champ1.neutralMinionsKilledTeamJungle)} jungle camps
-**${match[3]}:** ${Math.round(e.champ2.goldEarned)} g, ${Math.round(e.champ2.minionsKilled)} cs, ${Math.round(e.champ2.neutralMinionsKilledTeamJungle)} jungle camps`
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.goldEarned)} g, ${Math.round(e.champ1.minionsKilled)} cs, ${Math.round(e.champ1.neutralMinionsKilledTeamJungle)} jungle camps
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.goldEarned)} g, ${Math.round(e.champ2.minionsKilled)} cs, ${Math.round(e.champ2.neutralMinionsKilledTeamJungle)} jungle camps`
                                 }, {
                                     name: "KDA",
                                     // todo add killingSpreees
                                     value:
-`**${match[2]}:** ${Math.round(e.champ1.kills * 1000) / 1000} / ${Math.round(e.champ1.deaths * 1000) / 1000} / ${Math.round(e.champ1.assists * 1000) / 1000}
-**${match[3]}:** ${Math.round(e.champ2.kills * 1000) / 1000} / ${Math.round(e.champ2.deaths * 1000) / 1000} / ${Math.round(e.champ2.assists * 1000) / 1000}`
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.kills * 1000) / 1000} / ${Math.round(e.champ1.deaths * 1000) / 1000} / ${Math.round(e.champ1.assists * 1000) / 1000}
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.kills * 1000) / 1000} / ${Math.round(e.champ2.deaths * 1000) / 1000} / ${Math.round(e.champ2.assists * 1000) / 1000}`
 
                                 }, {
                                     name: "Damage",
                                     value:
-`**${match[2]}:** ${Math.round(e.champ1.totalDamageDealtToChampions)} damage dealt to champions
-**${match[3]}:** ${Math.round(e.champ2.totalDamageDealtToChampions)} damage dealt to champions`
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.totalDamageDealtToChampions)} damage dealt to champions
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.totalDamageDealtToChampions)} damage dealt to champions`
 
                                 }, {
                                     name: "Winrates",
                                     value:
-`**${match[2]}:** ${Math.round(e.champ1.winrate * 100 * 1000) / 1000}% winrate (${e.champ1.wins} wins)
-**${match[3]}:** ${Math.round(e.champ2.winrate * 100 * 1000) / 1000}% winrate (${e.champ2.wins} wins)`
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.winrate * 100 * 1000) / 1000}% winrate (${e.champ1.wins} wins)
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.winrate * 100 * 1000) / 1000}% winrate (${e.champ2.wins} wins)`
                                 }
                             ]
                         }});
@@ -552,7 +552,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             teemo.champgg.get('champion.getChampion', champ).then(data =>
                 data.forEach(d =>
-                    msg.channel.send(`${champName} ${d.role.trim().toLowerCase()} has a winrate of ${Math.round(d.winRate * 10000) / 100}`)
+                    msg.channel.send(`${teemo.champs[champ]} ${d.role.trim().toLowerCase()} has a winrate of ${Math.round(d.winRate * 10000) / 100}`)
                 )
             );
         }
@@ -575,7 +575,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let userObj = lol.getUserData(msg.author.id);
 
             if (!userObj) {
-                msg.channel.send("You don't have any linked accounts. You should use `-lol add <region> <summonername>` to link your account(s)");
+                msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
                 return;
             }
 
@@ -609,6 +609,104 @@ last played: ${Date(data[i].lastPlayTime)}`
 
         }
 
+    },
+
+
+    {
+        condition: msg => msg.content.match(/^-lol (?:mastery7|m7|mastery seven)(?:$|\s)/),
+        act: async msg => {
+            logCmd(msg, "checked m7 champs");
+
+
+            // get their main account
+            let userObj = lol.getUserData(msg.author.id);
+
+            if (!userObj) {
+                msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+                return;
+            }
+
+            let champs = [];
+
+            /*
+            [
+                {
+                    id : champ id,
+                    pts : total pts,
+                    accts : num accts w/ m7
+                }
+            ]
+            */
+
+            // fill a list with mastery promise requests
+            let dreqs = userObj.accounts.map(a => teemo.riot.get(a.server, "championMastery.getAllChampionMasteries", a.id));
+            // request them all at once
+            Promise.all(dreqs).then(accts => {
+
+                accts.forEach(data => {
+                    // for each champ on given acct
+                    for (let i = 0; i < data.length; i++) {
+                        // do they already have m7 on another acct or something
+                        let entry = champs.findIndex(e => { return e.id == data[i].championId; });
+
+
+                        // skip useless data
+                        if (data[i].championLevel < 7 && entry == -1)
+                            continue;
+
+                        // no entry for this champ yet
+                        if (entry == -1) {
+                            champs.push({
+                                id: data[i].championId,
+                                pts: data[i].championPoints,
+                                accts: 1
+                            });
+
+                        // append to prexisting entry
+                        } else {
+                            champs[entry].accts++;
+                            champs[entry].pts += data[i].championPoints;
+                        }
+
+                    }
+                });
+
+                // generate summary
+                let summary = "**Mastery 7 Champs:**\n";
+                champs.forEach(champ => {
+                    summary += `**${teemo.champs[champ.id]}:** ${champ.pts} points (${champ.accts} accounts)\n`;
+                });
+
+                // send summary or if they dont have m7 tell them
+                if (champs.length == 0)
+                    msg.channel.send("You have no m7 champs");
+                else
+                    msg.channel.send(summary);
+
+
+            });
+
+        }
+
+    },
+
+
+
+    { // info for latest game
+        condition: msg => msg.content.match(/^-lol lastgame/),
+        act: async msg => {
+
+            logCmd(msg, "checked last game stats");
+
+
+            // get their main account
+            let userObj = lol.getUserData(msg.author.id);
+
+            if (!userObj) {
+                msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+                return;
+            }
+        }
     }
 
 ];
