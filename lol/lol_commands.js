@@ -245,31 +245,31 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
     { // mastery leaderboard for all of the bot's users
         condition: msg => msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/),
-        act: function (msg) {
+        act: async function (msg) {
+            logCmd(msg, "generated leaderboard");
 
-                let timer = process.hrtime();
-                logCmd(msg, "generated leaderboard");
+            let timer = process.hrtime();
 
-                const champName = msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/)[1].replace(/\s/g, '');
-                const champID = teemo.champIDs[champName.toLowerCase()];
+            const champName = msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/)[1].replace(/\s/g, '');
+            const champID = teemo.champIDs[champName.toLowerCase()];
 
 
-                if (!champID) {
-                    msg.channel.send("invalid champion name (make sure to remove spaces)");
-                    return;
-                }
+            if (!champID) {
+                msg.channel.send("invalid champion name (make sure to remove spaces)");
+                return;
+            }
 
-                msg.channel.send("This could take a few seconds");
+            msg.channel.send("This could take a few seconds");
 
-                lol_lb.getLeaderBoard(msg.client.users, champID).then(data => {
-                    msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
+            lol_lb.getLeaderBoard(msg.client.users, champID).then(data => {
+                msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
 
-                    let time = process.hrtime(timer);
-                    let ns_per_s = 1e9;
-                    time = (time[0] * ns_per_s + time[1]) / (ns_per_s)
+                let time = process.hrtime(timer);
+                let ns_per_s = 1e9;
+                time = (time[0] * ns_per_s + time[1]) / ns_per_s;
 
-                    msg.channel.send(`that took ${time} seconds to complete`);
-                });
+                msg.channel.send(`that took ${time} seconds to complete`);
+            });
 
         }
 
