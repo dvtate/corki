@@ -104,11 +104,11 @@ module.exports = [
                         name: "`-lol main <number>`",
                         value: "tell corki which account is your main account"
                     }, {
-                        name: "`-lol mastery <champname> [<@mention> | <region> <summoner name>]`",
-                        value: "show how many mastery points you, a @mention'd user, or a specific summoner has on a champion (`-help lol mastery` for more)"
-                    }, {
                         name: "`-lol masteries`",
                         value: "show your top 10 mastery champs"
+                    }, {
+                        name: "`-lol mastery <champname> [<@mention> | <region> <summoner name>]`",
+                        value: "show how many mastery points you, a @mention'd user, or a specific summoner has on a champion (`-help lol mastery` for more)"
                     }, {
                         name: "`-lol mastery7`",
                         value: "list your mastery 7 champs"
