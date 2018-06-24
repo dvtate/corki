@@ -60,7 +60,8 @@ async function getLeaderBoard(members, champ) {
                 // return relevant data/entry
                 resolve({
                     id: u, pts: pts,
-                    name: members.get(u).user.username
+                    name: members.get(u).user ?
+                        members.get(u).user.username : members.get(u).username
                 });
 
             });
