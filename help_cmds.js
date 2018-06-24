@@ -107,6 +107,12 @@ module.exports = [
                         name: "`-lol mastery <champname> [<@mention> | <region> <summoner name>]`",
                         value: "show how many mastery points you, a @mention'd user, or a specific summoner has on a champion (`-help lol mastery` for more)"
                     }, {
+                        name: "`-lol masteries`",
+                        value: "show your top 10 mastery champs"
+                    }, {
+                        name: "`-lol mastery7`",
+                        value: "list your mastery 7 champs"
+                    }, {
                         name: "`-lol matchup [role] <champ1name> <champ2name>`",
                         value: "show matchup statistics for given champions"
                     }, {
@@ -121,7 +127,7 @@ module.exports = [
                     }
                 ],
 
-                timestamp: "2018-05-27T20:04:50.607Z",
+                timestamp: "2018-06-24",
 
                 footer: {
                     text: "Corki - corki.js.org"

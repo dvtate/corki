@@ -57,14 +57,14 @@ module.exports = [
 
     { // timezone convert
 
-        condition: msg => msg.content.match(/^\-timezone (.+)/),
+        condition: msg => msg.content.match(/^\-(?:timezone|tz) (.+)/),
 
         act: async function (msg) {
 
 
             logCmd(msg, "/timezone'd");
 
-            const match = msg.content.match(/^\-timezone (.+)/)[1];
+            const match = msg.content.match(/^\-(?:timezone|tz) (.+)/)[1];
 
             let tz;
 

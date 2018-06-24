@@ -14,7 +14,7 @@ module.exports = [
     { // ping
 
         // returns true if command fits
-        condition: msg => msg.content.match(/^\-ping/),
+        condition: msg => msg.content.match(/^-ping/),
 
         // run to perform command
         act: async msg => {
@@ -24,11 +24,27 @@ module.exports = [
     },
 
     { // generate an error
-        condition: msg => msg.content.match(/^\-err (.+)/),
+        condition: msg => msg.content.match(/^-err (.+)/),
 
         act: async msg => {
             logCmd(msg, "-err'd");
-            throw new Error(msg.content.match(/^\-err (.+)/)[1]);
+            throw new Error(msg.content.match(/^-err (.+)/)[1]);
+        }
+    },
+
+    { // expose raw message content
+        condition: msg => msg.content.match(/^-deformat (.+)/),
+        act: async msg => {
+            logCmd(msg, "-deformat'd text");
+            msg.channel.send(`\`${msg.content.match(/^-deformat (.+)/)[1]}\``);
+        }
+    },
+
+    { // opposite of deformat
+        condition: msg => msg.content.match(/^-reformat `(.+)`/),
+        act: async msg => {
+            logCmd(msg, "-reformat'd text");
+            msg.channel.send(msg.content.match(/^-reformat `(.+)`/)[1]);
         }
     },
 
