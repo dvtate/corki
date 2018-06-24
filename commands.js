@@ -152,6 +152,30 @@ const c_lol = [
 <kbd>-lol matchup &lt;champ1-name> &lt;champ2-name></kbd>: all matchups
         `,
         example: "<kbd>-lol matchup mid zed yasuo</kbd><br/><kbd>-lol matchup lucian zed</kbd><br/><kbd>-lol matchup anivia vs. corki</kbd>"
+    }, {
+        name: "-lol masteries",
+        usage: "<p>Show top 10 mastered champions<p>",
+        args: `
+        <kbd>-lol masteries</kbd>: info for all of your accounts<br/>
+        <kbd>-lol masteries @mention</kbd>: info for @mention'd user's account<br/>
+        <kbd>-lol masteries &lt;server-name> &lt;summoner-name></kbd>: info for a specific summoner
+        <ul><li>for a list of server names use <code>lol -servers</code></li></ul>
+        `,
+        example: `<kbd>-lol masteries</kbd><br/>
+<kbd>-lol masteries @testuser</kbd><bd/>
+<kbd>-lol masteries kr hide on bush</kbd>`
+    }, {
+        name: "-lol mastery7",
+        usage: "<p>List mastery seven champs</p>",
+        args: `
+        <kbd>-lol mastery7</kbd>: info for all of your accounts<br/>
+        <kbd>-lol mastery7 @mention</kbd>: info for @mention'd user's account<br/>
+        <kbd>-lol mastery7 &lt;server-name> &lt;summoner-name></kbd>: info for a specific summoner
+        <ul><li>for a list of server names use <code>lol -servers</code></li></ul>
+        `,
+        example: `<kbd>-lol mastery7</kbd><br/>
+<kbd>-lol m7 @testuser</kbd><bd/>
+<kbd>-lol mastery7 kr hide on bush</kbd>`
     }
 
 ];
@@ -314,6 +338,21 @@ const c_devtools = [
         usage: "<p>Make a Riot API call through corki</p>",
         args: "api call arguments",
         example: "<kbd>-lol api na1 summoner.getBySummonerName ridderhoff</kbd>"
+    }, {
+        name: "-err",
+        usage: "<p>Make corki throw an error</p>",
+        args: "string to throw",
+        example: "<kbd>-err this is just a test</kbd>"
+    }, {
+        name: "-deformat",
+        usage: "<p>send raw text of given message<p>"
+        args: "message contents",
+        example: "<kbd>-deformat @testuser</kbd>"
+    }, {
+        name: "-reformat",
+        usage: "<p>format raw text into a message (opposite of -deformat)</p>",
+        args: "raw text enclosed in <kbd>`</kbd>'s`",
+        example: "<kbd>-reformat `<@332958493722017792>`</kbd>"
     }
 ];
 
