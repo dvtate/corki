@@ -162,7 +162,7 @@ const c_lol = [
         <ul><li>for a list of server names use <code>lol -servers</code></li></ul>
         `,
         example: `<kbd>-lol masteries</kbd><br/>
-<kbd>-lol masteries @testuser</kbd><bd/>
+<kbd>-lol masteries @testuser</kbd><br/>
 <kbd>-lol masteries kr hide on bush</kbd>`
     }, {
         name: "-lol mastery7",
@@ -174,7 +174,7 @@ const c_lol = [
         <ul><li>for a list of server names use <code>lol -servers</code></li></ul>
         `,
         example: `<kbd>-lol mastery7</kbd><br/>
-<kbd>-lol m7 @testuser</kbd><bd/>
+<kbd>-lol m7 @testuser</kbd><br/>
 <kbd>-lol mastery7 kr hide on bush</kbd>`
     }
 
@@ -351,7 +351,7 @@ const c_devtools = [
     }, {
         name: "-reformat",
         usage: "<p>format raw text into a message (opposite of -deformat)</p>",
-        args: "raw text enclosed in <kbd>`</kbd>'s`",
+        args: "raw text enclosed in <kbd>`</kbd>'s",
         example: "<kbd>-reformat `<@332958493722017792>`</kbd>"
     }
 ];
