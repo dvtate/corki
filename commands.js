@@ -345,7 +345,7 @@ const c_devtools = [
         example: "<kbd>-err this is just a test</kbd>"
     }, {
         name: "-deformat",
-        usage: "<p>send raw text of given message<p>"
+        usage: "<p>send raw text of given message<p>",
         args: "message contents",
         example: "<kbd>-deformat @testuser</kbd>"
     }, {
