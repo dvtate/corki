@@ -44,7 +44,7 @@ commands = commands.concat(require("./help_cmds.js"));
 //commands.concat(require("./.js");
 
 // message event listener
-global.client.on('message', async msg => {
+global.client.on("message", async msg => {
 
 	// check each possible command
 	for (let i = 0; i < commands.length; i++)
@@ -60,6 +60,12 @@ global.client.on('message', async msg => {
 			break; // we're done here
 		}
 
+});
+
+// something broke
+global.client.on("error", async e => {
+	require("./bot_admins.js").sendBugReport(msg, `Client Error:\n\`\`\`\n${e.stack}\n\`\`\``);
+	console.error(`Client Error: ${e.stack}`);
 });
 
 // welcome new members to the server
