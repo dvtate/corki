@@ -59,7 +59,6 @@ function checkin(server) {
 
         let keys = Object.keys(rule.pts_roles);
         keys.sort((a, b) => b - a);
-        console.log(keys);
         let roles = keys.map(k => rule.pts_roles[k]);
 
         let members = Array.from(guild.members);
@@ -108,6 +107,6 @@ function checkin(server) {
 // 2 min checkin intervals
 function refresh() {
     checkin("252833520282501122"); // corkimains server id
-    setTimeout(refresh, 20000000); // every 2 mins
+    setTimeout(refresh, 20000000); // a few times per day
 }
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
