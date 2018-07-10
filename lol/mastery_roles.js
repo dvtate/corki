@@ -108,6 +108,6 @@ function checkin(server) {
 // 2 min checkin intervals
 function refresh() {
     checkin("252833520282501122"); // corkimains server id
-    setTimeout(refresh, 50000); // every 2 mins
+    setTimeout(refresh, 20000000); // every 2 mins
 }
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
