@@ -80,7 +80,7 @@ function checkin(server) {
                 if (mastery.pts > keys[i]) {
                     let role = guild.roles.find("name", roles[i]);
                     // if they dont already have this role
-                    if (!member[1]._roles.includes(role)) {
+                    if (!member[1]._roles.includes(role.id)) {
                         removeRoles(server, member[0], roles);
                         member[1].addRole(role);
 
