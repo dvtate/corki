@@ -185,7 +185,7 @@ region and summoner name\nFor example: `-lol add na ridderhoff`")
         act: async function (msg) {
             logCmd(msg, "modified their main account");
             let userObj = lol.getUserData(msg.author.id);
-            userObj.main = msg.content.match(/^-main-lol ([0-9])/)[1];
+            userObj.main = msg.content.match(/^-lol main ([0-9])/)[1];
             lol.setUserData(msg.author.id, userObj);
             msg.channel.send("main account updated");
         }
