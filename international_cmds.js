@@ -6,16 +6,32 @@ module.exports = [
 
     { // currency exchange
         condition: msg => msg.content.match(/^\-exchange ([0-9\.]+)\s?([a-zA-Z]{3})(?:\sto\s|\s)?([a-zA-Z]{3})(?:$|\s)/),
-        act: async function (msg) {
 
+        act: async function (msg) {
             const match = msg.content.match(/^\-exchange ([0-9\.]+)\s?([a-zA-Z]{3})(?:\sto\s|\s)?([a-zA-Z]{3})(?:$|\s)/);
+
             // currency conversion api
         	let exchange = require("open-exchange-rates"),
         		fx = require("money");
         	exchange.set({ app_id : "2e7a1b340cc64e4a838c5f28309805da" });
 
+            let triggered = false;
         	// get current exchange-rates
-        	exchange.latest(function() {
+        	exchange.latest(err => {
+
+                // idk why it double triggers
+                if (triggered)
+                    return;
+                else
+                    triggered = true;
+
+                if (err) {
+            		console.log("ERROR loading data from Open Exchange Rates API!");
+            		console.log(err);
+
+            		return false;
+            	}
+
         		// Apply exchange rates and base rate to money/fx library object:
         		fx.rates = exchange.rates;
         		fx.base	= exchange.base;

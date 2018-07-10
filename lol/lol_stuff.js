@@ -90,17 +90,19 @@ function getUserMastery (id, champ) {
         }
 
         // total mastery from each of the user's accounts
-        let mastery = 0;
-
+        let ret = { pts : 0, lvl : 0 };
         for (let i = 0; i < data.accounts.length; i++) {
 
             const acctMastery = await teemo.riot.get(data.accounts[i].server,
                 "championMastery.getChampionMastery", data.accounts[i].id, champ);
 
-            mastery += !!acctMastery ? acctMastery.championPoints : 0;
+            ret.pts += !!acctMastery ? acctMastery.championPoints : 0;
+            ret.lvl = !!acctMastery && acctMastery.championLevel > ret.lvl
+                ? acctMastery.championLevel : ret.lvl;
+
         }
         // return total
-        resolve(mastery);
+        resolve(ret);
 
     });
 

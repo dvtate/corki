@@ -44,7 +44,7 @@ module.exports = [
         condition: msg => msg.content.match(/^-echo(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "-echo'd a message"),
-            msg.channel.send("-echo expected a message");
+            msg.channel.send("`-echo` expected a message");
         }
     },
 

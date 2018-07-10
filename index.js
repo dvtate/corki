@@ -60,6 +60,7 @@ global.client.on("message", async msg => {
 			break; // we're done here
 		}
 
+
 });
 
 // something broke
@@ -89,3 +90,5 @@ const token = `${require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key
 
 // Log bot in using token
 global.client.login(token);
+
+require("./lol/mastery_roles.js");

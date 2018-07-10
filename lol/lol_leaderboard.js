@@ -52,7 +52,7 @@ async function getLeaderBoard(members, champ) {
                 // get mastery pts
                 let pts;
                 try {
-                    pts = await lol.getUserMastery(u, champ);
+                    pts = (await lol.getUserMastery(u, champ)).pts;
                 } catch (e) {
                     pts = 0;
                 }

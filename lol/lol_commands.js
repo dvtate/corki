@@ -48,6 +48,7 @@ module.exports = [
     { // mastery of a different user
         condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/),
         act: async function (msg) {
+            logCmd(msg, "checked lol mastery");
             const match = msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/);
             const champName = match[1].toLowerCase();
             const champID = teemo.champIDs[champName];
@@ -58,8 +59,8 @@ module.exports = [
                 return;
             }
 
-            lol.getUserMastery(id, champID).then(pts => {
-                msg.channel.send(`<@!${id}> has ${pts} points on ${teemo.champs[champID]}`);
+            lol.getUserMastery(id, champID).then(data => {
+                msg.channel.send(`<@!${id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`);
             }).catch(err => {
                 msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
             });
@@ -71,6 +72,7 @@ module.exports = [
     { // self mastery of a champ
         condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+)/),
         act: async function (msg) {
+            logCmd(msg, "checked lol mastery");
             const champName = msg.content.match(/^-(?:mastery|lol mastery) (\S+)/)[1].toLowerCase();
             const champID =  teemo.champIDs[champName];
 
@@ -79,9 +81,10 @@ module.exports = [
                 return;
             }
 
-            lol.getUserMastery(msg.author.id, champID).then(pts => {
-                msg.channel.send(`You have ${pts} points on ${teemo.champs[champID]}`);
+            lol.getUserMastery(msg.author.id, champID).then(data => {
+                msg.channel.send(`<@!${msg.author.id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`);
             }).catch(err => {
+                console.log(err);
                 msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
             });
         }
