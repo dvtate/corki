@@ -58,7 +58,8 @@ function checkin(server) {
     rules.forEach(rule => {
 
         let keys = Object.keys(rule.pts_roles);
-        keys.sort((a, b) => a < b);
+        keys.sort((a, b) => parseInt(a) < parseInt(b));
+        console.log(keys);
         let roles = keys.map(k => rule.pts_roles[k]);
 
         let members = Array.from(guild.members);
@@ -68,7 +69,6 @@ function checkin(server) {
 
             // get mastery info
             try {
-                console.log(member)
                 var mastery = await lol.getUserMastery(member[0], rule.champ);
             } catch (e) {
                 return; // no registered accounts
@@ -78,15 +78,16 @@ function checkin(server) {
             for (let i = 0; i < keys.length; i++) {
                 // find qualifying role
                 if (mastery.pts > keys[i]) {
+                    let role = guild.roles.find("name", roles[i]);
                     // if they dont already have this role
-                    if (!member[1]._roles.includes(guild.roles.find("name", rule.pts_roles[keys[i]]))) {
+                    if (!member[1]._roles.includes(role)) {
                         removeRoles(server, member[0], roles);
-                        member[1].addRole(guild.roles.find("name", rule.pts_roles[keys[i]]));
+                        member[1].addRole(role);
 
                         // announce achievement
                         if (!!rule.announce)
                             guild.channels.find("name", rule.announce).send({ embed : {
-                                title: `${member[1].user.username} just got promoted to ${rule.pts_roles[keys[i]]}!, `,
+                                title: `${member[1].user.username} just got promoted to ${roles[i]}!, `,
                                 description: `They currently have ${mastery.pts} points`
                             }});
                     }
@@ -109,4 +110,4 @@ function refresh() {
     checkin("252833520282501122"); // corkimains server id
     setTimeout(refresh, 50000); // every 2 mins
 }
-setTimeout(refresh, 10000); // give 10 seconds for bot to start before checkingsetTimeout(checkin, 5000, "319518724774166531");
+setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
