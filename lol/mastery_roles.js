@@ -58,7 +58,7 @@ function checkin(server) {
     rules.forEach(rule => {
 
         let keys = Object.keys(rule.pts_roles);
-        keys.sort((a, b) => parseInt(a) < parseInt(b));
+        keys.sort((a, b) => b - a);
         console.log(keys);
         let roles = keys.map(k => rule.pts_roles[k]);
 
