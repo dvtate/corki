@@ -46,9 +46,11 @@ rules =
 
 
 function checkin(server) {
+    let rules;
+    let guild;
     try {
-        let rules = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${server}/mastery_roles_rules.json`));
-        const guild = global.client.guilds.get(server);
+        rules = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${server}/mastery_roles_rules.json`));
+        guild = global.client.guilds.get(server);
     } catch (e) {
         console.log("err: corki server not found");
         return;

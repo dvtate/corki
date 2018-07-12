@@ -8,8 +8,6 @@ const router = express.Router();
 
 
 
-const redirect = encodeURIComponent('http://localhost:5050/callback');
-
 
 // async/await error catcher
 const catchAsync = fn => (
@@ -23,12 +21,15 @@ const catchAsync = fn => (
 
 
 router.get("/login", (req, res) => {
-  res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}`);
+    global.portal_host = req.headers.host;
+    const redirect = encodeURIComponent(`http://${global.portal_host}/callback`);
+    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}`);
 });
 
 router.get("/callback", catchAsync(async (req, res) => {
     if (!req.query.code)
         throw new Error("NoCodeProvided");
+
 
     request.post({
         headers: {"Content-Type" : "application/x-www-form-urlencoded" },
@@ -39,15 +40,14 @@ router.get("/callback", catchAsync(async (req, res) => {
             "code" : req.query.code,
             "client_id" : global.CLIENT_ID,
             "client_secret" : global.CLIENT_SECRET,
-            "redirect_uri" : "https://localhost:5050/callback"
+            "redirect_uri" : `https://${global.portal_host}/callback`
         }
     }, async (error, response, body) => {
         if (error)
             throw error;
 
-
         let id = await bot.getUserID(body.access_token);
-        console.log(id);
+
         res .cookie("token", body.access_token, { maxAge: body.expires_in })
             .cookie("userid", id, { maxAge: body.expires_in })
             .redirect('/');

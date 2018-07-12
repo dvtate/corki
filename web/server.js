@@ -31,6 +31,6 @@ app.use('/', require('./pages/home'));
 app.use('/', require('./pages/login'));
 
 //
-app.listen(5050, () => {
+app.listen(5050, (req, res) => {
     console.info("portal running on port 5050");
 });
