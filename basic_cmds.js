@@ -109,7 +109,7 @@ module.exports = [
                 if (error) {
                     console.log(`-xkcd - error: ${error}`);
                     console.log(`    statusCode: ${response && response.statusCode}`);
-                    bot.sendMessage(msg.chat.id, "xkcd appears to be down right now :/", { reply_to_message_id : msg.message_id });
+                    msg.channel.send("xkcd appears to be down right now :/");
                     return;
                 }
 

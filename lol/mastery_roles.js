@@ -46,13 +46,13 @@ rules =
 
 
 function checkin(server) {
-    let rules = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${server}/mastery_roles_rules.json`));
-    if (!rules)
+    try {
+        let rules = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${server}/mastery_roles_rules.json`));
+        const guild = global.client.guilds.get(server);
+    } catch (e) {
+        console.log("err: corki server not found");
         return;
-
-    const guild = global.client.guilds.get(server);
-    if (!guild)
-        return;
+    }
 
     // proc each rule
     rules.forEach(rule => {
@@ -75,20 +75,25 @@ function checkin(server) {
 
             // see which role applies to user
             for (let i = 0; i < keys.length; i++) {
+
                 // find qualifying role
                 if (mastery.pts > keys[i]) {
+
                     let role = guild.roles.find("name", roles[i]);
+
                     // if they dont already have this role
                     if (!member[1]._roles.includes(role.id)) {
+                        // reset and replace associate roles
                         removeRoles(server, member[0], roles);
                         member[1].addRole(role);
 
                         // announce achievement
                         if (!!rule.announce)
                             guild.channels.find("name", rule.announce).send({ embed : {
-                                title: `${member[1].user.username} just got promoted to ${roles[i]}!, `,
+                                title: `${member[1].user.username} got promoted to ${roles[i]}!`,
                                 description: `They currently have ${mastery.pts} points`
                             }});
+
                     }
 
                     break;
@@ -104,9 +109,8 @@ function checkin(server) {
 
 
 
-// 2 min checkin intervals
 function refresh() {
     checkin("252833520282501122"); // corkimains server id
-    setTimeout(refresh, 20000000); // a few times per day
+    setTimeout(refresh, 10000000); // a few times per day
 }
-setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
+setTimeout(refresh, 20000); // give 10 seconds for bot to start before checking

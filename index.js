@@ -92,3 +92,4 @@ const token = `${require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key
 global.client.login(token);
 
 require("./lol/mastery_roles.js");
+require("./web/server.js");

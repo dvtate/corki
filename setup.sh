@@ -58,7 +58,30 @@ if [ ! -f $HOME/.corki/champgg_key ]; then
 fi
 
 
+if [ ! -f $HOME/.corki/client_id ]; then
+	# get token
+	printf "Enter client id: "
+	read CLIENT_ID
+
+	# put in file
+	printf "inserting client id into ~/.corki/client_id... "
+	echo $CLIENT_ID > $HOME/.corki/client_id
+	echo "done"
+fi
+
+
+if [ ! -f $HOME/.corki/client_secret ]; then
+	# get token
+	printf "Enter client secret: "
+	read CLIENT_SECRET
+
+	# put in file
+	printf "inserting client id into ~/.corki/client_secret... "
+	echo $CLIENT_SECRET > $HOME/.corki/client_secret
+	echo "done"
+fi
+
 # install dependencies
 echo "installing dependencies..."
-npm install --save discord.js node-datetime open-exchange-rates money time lunicode-creepify lunicode-tiny lunicode-flip lunicode-mirror rss-parser teemojs request circular-json
+npm install
 echo "installed dependencies"
