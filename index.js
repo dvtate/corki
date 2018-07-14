@@ -25,21 +25,16 @@ global.client.on("ready", () => {
 
 
 // set up our list of commands
-let commands = [];
-commands = commands.concat(require("./dev_cmds.js"));
-commands = commands.concat(require("./basic_cmds.js"));
-commands = commands.concat(require("./international_cmds.js"));
-commands = commands.concat(require("./text_cmds.js"));
-
-commands = commands.concat(require("./roles.js"));
-
-// LoL stuff
-commands = commands.concat(require("./lol/lol_commands.js"));
-// RSS feed used for reddit fwd
-commands = commands.concat(require("./rss/rss_cmds.js"));
-
-commands = commands.concat(require("./reactions.js"));
-commands = commands.concat(require("./help_cmds.js"));
+let commands = []
+	.concat(require("./dev_cmds.js"))
+	.concat(require("./basic_cmds.js"))
+	.concat(require("./international_cmds.js"))
+	.concat(require("./text_cmds.js"))
+	.concat(require("./roles.js"))
+	.concat(require("./lol/lol_commands.js"))
+	.concat(require("./rss/rss_cmds.js"))
+	.concat(require("./reactions.js"))
+	.concat(require("./help_cmds.js"))
 
 //commands.concat(require("./.js");
 
@@ -91,5 +86,8 @@ const token = `${require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key
 // Log bot in using token
 global.client.login(token);
 
+// lol champion mastery-based roles
 require("./lol/mastery_roles.js");
+
+// start web portal
 require("./web/server.js");

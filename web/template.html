@@ -1,0 +1,270 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" type="image/png" href="https://corki.js.org/Corkiporo.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Corki Portal ${this.title ? " - " + this.title : ""}</title>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" />
+        <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v2.3.7/dist/mini-default.min.css" />
+
+        <style>
+
+            body {
+                padding: 0; margin: 0;
+                font-family: 'Open Sans', Helvetica, sans-serif;
+
+                background-color: #2b2b30;
+                color: white;
+            }
+
+            /* headdings */
+            h1, h2, h3, h4, h5, h6 {
+                font-family: 'Open Sans Light', 'Open Sans', sans-serif;
+                font-weight: 100;
+            }
+
+            div#topbar {
+                background-color: #000;
+                padding: 5px;
+                height: 60px;
+                padding-right: 0;
+            }
+
+            div#topbar * {
+                height: 100%;
+            }
+            div#topbar > div > div {
+                text-align: right;
+                width: 100%;
+            }
+            div#topbar img.profilepic {
+                border-radius: 100%;
+            }
+            div {
+                /*border: 1px solid red;*/
+            }
+            div#user-dropdown {
+                background-color: #e0e0e0;
+                color: black;
+                padding-left: 20px;
+                display: none;
+            }
+
+            div#user-dropdown button {
+                background-color: #433233;
+                color: white;
+            }
+
+            div#user-dropdown button:hover {
+                background-color: #a01212;
+            }
+
+            form {
+                background-color: #2b2b30;
+                border: 0;
+            }
+
+
+            #submit-box {
+                float: right;
+                background-color: #476a8e;
+                border-radius: 2px;
+                margin: 15px;
+                box-shadow: 5px 10px #000;
+            }
+
+
+
+
+            /* */
+            div.div-table {
+                color: white;
+            }
+
+            div.div-table > div {
+                background-color: #555;
+                border-radius: 2px;
+            }
+
+            div.div-table div {
+                padding: 5px;
+                padding-left: 10px;
+                padding-bottom: 0;
+            }
+
+            div.div-table-headers {
+                background-color: #1a1a1a !important;
+                padding: 10px;
+            }
+
+            div.input-group {
+                padding-top: 0 !important;
+            }
+
+
+        </style>
+
+        <script>
+            function deleteAllCookies() {
+                var cookies = document.cookie.split(";");
+
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i];
+                    var eqPos = cookie.indexOf("=");
+                    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                }
+            }
+
+            function toggleUserDropdown() {
+                document.getElementById("user-dropdown").style.display =
+                    document.getElementById("user-dropdown").style.display == "block" ?
+                        "none" : "block";
+            }
+        </script>
+
+    </head>
+    <body>
+        <div class="row" id="topbar">
+            <div class="col-md-3">
+                <a href="/">
+                    <img src="https://b.thumbs.redditmedia.com/V8fcjDBXCWzITicr1z71uNHIkvhTR8aL7u233v8mANA.png" />
+                </a>
+            </div>
+            <div class="col-md-6">
+                <h2>${ this.title || "Web Portal" }</h2>
+            </div>
+            <div class="col-md-3">
+                <div onclick="toggleUserDropdown()">
+                    <img src="https://cdn.discordapp.com/avatars/253784341555970048/99e124fcae25408590e5a8ae70cbde61" class="profilepic" />
+                </div>
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-md-6 col-md-offset-6" id="user-dropdown">
+                Logged in as ${global.client.users.get(req.cookies.userid).username}.
+                <button onclick="deleteAllCookies()" >Logout</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"
+            <form action="/">
+                <fieldset><legend>Select a user</legend>
+                    <div class="input-group">
+                        <input list="users" name="userselect">
+                        <datalist id="users">
+                            <option value="ridderhoff#6333">
+                            <option value="robot#2323">
+                            <option value="steve#1214">
+                            <option value="nerd64#5852">
+                            <option value="stan#4449">
+                        </datalist>
+                        <label>Select a user</label>
+                    </div>
+
+                </fieldset>
+
+                <fieldset><legend>League of Legends Accounts</legend>
+                    <button>Import from Reddit</button>
+                    <button>Delete all</button>
+
+                    <div class="div-table">
+                        <div class="row div-table-headers">
+                            <div class="col-md-4">
+                                Region
+                            </div>
+
+                            <div class="col-md-4">
+                                Summoner
+                            </div>
+
+                            <div class="col-md-4">
+                                Actions
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                NA
+                            </div>
+
+                            <div class="col-md-4">
+                                ridderhoff
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input type="checkbox" id="del-0" class="lol-acct-del-cb" value="">
+                                    <label for="del-0">Delete</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <style>
+                    div.permissions-tree {
+                        padding: 5px;
+                    }
+                    div.permissions-tree ul {
+                        border-left: 1px solid grey;
+                    }
+                </style>
+                <fieldset>
+                    <legend>Permissions Tree</legend>
+                    Showing permissions for ${selected} moderator.
+                    <div class="permissions-tree" >
+                        <div class="input-group">
+                            <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                            <label for="del-na-ridderhoff">Unlimited Power</label>
+                        </div>
+                        <ul>
+                            <div class="input-group">
+                                <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                <label for="del-na-ridderhoff">Manage Server</label>
+                            </div>
+                            <ul>
+                                <div class="input-group">
+                                    <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                    <label for="del-na-ridderhoff">Manage Users</label>
+                                </div>
+                                <div class="input-group">
+                                    <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                    <label for="del-na-ridderhoff">Manage Roles</label>
+                                </div>
+                            </ul>
+
+                            <div class="input-group">
+                                <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                <label for="del-na-ridderhoff">Manage Bot</label>
+                            </div>
+                            <ul>
+                                <div class="input-group">
+                                    <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                    <label for="del-na-ridderhoff">Kick Users</label>
+                                </div>
+                                <div class="input-group">
+                                    <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                    <label for="del-na-ridderhoff">Ban Users</label>
+                                </div>
+                            </ul>
+                        </ul>
+                    </div>
+                </fieldset>
+
+                <span id="submit-box" class="row">
+                    <div class="col-md-6 border-right">
+                        <button>Reset</buton>
+                    </div><div class="col-md-6">
+                        <button>Apply</buton>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </body>
+</html>
