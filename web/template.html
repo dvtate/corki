@@ -78,32 +78,6 @@
 
 
 
-            /* */
-            div.div-table {
-                color: white;
-            }
-
-            div.div-table > div {
-                background-color: #555;
-                border-radius: 2px;
-            }
-
-            div.div-table div {
-                padding: 5px;
-                padding-left: 10px;
-                padding-bottom: 0;
-            }
-
-            div.div-table-headers {
-                background-color: #1a1a1a !important;
-                padding: 10px;
-            }
-
-            div.input-group {
-                padding-top: 0 !important;
-            }
-
-
         </style>
 
         <script>
@@ -150,120 +124,152 @@
         </div>
 
         <div class="row">
-            <div class="col-sm col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3"
-            <form action="/">
-                <fieldset><legend>Select a user</legend>
-                    <div class="input-group">
-                        <input list="users" name="userselect">
-                        <datalist id="users">
-                            <option value="ridderhoff#6333">
-                            <option value="robot#2323">
-                            <option value="steve#1214">
-                            <option value="nerd64#5852">
-                            <option value="stan#4449">
-                        </datalist>
-                        <label>Select a user</label>
-                    </div>
-
-                </fieldset>
-
-                <fieldset><legend>League of Legends Accounts</legend>
-                    <button>Import from Reddit</button>
-                    <button>Delete all</button>
-
-                    <div class="div-table">
-                        <div class="row div-table-headers">
-                            <div class="col-md-4">
-                                Region
-                            </div>
-
-                            <div class="col-md-4">
-                                Summoner
-                            </div>
-
-                            <div class="col-md-4">
-                                Actions
-                            </div>
-
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                NA
-                            </div>
-
-                            <div class="col-md-4">
-                                ridderhoff
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="input-group">
-                                    <input type="checkbox" id="del-0" class="lol-acct-del-cb" value="">
-                                    <label for="del-0">Delete</label>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </fieldset>
-
-                <style>
-                    div.permissions-tree {
-                        padding: 5px;
-                    }
-                    div.permissions-tree ul {
-                        border-left: 1px solid grey;
-                    }
-                </style>
-                <fieldset>
-                    <legend>Permissions Tree</legend>
-                    Showing permissions for ${selected} moderator.
-                    <div class="permissions-tree" >
+            <div class="col-sm col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                <form action="/">
+                    <fieldset><legend>Select a user</legend>
                         <div class="input-group">
-                            <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                            <label for="del-na-ridderhoff">Unlimited Power</label>
+                            <input list="users" name="userselect">
+                            <datalist id="users">
+                                <option value="ridderhoff#6333">
+                                <option value="robot#2323">
+                                <option value="steve#1214">
+                                <option value="nerd64#5852">
+                                <option value="stan#4449">
+                            </datalist>
+                            <label>Select a user</label>
                         </div>
-                        <ul>
+
+                    </fieldset>
+
+
+
+                    <style>
+
+                        /* */
+                        div.div-table {
+                            color: white;
+                        }
+
+                        div.div-table > div {
+                            background-color: #555;
+                            border-radius: 2px;
+                        }
+
+                        div.div-table div {
+                            padding: 5px;
+                            padding-left: 10px;
+                            padding-bottom: 0;
+                        }
+
+                        div.div-table-headers {
+                            background-color: #1a1a1a !important;
+                            padding: 10px;
+                        }
+
+                        div.div-table div.input-group {
+                            padding-top: 0 !important;
+                        }
+                    </style>
+
+                    <fieldset><legend>League of Legends Accounts</legend>
+                        <button>Import from Reddit</button>
+                        <button>Delete all</button>
+
+                        <div class="div-table">
+                            <div class="row div-table-headers">
+                                <div class="col-md-4">
+                                    Region
+                                </div>
+
+                                <div class="col-md-4">
+                                    Summoner
+                                </div>
+
+                                <div class="col-md-4">
+                                    Actions
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    NA
+                                </div>
+
+                                <div class="col-md-4">
+                                    ridderhoff
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="checkbox" id="del-0" class="lol-acct-del-cb" value="">
+                                        <label for="del-0">Delete</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <style>
+                        div.permissions-tree {
+                            padding: 5px;
+                        }
+                        div.permissions-tree ul {
+                            border-left: 1px solid grey;
+                        }
+                    </style>
+                    <fieldset>
+                        <legend>Permissions Tree</legend>
+                        Showing permissions for ${selected} moderator.
+                        <div class="permissions-tree" >
                             <div class="input-group">
                                 <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                <label for="del-na-ridderhoff">Manage Server</label>
+                                <label for="del-na-ridderhoff">Unlimited Power</label>
                             </div>
                             <ul>
                                 <div class="input-group">
                                     <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                    <label for="del-na-ridderhoff">Manage Users</label>
+                                    <label for="del-na-ridderhoff">Manage Server</label>
                                 </div>
-                                <div class="input-group">
-                                    <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                    <label for="del-na-ridderhoff">Manage Roles</label>
-                                </div>
-                            </ul>
+                                <ul>
+                                    <div class="input-group">
+                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                        <label for="del-na-ridderhoff">Manage Users</label>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                        <label for="del-na-ridderhoff">Manage Roles</label>
+                                    </div>
+                                </ul>
 
-                            <div class="input-group">
-                                <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                <label for="del-na-ridderhoff">Manage Bot</label>
-                            </div>
-                            <ul>
                                 <div class="input-group">
                                     <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                    <label for="del-na-ridderhoff">Kick Users</label>
+                                    <label for="del-na-ridderhoff">Manage Bot</label>
                                 </div>
-                                <div class="input-group">
-                                    <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                    <label for="del-na-ridderhoff">Ban Users</label>
-                                </div>
+                                <ul>
+                                    <div class="input-group">
+                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                        <label for="del-na-ridderhoff">Kick Users</label>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                        <label for="del-na-ridderhoff">Ban Users</label>
+                                    </div>
+                                </ul>
                             </ul>
-                        </ul>
-                    </div>
-                </fieldset>
+                        </div>
+                    </fieldset>
 
-                <span id="submit-box" class="row">
-                    <div class="col-md-6 border-right">
-                        <button>Reset</buton>
-                    </div><div class="col-md-6">
-                        <button>Apply</buton>
-                    </div>
-                </div>
-            </form>
+                    <span id="submit-box" class="row">
+                        <div class="col-md-6 border-right">
+                            <button>Reset</buton>
+                        </div><div class="col-md-6">
+                            <button>Apply</buton>
+                        </div>
+                    </span>
+
+                </form>
+            </div>
 
         </div>
     </body>

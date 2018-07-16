@@ -34,7 +34,7 @@ let commands = []
 	.concat(require("./lol/lol_commands.js"))
 	.concat(require("./rss/rss_cmds.js"))
 	.concat(require("./reactions.js"))
-	.concat(require("./help_cmds.js"))
+	.concat(require("./help_cmds.js"));
 
 //commands.concat(require("./.js");
 
