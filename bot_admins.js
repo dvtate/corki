@@ -20,6 +20,12 @@ const root = [ "253784341555970048" ]; // @ridderhoff
 // feel free to join server btw: https://discord.gg/cXcXSmy
 module.exports.bugReportChannel = "455415485173858318"; // atest/botstuff#bugs
 
-module.exports.sendBugReport = async (msg, bug) =>
-                global.client.channels.find("id", this.bugReportChannel)
-                    .send(`@${msg.author.username}#${msg.author.discriminator} found a bug(${msg.content}): ${bug}`);
+module.exports.sendBugReport = async (msg, bug) => {
+    if (msg) {
+        global.client.channels.find("id", this.bugReportChannel)
+            .send(`@${msg.author.username}#${msg.author.discriminator} found a bug(${msg.content}): ${bug}`);
+    } else {
+        global.client.channels.find("id", this.bugReportChannel)
+            .sent(`untraced error: ${bug}`);
+    }
+}
