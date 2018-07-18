@@ -7,18 +7,21 @@ async function getUserID(token) {
         fetch("https://discordapp.com/api/users/@me", {
             "method" : "GET",
             headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
+                "Authorization": `Bearer ${token}`
             }
         }).then(data => {
-            data.json().then(user => resolve(user.id)).catch(reject);
+
+            data.json().then(user => {
+                console.log(user);
+                resolve(user.id)
+            }).catch(reject);
         }).catch(reject);
     });
 }
 module.exports.getUserID = getUserID
 
 
-function userServers(userid) {
+function mutualServers(userid) {
 
 }
-module.exports.userServers = userServers;
+module.exports.mutualServers = mutualServers;

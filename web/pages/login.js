@@ -1,5 +1,8 @@
 
 const express = require("express");
+
+const fetch = require("node-fetch");
+
 const request = require("request");
 const bot = require("../middleman.js");
 const btoa = require("btoa");
@@ -27,31 +30,28 @@ router.get("/login", (req, res) => {
 });
 
 router.get("/callback", catchAsync(async (req, res) => {
+    global.portal_host = req.headers.host;
+    const redirect = encodeURIComponent(`http://${global.portal_host}/callback`);
+
     if (!req.query.code)
         throw new Error("NoCodeProvided");
 
-
-    request.post({
-        headers: {"Content-Type" : "application/x-www-form-urlencoded" },
-        url: "https://discordapp.com/api/oauth2/token",
-        json: true,
-        form: {
-            "grant_type" : "client_credentials",
-            "code" : req.query.code,
-            "client_id" : global.CLIENT_ID,
-            "client_secret" : global.CLIENT_SECRET,
-            "redirect_uri" : `https://${global.portal_host}/callback`
+    if (!req.query.code) throw new Error('NoCodeProvided');
+    const code = req.query.code;
+    const creds = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
+    const response = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Basic ${creds}`,
         }
-    }, async (error, response, body) => {
-        if (error)
-            throw error;
-
-        let id = await bot.getUserID(body.access_token);
-
-        res .cookie("token", body.access_token, { maxAge: body.expires_in })
-            .cookie("userid", id, { maxAge: body.expires_in })
-            .redirect('/');
     });
+    const json = await response.json();
+    const id = await bot.getUserID(json.access_token);
+
+    res .cookie("token", json.access_token, { maxAge: json.expires_in })
+        .cookie("userid", id, { maxAge: json.expires_in })
+        .redirect('/');
+
 }));
 
 module.exports = router;

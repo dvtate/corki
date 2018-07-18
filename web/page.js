@@ -67,6 +67,8 @@ module.exports = class {
                             var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
                             document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
                         }
+
+                        window.location.reload();
                     }
 
                     // show/hide user dropdown menu
@@ -90,34 +92,30 @@ module.exports = class {
                     </div>
                     <div class="col-md-3">
                         <div onclick="toggleUserDropdown()">
-                            <img src="https://cdn.discordapp.com/avatars/${this.userid}/${global.client.users.get(this.userid).avatar}" class="profilepic" />
+                            <img src="${
+                                global.client.users.get(this.userid).avatar ?
+                                    `https://cdn.discordapp.com/avatars/${this.userid}/${global.client.users.get(this.userid).avatar}`
+                                    : "https://discordapp.com/assets/dd4dbc0016779df1378e7812eabaa04d.png"
+                        }" class="profilepic" />
                         </div>
                     </div>
                 </div>
                 <div class="row" >
                     <div class="col-md-6 col-md-offset-6" id="user-dropdown">
-                        Logged in as ${global.client.users.get(this.userid).username}}.
+                        Logged in as ${ global.client.users.get(this.userid).username }.
                         <button onclick="deleteAllCookies()" >Logout</button>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                        <form action="${this.action}">
+                        <form action="${ this.action }">
 
         `;
-        this.end = `
-                            <span id="submit-box" class="row">
-                                <div class="col-md-6 border-right">
-                                    <button>Reset</buton>
-                                </div><div class="col-md-6">
-                                    <button>Apply</buton>
-                                </div>
-                            </span>
 
+        this.end = `
                         </form>
                     </div>
-
                 </div>
             </body>
         </html>
@@ -147,14 +145,35 @@ module.exports = class {
             this.html += `<legend>${legend}</legend>\n`;
 
         return this;
-
     }
-
     endFieldset() {
         this.html += "</fieldset>";
         return this;
     }
-    
+
+    addDataSelector(label, options) {
+
+    }
+
+
+
+
+
+
+
+    addSubmitBox() {
+        this.html +=
+            `<span id="submit-box" class="row">
+                <div class="col-md-6">
+                    <button type="reset">Reset</button>
+                </div><div class="col-md-6">
+                    <button type="submit">Apply</button>
+                </div>
+            </span>`;
+            return this;
+    }
+
+
     export() {
         return this.html + this.end;
     }

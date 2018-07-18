@@ -108,7 +108,7 @@
                 </a>
             </div>
             <div class="col-md-6">
-                <h2>${ this.title || "Web Portal" }</h2>
+                <h1>${ this.title || "Web Portal" }</h1>
             </div>
             <div class="col-md-3">
                 <div onclick="toggleUserDropdown()">
@@ -260,11 +260,18 @@
                         </div>
                     </fieldset>
 
+                    <fieldset>
+                        <legend>What brings you to the portal?</legend>
+                        <a href="user"><button>User Settings</button></a>
+                        <a href="mod"><button>Server Moderation Panel</button></a>
+                        <a href="admin"><button>Server Admin Panel</button></a>
+                    </fieldset>
+
                     <span id="submit-box" class="row">
-                        <div class="col-md-6 border-right">
-                            <button>Reset</buton>
+                        <div class="col-md-6">
+                            <button type="reset">Reset</button>
                         </div><div class="col-md-6">
-                            <button>Apply</buton>
+                            <button type="submit">Apply</button>
                         </div>
                     </span>
 

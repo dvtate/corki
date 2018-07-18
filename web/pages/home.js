@@ -13,14 +13,18 @@ router.get('/', (req, res) => {
         return;
     }
 
+
     let homepage = new Page(null, req.cookies.userid, '/');
     homepage.startFieldset(`Welcome ${global.client.users.get(req.cookies.userid).username}!`)
-            .addRaw(`<h1>your API token is ${req.cookies.token}.</h1><hr/>more coming soon`)
-            .endFieldset();
+            .addRaw(`
+                    <h2>What brings you here?</h2>
+                    <a href="/user"><button>User Settings</button></a>
+                    <a href="/mod"><button>Server Moderation Panel</button></a>
+                    <a href="/admin"><button>Server Admin Panel</button></a>`)
+            .endFieldset()
+            .addRaw(`<h4>token: ${req.cookies.token}`);
 
     res.send(homepage.export());
-
-
 
 });
 

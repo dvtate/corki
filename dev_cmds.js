@@ -132,7 +132,7 @@ module.exports = [
             const contents = match[2];
 
             try {
-                global.client.channels.find("id", channel).send("via -msg: " + contents);
+                global.client.channels.find("id", channel).send(contents);
             } catch (e) {
                 msg.channel.send("that didn't work.. probably wrong channel id");
                 console.log(e);
