@@ -9,95 +9,8 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" />
         <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v2.3.7/dist/mini-default.min.css" />
 
-        <style>
-
-            body {
-                padding: 0; margin: 0;
-                font-family: 'Open Sans', Helvetica, sans-serif;
-
-                background-color: #2b2b30;
-                color: white;
-            }
-
-            /* headdings */
-            h1, h2, h3, h4, h5, h6 {
-                font-family: 'Open Sans Light', 'Open Sans', sans-serif;
-                font-weight: 100;
-            }
-
-            div#topbar {
-                background-color: #000;
-                padding: 5px;
-                height: 60px;
-                padding-right: 0;
-            }
-
-            div#topbar * {
-                height: 100%;
-            }
-            div#topbar > div > div {
-                text-align: right;
-                width: 100%;
-            }
-            div#topbar img.profilepic {
-                border-radius: 100%;
-            }
-            div {
-                /*border: 1px solid red;*/
-            }
-            div#user-dropdown {
-                background-color: #e0e0e0;
-                color: black;
-                padding-left: 20px;
-                display: none;
-            }
-
-            div#user-dropdown button {
-                background-color: #433233;
-                color: white;
-            }
-
-            div#user-dropdown button:hover {
-                background-color: #a01212;
-            }
-
-            form {
-                background-color: #2b2b30;
-                border: 0;
-            }
-
-
-            #submit-box {
-                float: right;
-                background-color: #476a8e;
-                border-radius: 2px;
-                margin: 15px;
-                box-shadow: 5px 10px #000;
-            }
-
-
-
-
-        </style>
-
-        <script>
-            function deleteAllCookies() {
-                var cookies = document.cookie.split(";");
-
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = cookies[i];
-                    var eqPos = cookie.indexOf("=");
-                    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                }
-            }
-
-            function toggleUserDropdown() {
-                document.getElementById("user-dropdown").style.display =
-                    document.getElementById("user-dropdown").style.display == "block" ?
-                        "none" : "block";
-            }
-        </script>
+        <link rel="stylesheet" href="resources/main.css" />
+        <script src="resources/main.js"></script>
 
     </head>
     <body>
@@ -236,9 +149,23 @@
                                         <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
                                         <label for="del-na-ridderhoff">Manage Users</label>
                                     </div>
+                                    <ul>
+                                        <div class="input-group">
+                                            <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                            <label for="del-na-ridderhoff">Kick Users</label>
+                                        </div>
+                                        <div class="input-group">
+                                            <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                            <label for="del-na-ridderhoff">Ban Users</label>
+                                        </div>
+                                    </ul>
                                     <div class="input-group">
                                         <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
                                         <label for="del-na-ridderhoff">Manage Roles</label>
+                                    </div>
+                                    <div class="input-group">
+                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                        <label for="del-na-ridderhoff">Manage Channels</label>
                                     </div>
                                 </ul>
 
@@ -249,12 +176,17 @@
                                 <ul>
                                     <div class="input-group">
                                         <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                        <label for="del-na-ridderhoff">Kick Users</label>
+                                        <label for="del-na-ridderhoff">Manage Automated Messages</label>
                                     </div>
                                     <div class="input-group">
                                         <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                        <label for="del-na-ridderhoff">Ban Users</label>
+                                        <label for="del-na-ridderhoff">Manage Server Metadata</label>
                                     </div>
+                                    <div class="input-group">
+                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
+                                        <label for="del-na-ridderhoff">Manage Server Metadata</label>
+                                    </div>
+
                                 </ul>
                             </ul>
                         </div>
@@ -265,6 +197,49 @@
                         <a href="user"><button>User Settings</button></a>
                         <a href="mod"><button>Server Moderation Panel</button></a>
                         <a href="admin"><button>Server Admin Panel</button></a>
+                    </fieldset>
+
+                    <fieldset>
+                        <style>
+                            table.data-table {
+                                width: 100%;
+                            }
+                            table.data-table thead tr th {
+                                background-color: #1a1a1a;
+                            }
+                            table.data-table td {
+                                background-color: #555;
+                            }
+
+                        </style>
+                        <legend>Table experiment</legend>
+                        <table class="data-table">
+                            <caption>Accounts</caption>
+                            <thead>
+                                <tr>
+                                    <th>Region</th>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="Region">NA</td>
+                                    <td data-label="Name">ridderhoff</td>
+                                    <td data-label="Action"><button name="del0">Delete</button></td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Region">NA</td>
+                                    <td data-label="Name">ridderhoff</td>
+                                    <td data-label="Action"><button name="del1">Delete</button></td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Region">NA</td>
+                                    <td data-label="Name">ridderhoff</td>
+                                    <td data-label="Action"><button name="del2">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </fieldset>
 
                     <span id="submit-box" class="row">

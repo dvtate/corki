@@ -17,8 +17,9 @@ module.exports.auth = id => botAdmins.includes(id);
 const root = [ "253784341555970048" ]; // @ridderhoff
 
 
-// feel free to join server btw: https://discord.gg/cXcXSmy
+// feel free to join the server btw: https://discord.gg/cXcXSmy
 module.exports.bugReportChannel = "455415485173858318"; // atest/botstuff#bugs
+
 
 module.exports.sendBugReport = async (msg, bug) => {
     if (msg) {

@@ -1,6 +1,6 @@
 
 
-module.exports = class {
+module.exports = class Page {
 
     constructor(title, userid, action) {
         this.title = title;
@@ -19,65 +19,8 @@ module.exports = class {
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" />
                 <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v2.3.7/dist/mini-default.min.css" />
 
-                <style>
-
-                    body {
-                        padding: 0; margin: 0;
-                        font-family: 'Open Sans', Helvetica, sans-serif;
-                        background-color: #2b2b30; color: white;
-                    }
-                    h1, h2, h3, h4, h5, h6 {
-                        font-family: 'Open Sans Light', 'Open Sans', sans-serif;
-                        font-weight: 100;
-                    }
-
-                    div#topbar { background-color: #000;
-                        padding: 5px; padding-right: 0; height: 60px;
-                    }
-                    div#topbar * { height: 100%; }
-                    div#topbar > div > div { text-align: right; width: 100%; }
-                    div#topbar img.profilepic { border-radius: 100%; }
-
-
-                    div#user-dropdown { padding-left: 20px;
-                        background-color: #e0e0e0; color: black; display: none;
-                    }
-                    div#user-dropdown button { background-color: #433233; color: white; }
-                    div#user-dropdown button:hover { background-color: #a01212; }
-
-
-                    form { background-color: #2b2b30; border: 0; }
-
-                    #submit-box {
-                        float: right; margin: 15px;
-                        border-radius: 2px;
-                        background-color: #476a8e;
-                        box-shadow: 5px 10px #000;
-                    }
-                </style>
-
-                <script>
-                    // used to log user off
-                    function deleteAllCookies() {
-                        var cookies = document.cookie.split(";");
-
-                        for (var i = 0; i < cookies.length; i++) {
-                            var cookie = cookies[i];
-                            var eqPos = cookie.indexOf("=");
-                            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-                        }
-
-                        window.location.reload();
-                    }
-
-                    // show/hide user dropdown menu
-                    function toggleUserDropdown() {
-                        document.getElementById("user-dropdown").style.display =
-                            document.getElementById("user-dropdown").style.display == "block" ?
-                                "none" : "block";
-                    }
-                </script>
+                <link rel="stylesheet" href="/resources/main.css" />
+                <script src="/resources/main.js"></script>
 
             </head>
             <body>
@@ -122,23 +65,44 @@ module.exports = class {
         `;
     }
 
-    addScript(code, src) {
+    static script(code, src) {
         if (!src)
             this.html += `<script>${code}</script>`;
         else
             this.html += `<script src=${src}>${code}</script>`;
 
-        return this;
     }
-    addStyle(code) {
-        this.html += `<style>${code}</style>`;
-        return this;
-    }
-    addRaw(code) {
-        this.html += code;
+    addScript(code, src) {
+        this.html += Page.script(code, src);
         return this;
     }
 
+    static style(code) {
+        return `<style>${code}</style>`;
+    }
+    addStyle(code) {
+        this.html += Page.style(code);
+        return this;
+    }
+    add(code) {
+        this.html += code;
+        return this;
+    }
+    addRaw(code)
+        { return this.add(code); }
+
+    static combine(items) {
+        return arguments.join(' ');
+    }
+
+    static fieldset(body, legend) {
+        let ret = "<fieldset>";
+        if (legend)
+            ret += `<legend>${legend}</legend>`;
+        if (body)
+            ret += body;
+        return ret + "</fieldset>"
+    }
     startFieldset(legend) {
         this.html += "<fieldset>\n";
         if (!!legend)
@@ -151,11 +115,40 @@ module.exports = class {
         return this;
     }
 
-    addDataSelector(label, options) {
-
+    static image(src, alt, height, width) {
+        return `<img src="${src}" ${alt ? `alt="${alt}"` : ''} ${height ? `height="${height}"` : ''} ${width ? `width="${width}"` : ''} />`
+    }
+    addImage(src, alt, height, width) {
+        this.html += Page.image(src, alt, height, width);
+        return this;
     }
 
+    static table(headers, body, caption) {
+        let ret = "<table class=\"data-table\">";
+        if (caption)
+            ret += `\n<caption>${caption}</caption>`;
 
+        if (headers) {
+            ret += "<thead><tr>\n";
+            headers.forEach(h => ret += `<th>${h}</th>`);
+            ret += "\n</tr></thead>";
+        }
+
+        ret += "<tbody>";
+        body.forEach(row => {
+            ret += "<tr>\n";
+            for (let i = 0; i < row.length; i++)
+                ret += `<td data-label="${headers[i] || ""}">${row[i]}</td>`;
+            ret += "</tr>";
+        });
+        ret += "\n</tbody>\n</table>";
+
+        return ret;
+    }
+    addTable(headers, body, caption) {
+        this.html += Page.table(headers, body, caption);
+        return this;
+    }
 
 
 

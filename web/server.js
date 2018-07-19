@@ -27,10 +27,17 @@ app.use((err, req, res, next) => {
     }
 });
 
-app.use('/', require('./pages/home'));
-app.use('/', require('./pages/login'));
 
-//
+app.use('/resources', express.static(path.join(__dirname, "resources")));
+
+app.use('/', require("./pages/home"));
+app.use('/', require("./pages/login"));
+app.use('/', require("./pages/user"));
+app.use('/', require("./pages/guild_admin"));
+app.use('/', require("./pages/guild_mod"));
+
+
+
 app.listen(5050, (req, res) => {
     console.info("portal running on port 5050");
 });

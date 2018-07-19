@@ -23,21 +23,25 @@ const catchAsync = fn => (
 );
 
 
-router.get("/login", (req, res) => {
-    global.portal_host = req.headers.host;
-    const redirect = encodeURIComponent(`http://${global.portal_host}/callback`);
+router.get("/login/:source", (req, res) => {
+    const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
+    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}&state=${req.params.source}`);
+});
+
+router.get("/login/", (req, res) => {
+    const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}`);
 });
 
 router.get("/callback", catchAsync(async (req, res) => {
-    global.portal_host = req.headers.host;
-    const redirect = encodeURIComponent(`http://${global.portal_host}/callback`);
+    const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
 
     if (!req.query.code)
         throw new Error("NoCodeProvided");
 
     if (!req.query.code) throw new Error('NoCodeProvided');
     const code = req.query.code;
+    const source = req.query.state || '/';
     const creds = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
     const response = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`, {
         method: 'POST',
@@ -50,7 +54,7 @@ router.get("/callback", catchAsync(async (req, res) => {
 
     res .cookie("token", json.access_token, { maxAge: json.expires_in })
         .cookie("userid", id, { maxAge: json.expires_in })
-        .redirect('/');
+        .redirect(source);
 
 }));
 

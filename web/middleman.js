@@ -9,13 +9,11 @@ async function getUserID(token) {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
-        }).then(data => {
-
-            data.json().then(user => {
-                console.log(user);
+        }).then(data =>
+            data.json().then(user =>
                 resolve(user.id)
-            }).catch(reject);
-        }).catch(reject);
+            ).catch(reject)
+        ).catch(reject);
     });
 }
 module.exports.getUserID = getUserID
