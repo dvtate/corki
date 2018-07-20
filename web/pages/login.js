@@ -10,19 +10,6 @@ const btoa = require("btoa");
 const router = express.Router();
 
 
-
-
-// async/await error catcher
-const catchAsync = fn => (
-    (req, res, next) => {
-        const routePromise = fn(req, res, next);
-        if (routePromise.catch) {
-            routePromise.catch(err => next(err));
-        }
-    }
-);
-
-
 router.get("/login/:source", (req, res) => {
     const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}&state=${req.params.source}`);
@@ -33,7 +20,7 @@ router.get("/login/", (req, res) => {
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}`);
 });
 
-router.get("/callback", catchAsync(async (req, res) => {
+router.get("/callback", bot.catchAsync(async (req, res) => {
     const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
 
     if (!req.query.code)
@@ -50,10 +37,8 @@ router.get("/callback", catchAsync(async (req, res) => {
         }
     });
     const json = await response.json();
-    const id = await bot.getUserID(json.access_token);
 
     res .cookie("token", json.access_token, { maxAge: json.expires_in })
-        .cookie("userid", id, { maxAge: json.expires_in })
         .redirect(source);
 
 }));

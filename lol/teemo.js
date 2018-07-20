@@ -54,6 +54,12 @@ module.exports.serverNames = {
     "las" : "la2",  "na" : "na1",  "oce" : "oc1",
     "tr"  : "tr1", "ru"  : "ru1",  "pbe" : "pbe1"
 };
+module.exports.champNames = {};
+
+// also include inverted keys/values
+for (key in module.exports.serverNames)
+    module.exports.serverNames[module.exports.serverNames[key]] = key;
+
 
 
 // edit when new champs come out
