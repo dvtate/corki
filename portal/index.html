@@ -11,8 +11,6 @@ function findGetParameter(parameterName) {
 }
 
 let redirect = findGetParameter("rdr");
-alert("http://98.184.89.140:5050/" + redirect ? redirect : "");
-window.location = "http://98.184.89.140:5050/" + redirect ? redirect : "";
-
+window.location = "http://98.184.89.140:5050/" + (redirect ? redirect : "");
 
 </script>
