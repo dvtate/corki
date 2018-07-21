@@ -21,7 +21,7 @@ mkdir "$HOME/.corki/lb"				# leaderboard
 
 
 
-# if token wasn't exported by update.sh or steve.sh
+# if token isn't already saved
 # then we need to prompt the user for it
 if [ ! -f $HOME/.corki/disc_key ]; then
 	# get bot token
@@ -78,6 +78,17 @@ if [ ! -f $HOME/.corki/client_secret ]; then
 	# put in file
 	printf "inserting client id into ~/.corki/client_secret... "
 	echo $CLIENT_SECRET > $HOME/.corki/client_secret
+	echo "done"
+fi
+
+if [ ! -f $HOME/.corki/reddit_secret ]; then
+	# get token
+	printf "Enter reddit secret: "
+	read REDDIT_SECRET
+
+	# put in file
+	printf "inserting client id into ~/.corki/reddit_secret... "
+	echo $REDDIT_SECRET > $HOME/.corki/reddit_secret
 	echo "done"
 fi
 

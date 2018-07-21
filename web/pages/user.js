@@ -1,5 +1,8 @@
 
 const fs = require("fs");
+const fetch = require("node-fetch");
+const request = require("request");
+const btoa = require("btoa");
 
 const express = require("express");
 const router = express.Router();
@@ -14,6 +17,8 @@ const Page = require("../page.js");
 const lol = require("../../lol/lol_stuff");
 const teemo = require("../../lol/teemo");
 
+const reddit_id = "fcn1qC1IsC7JQw";
+const reddit_secret = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit_secret`)}`.trim();
 
 
 router.get("/user", bot.catchAsync(async (req, res) => {
@@ -27,7 +32,7 @@ router.get("/user", bot.catchAsync(async (req, res) => {
     let page = new Page("User Settings", userid, "/user");
     page.startFieldset(`League of Legends Accounts`)
         .addRaw(`
-            <button type="button">Import from reddit</button>
+            <button type="button" onclick="redirect('/user/lol/import/reddit')">Import from Reddit</button>
             <button type="button" onclick="redirect('/user/lol/reset')">Clear Accounts</button>
         `);
 
@@ -48,8 +53,10 @@ router.get("/user", bot.catchAsync(async (req, res) => {
     }
 
 
-    page.addTable(["Region", "Name", "Actions"], table, "Linked Accounts");
+    page.addTable(["Region", "Name", "Actions"], table);
 
+    if (table.length == 0)
+        page.addRaw("<center><h4>You have no linked accounts</h4></center>");
 
     page.addRaw(`
         <script>
@@ -128,7 +135,7 @@ router.get("/user/lol/rm/:id([0-9]+)", bot.catchAsync(async (req, res) => {
     data.accounts = data.accounts.filter(a => a.id != req.params.id);
 
     // verify valid main acct index
-    if (data.main >= data.accounts.length)
+    if (data.main >= data.accounts.length && data.accounts.length != 0)
         data.main = data.accounts.length - 1;
 
     lol.setUserData(userid, data);
@@ -169,20 +176,31 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
         return;
     }
 
-    let summoner;
+    let summoner, page;
     try {
         summoner = await teemo.riot.get(teemo.serverNames[req.params.region], "summoner.getBySummonerName", req.params.name);
     } catch (e) {
-        let page = new Page("Error", userid, "/user");
+        page = new Page("Error", userid, "/user");
         page.startFieldset("That didn't work :/")
             .addRaw(`<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
                         <button type="button" onclick="redirect('/user')">Try Again</button>`)
             .endFieldset();
         res.send(page.export());
+        return;
+    }
+
+    if (!summoner) {
+        page = new Page("Error", userid, "/user");
+        page.startFieldset("That didn't work :/")
+            .addRaw(`<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
+                        <button type="button" onclick="redirect('/user')">Try Again</button>`)
+            .endFieldset();
+        res.send(page.export());
+        return;
     }
 
 
-    let page = new Page("Verify Account", userid, "/user/lol/add/verify");
+    page = new Page("Verify Account", userid, "/user/lol/add/verify");
     page.startFieldset("Verify League of Legends Account");
 
     let pend = {
@@ -227,14 +245,15 @@ router.get("/user/lol/add/verify", bot.catchAsync(async (req, res) => {
         if (!summoner)
             throw "summoner DNE";
 
-
+        console.log("verify: ", summoner);
         if (summoner.profileIconId == pend.icon) {
+
+                logCmd(null, `[web]@${global.client.users.get(userid).username} added a LoL acct`);
                 lol.addUserAcct(userid, pend.region, pend.summoner)
                     .then(() => res.redirect("/user"))
                     .catch(e => { throw e });
 
         } else {
-            logCmd(null, `[web]@${global.client.users.get(userid).username} added a LoL acct`);
             res.redirect("/user/lol/add/failed");
         }
     }).catch(e => {
@@ -267,5 +286,93 @@ router.get("/user/lol/add/failed", bot.catchAsync(async (req, res) => {
     res.send(page.export());
 
 }));
+
+// reddit login for oauth2
+router.get("/user/lol/import/reddit", (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/user");
+        return;
+    }
+
+    const redirect = encodeURIComponent(`http://${req.headers.host}/user/lol/import/reddit/cb`);
+    res.redirect(`https://www.reddit.com/api/v1/authorize?client_id=${reddit_id}&response_type=code&state=${req.cookies.token}&redirect_uri=${redirect}&duration=temporary&scope=identity`);
+});
+
+
+// retrieve cb code and get token + username
+// require("request")( "http://flairs.championmains.com/api/user-summoners?username=dvtate" , (err, resp, body) => msg.channel.send(body) )
+router.get("/user/lol/import/reddit/cb", bot.catchAsync(async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/user");
+        return;
+    }
+
+    const redirect = encodeURIComponent(`http://${req.headers.host}/user/lol/import/reddit/cb`);
+
+    if (!req.query.code)
+        throw new Error("NoCodeProvided");
+
+    const response = await fetch(`https://www.reddit.com/api/v1/access_token?grant_type=authorization_code&code=${req.query.code}&redirect_uri=${redirect}`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Basic ${btoa(`${reddit_id}:${reddit_secret}`)}`,
+        }
+    });
+
+    const json = await response.json();
+    const token = json.access_token;
+
+    let user = await fetch("https://oauth.reddit.com/api/v1/me", {
+        "method" : "GET",
+        headers: {
+            "Authorization": `bearer ${token}`,
+            "User-Agent": "Corki Bot by dvtate"
+        }
+    });
+    user = await user.json();
+
+    const userid = await bot.getUserID(req.cookies.token);
+    if (!userid) {
+        res.redirect("/login/user");
+        return;
+    }
+
+    request(`http://flairs.championmains.com/api/user-summoners?username=${user.name}`, async (err, resp, body) => {
+        if (err)
+            throw new Error(err);
+
+        let accts;
+        try {
+            accts = JSON.parse(body).result;
+        } catch (e) {
+            res.redirect("/user/lol/import/reddit/none");
+            return;
+        }
+
+        logCmd(null, `web@${global.client.users.get(userid).username} added LoL acct(s) from reddit`);
+
+        // unfortunately i have to run one at a time or else only one will be added
+        // due to multiple async fxn calls modifying same file at same time
+        for (let i = 0; i < accts.length; i++)
+            await lol.addUserAcct(userid, teemo.serverNames[accts[i].region.toLowerCase()], accts[i].name);
+
+
+        res.redirect("/user");
+
+    });
+
+}));
+
+router.get("/user/lol/import/reddit/none", (req, res) => {
+    let page = new Page("Error", userid, "/user");
+    page.startFieldset("Couldn't find anything useful")
+        .add(`<p>The account you logged in with doesn't appear to have any league
+            of legends accounts linked to the <a href="https://www.reddit.com/r/ChampionMains/">/r/championmains</a>
+            flair system.</p>
+            <button type="button" onclick="redirect('/user')">Go Back</button>
+            <button type="button" onclick="redirect('http://flairs.championmains.com/')">Set up account</button>`)
+        .endFieldset();
+});
+
 
 module.exports = router;

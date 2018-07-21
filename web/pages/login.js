@@ -3,7 +3,6 @@ const express = require("express");
 
 const fetch = require("node-fetch");
 
-const request = require("request");
 const bot = require("../middleman.js");
 const btoa = require("btoa");
 
@@ -26,7 +25,6 @@ router.get("/callback", bot.catchAsync(async (req, res) => {
     if (!req.query.code)
         throw new Error("NoCodeProvided");
 
-    if (!req.query.code) throw new Error('NoCodeProvided');
     const code = req.query.code;
     const source = req.query.state || '/';
     const creds = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
