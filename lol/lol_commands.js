@@ -141,7 +141,7 @@ region and summoner name\nFor example: `-lol add na ridderhoff`")
     { // list another user's accts
         condition: msg => msg.content.match(/^-lol list <@!?([0-9]+)>/),
         act: async function (msg) {
-            logCmd(msg, "listed a user's lol accts. (-list-lol)");
+            logCmd(msg, "listed a user's lol accts. (-lol list)");
 
 
             const id = msg.content.match(/^-lol list <@!?([0-9]+)>/)[1];

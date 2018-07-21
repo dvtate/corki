@@ -1,9 +1,11 @@
 
-const express = require("express");
+const fs = require("fs");
 
+const express = require("express");
 const router = express.Router();
 
-const fs = require("fs");
+
+const logCmd = require("../../logging");
 
 const bot = require("../middleman.js");
 const Page = require("../page.js");
@@ -11,6 +13,8 @@ const Page = require("../page.js");
 
 const lol = require("../../lol/lol_stuff");
 const teemo = require("../../lol/teemo");
+
+
 
 router.get("/user", bot.catchAsync(async (req, res) => {
     if (!req.cookies.token) {
@@ -100,6 +104,7 @@ router.get("/user/lol/reset", bot.catchAsync(async (req, res) => {
         return;
     }
 
+    logCmd(null, `web@${global.client.users.get(userid).username} reset their LoL accts`);
     lol.removeDir(userid);
     res.redirect("/user");
 }));
@@ -114,10 +119,11 @@ router.get("/user/lol/rm/:id([0-9]+)", bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token);
     if (!userid) {
-        res.redirect("/login/user");
+        res.redirect("/login/user");logCmd(null, `web@${global.client.users.get(userid).username} reset their LoL accts`);
         return;
     }
 
+    logCmd(null, `web@${global.client.users.get(userid).username} removed a LoL acct`);
     let data = lol.getUserData(userid);
     data.accounts = data.accounts.filter(a => a.id != req.params.id);
 
@@ -142,7 +148,7 @@ router.get("/user/lol/main/:id([0-9]+)", bot.catchAsync(async (req, res) => {
         res.redirect("/login/user");
         return;
     }
-
+    logCmd(null, `web@${global.client.users.get(userid).username} changed main LoL acct`);
     let data = lol.getUserData(userid);
     data.main = data.accounts.findIndex(a => a.id == req.params.id);
     lol.setUserData(userid, data);
@@ -218,9 +224,9 @@ router.get("/user/lol/add/verify", bot.catchAsync(async (req, res) => {
     let pend = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${userid}/pending.json`));
     teemo.riot.get(pend.region, "summoner.getBySummonerName", pend.summoner).then(summoner => {
 
-        if (!summoner) {
+        if (!summoner)
             throw "summoner DNE";
-        }
+
 
         if (summoner.profileIconId == pend.icon) {
                 lol.addUserAcct(userid, pend.region, pend.summoner)
@@ -228,6 +234,7 @@ router.get("/user/lol/add/verify", bot.catchAsync(async (req, res) => {
                     .catch(e => { throw e });
 
         } else {
+            logCmd(null, `[web]@${global.client.users.get(userid).username} added a LoL acct`);
             res.redirect("/user/lol/add/failed");
         }
     }).catch(e => {
