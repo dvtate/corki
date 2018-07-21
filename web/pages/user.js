@@ -165,7 +165,7 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
 
     let summoner;
     try {
-        summoner = teemo.riot.get(teemo.serverNames[req.params.region], "summoner.getBySummonerName", req.params.name);
+        summoner = await teemo.riot.get(teemo.serverNames[req.params.region], "summoner.getBySummonerName", req.params.name);
     } catch (e) {
         let page = new Page("Error", userid, "/user");
         page.startFieldset("That didn't work :/")
