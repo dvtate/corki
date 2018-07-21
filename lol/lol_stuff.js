@@ -113,14 +113,18 @@ module.exports.getUserMastery = getUserMastery;
 
 
 // associate a new acct with user
-async function addUserAcct(msg, server, username) {
+async function addUserAcct(id, server, username) {
     return new Promise((resolve, reject) => {
         // get user info
-        setupDir(msg.author.id);
-        let usrObj = getUserData(msg.author.id);
+        setupDir(id);
+        let usrObj = getUserData(id);
 
         // get account info
         teemo.riot.get(server, "summoner.getBySummonerName", username).then(summoner => {
+            if (!summoner) {
+                reject("invalid summoner");
+                return;
+            }
             if (!usrObj.accounts.find(acct => acct.id == summoner.id)) {
                 usrObj.accounts = usrObj.accounts.concat({
                     name: summoner.name,
@@ -131,7 +135,7 @@ async function addUserAcct(msg, server, username) {
                 });
 
                 // write account info
-                setUserData(msg.author.id, usrObj);
+                setUserData(id, usrObj);
             }
             resolve();
 

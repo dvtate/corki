@@ -98,7 +98,7 @@ module.exports.champIDs = {
     "maokai" : 57, "mao" : 57,
     "ornn" : 516, "thresh" : 412, "kayle" : 10,
     "hecarim" : 120, "hec" : 120, "pony" : 120, "horse" : 120,
-    "khazix" : 121, "bug" : 121, "zix" : 121,
+    "khazix" : 121, "bug" : 121, "zix" : 121, "k6" : 121,
     "olaf" : 2, "ziggs" : 115, "syndra" : 134,
     "drmundo" : 36, "mundo" : 36,
     "karma" : 43, "annie" : 1, "akali" : 84,

@@ -112,7 +112,7 @@ module.exports = [
             }
             const summoner = match[2];
 
-            lol.addUserAcct(msg, server, summoner).then(() =>
+            lol.addUserAcct(msg.author.id, server, summoner).then(() =>
                 msg.channel.send(`${msg.author} is also ${summoner}`)
             ).catch(err =>
                 msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err}\n\`\`\``)
