@@ -206,7 +206,7 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
     let pend = {
         icon: summoner.profileIconId == 20 ? 23 : 20,
         region: teemo.serverNames[req.params.region],
-        summoner: req.params.summoner
+        summoner: req.params.name
     };
 
     fs.writeFileSync(`${process.env.HOME}/.corki/users/${userid}/pending.json`, JSON.stringify(pend));
@@ -364,6 +364,15 @@ router.get("/user/lol/import/reddit/cb", bot.catchAsync(async (req, res) => {
 }));
 
 router.get("/user/lol/import/reddit/none", (req, res) => {
+    
+    
+    const userid = await bot.getUserID(req.cookies.token);
+    if (!userid) {
+        res.redirect("/login/user");
+        return;
+    }
+    
+    
     let page = new Page("Error", userid, "/user");
     page.startFieldset("Couldn't find anything useful")
         .add(`<p>The account you logged in with doesn't appear to have any league
