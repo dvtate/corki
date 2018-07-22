@@ -12,7 +12,7 @@ async function getUserID(token, res) {
         }).then(data =>
             data.json().then(user => {
                 if (!global.client.users.get(user.id)) {
-                    res.redirect("/login/unknown");
+                    res.redirect("/unknown");
                     resolve(null);
                 } else
                     resolve(user.id)

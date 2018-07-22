@@ -13,7 +13,7 @@ router.get('/', bot.catchAsync(async (req, res) => {
     }
 
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
 
     let page = new Page(null, userid);
     page.startFieldset(`Welcome ${global.client.users.get(userid).username}!`)

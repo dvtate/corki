@@ -36,6 +36,11 @@ router.get("/callback", bot.catchAsync(async (req, res) => {
     });
     const json = await response.json();
 
+    let id = await bot.getUserID(json.access_token, res);
+    if (!id) {
+        return;
+    }
+
     res .cookie("token", json.access_token, { maxAge: json.expires_in })
         .redirect(source);
 
@@ -44,7 +49,7 @@ router.get("/callback", bot.catchAsync(async (req, res) => {
 
 const Page = require("../page");
 
-router.get("/login/unknown", bot.catchAsync(async (req, res) => {
+router.get("/unknown", bot.catchAsync(async (req, res) => {
 
     let page = new Page();
     page.startFieldset("Unknown User :/")
