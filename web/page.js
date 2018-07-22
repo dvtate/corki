@@ -14,7 +14,7 @@ module.exports = class Page {
                 <link rel="icon" type="image/png" href="https://corki.js.org/Corkiporo.png" />
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-                <title>Corki Portal ${this.title ? " - " + this.title : ""}</title>
+                <title>Corki Portal${this.title ? " - " + this.title : ""}</title>
 
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" />
                 <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v2.3.7/dist/mini-default.min.css" />
@@ -34,30 +34,33 @@ module.exports = class Page {
                         <h2>${ this.title || "Web Portal" }</h2>
                     </div>
                     <div class="col-md-3">
-                        <div onclick="toggleUserDropdown()">
-                            <img src="${
-                                global.client.users.get(this.userid).avatar ?
-                                    `https://cdn.discordapp.com/avatars/${this.userid}/${global.client.users.get(this.userid).avatar}`
-                                    : "https://discordapp.com/assets/dd4dbc0016779df1378e7812eabaa04d.png"
-                        }" class="profilepic" />
-                        </div>
+                        ${this.userid ? `
+                            <div onclick="toggleUserDropdown()">
+                                <img src="${
+                                    global.client.users.get(this.userid).avatar ?
+                                        `https://cdn.discordapp.com/avatars/${this.userid}/${global.client.users.get(this.userid).avatar}`
+                                        : "https://discordapp.com/assets/dd4dbc0016779df1378e7812eabaa04d.png"
+                            }" class="profilepic" />
+                            </div>
+                            ` : ""
+                        }
                     </div>
                 </div>
+                ${ this.userid ? `
                 <div class="row" >
                     <div class="col-md-6 col-md-offset-6" id="user-dropdown">
                         Logged in as ${ global.client.users.get(this.userid).username }.
                         <button onclick="deleteAllCookies()" >Logout</button>
                     </div>
-                </div>
-
+                </div>` : ""
+                }
                 <div class="row">
                     <div class="col-sm col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                        <form action="${ this.action }">
-
+                        ${this.action ? `<form action="${ this.action }">` : ""}
         `;
 
         this.end = `
-                        </form>
+                        ${this.action ? "</form>" :""}
                     </div>
                 </div>
             </body>

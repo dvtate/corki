@@ -2,7 +2,7 @@
 const fetch = require("node-fetch");
 
 
-async function getUserID(token) {
+async function getUserID(token, res) {
     return new Promise((resolve, reject) => {
         fetch("https://discordapp.com/api/users/@me", {
             "method" : "GET",
@@ -10,9 +10,13 @@ async function getUserID(token) {
                 "Authorization": `Bearer ${token}`
             }
         }).then(data =>
-            data.json().then(user =>
-                resolve(user.id)
-            ).catch(reject)
+            data.json().then(user => {
+                if (!global.client.users.get(user.id)) {
+                    res.redirect("/login/unknown");
+                    resolve(null);
+                } else
+                    resolve(user.id)
+            }).catch(reject)
         ).catch(reject);
     });
 }

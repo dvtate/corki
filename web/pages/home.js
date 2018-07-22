@@ -15,7 +15,7 @@ router.get('/', bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token);
 
-    let page = new Page(null, userid, '/');
+    let page = new Page(null, userid);
     page.startFieldset(`Welcome ${global.client.users.get(userid).username}!`)
         .addRaw(`
                 <h2>What brings you here?</h2>

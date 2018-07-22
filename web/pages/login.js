@@ -41,4 +41,24 @@ router.get("/callback", bot.catchAsync(async (req, res) => {
 
 }));
 
+
+const Page = require("../page");
+
+router.get("/login/unknown", bot.catchAsync(async (req, res) => {
+
+    let page = new Page();
+    page.startFieldset("Unknown User :/")
+        .add(`<p>In order for you to access the Corki Bot web portal you have to
+         use Corki Bot in Discord. You should add Corki bot to one of the servers
+         you own/moderate</p>
+         <button type="button" onclick="redirect('https://corki.js.org/invite')">Add to Server</button>
+         <button type="button" onclick="redirect('/login')">Try Again</button>
+         <button type="button" onclick="redirect('https://corki.js.org')">Visit Corki Homepage</button>
+         `)
+         .endFieldset();
+
+    res.send(page.export());
+
+}));
+
 module.exports = router;

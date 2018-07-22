@@ -27,9 +27,9 @@ router.get("/user", bot.catchAsync(async (req, res) => {
         return;
     }
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
 
-    let page = new Page("User Settings", userid, "/user");
+    let page = new Page("User Settings", userid);
     page.startFieldset(`League of Legends Accounts`)
         .addRaw(`
             <button type="button" onclick="redirect('/user/lol/import/reddit')">Import from Reddit</button>
@@ -105,7 +105,7 @@ router.get("/user/lol/reset", bot.catchAsync(async (req, res) => {
         return;
     }
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
         res.redirect("/login/user");
         return;
@@ -124,7 +124,7 @@ router.get("/user/lol/rm/:id([0-9]+)", bot.catchAsync(async (req, res) => {
         return;
     }
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
         res.redirect("/login/user");logCmd(null, `web@${global.client.users.get(userid).username} reset their LoL accts`);
         return;
@@ -150,7 +150,7 @@ router.get("/user/lol/main/:id([0-9]+)", bot.catchAsync(async (req, res) => {
         return;
     }
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
         res.redirect("/login/user");
         return;
@@ -170,7 +170,7 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
         return;
     }
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
         res.redirect("/login/user");
         return;
@@ -180,7 +180,7 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
     try {
         summoner = await teemo.riot.get(teemo.serverNames[req.params.region], "summoner.getBySummonerName", req.params.name);
     } catch (e) {
-        page = new Page("Error", userid, "/user");
+        page = new Page("Error", userid);
         page.startFieldset("That didn't work :/")
             .addRaw(`<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
                         <button type="button" onclick="redirect('/user')">Try Again</button>`)
@@ -190,7 +190,7 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
     }
 
     if (!summoner) {
-        page = new Page("Error", userid, "/user");
+        page = new Page("Error", userid);
         page.startFieldset("That didn't work :/")
             .addRaw(`<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
                         <button type="button" onclick="redirect('/user')">Try Again</button>`)
@@ -229,7 +229,7 @@ router.get("/user/lol/add/verify", bot.catchAsync(async (req, res) => {
         return;
     }
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
         res.redirect("/login/user");
         return;
@@ -271,7 +271,7 @@ router.get("/user/lol/add/failed", bot.catchAsync(async (req, res) => {
         return;
     }
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
         res.redirect("/login/user");
         return;
@@ -331,7 +331,7 @@ router.get("/user/lol/import/reddit/cb", bot.catchAsync(async (req, res) => {
     });
     user = await user.json();
 
-    const userid = await bot.getUserID(req.cookies.token);
+    const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
         res.redirect("/login/user");
         return;
@@ -363,25 +363,24 @@ router.get("/user/lol/import/reddit/cb", bot.catchAsync(async (req, res) => {
 
 }));
 
-router.get("/user/lol/import/reddit/none", (req, res) => {
-    
-    
-    const userid = await bot.getUserID(req.cookies.token);
+router.get("/user/lol/import/reddit/none", bot.catchAsync(async (req, res) => {
+
+
+    const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
         res.redirect("/login/user");
         return;
     }
-    
-    
-    let page = new Page("Error", userid, "/user");
+
+    let page = new Page("Error", userid);
     page.startFieldset("Couldn't find anything useful")
         .add(`<p>The account you logged in with doesn't appear to have any league
-            of legends accounts linked to the <a href="https://www.reddit.com/r/ChampionMains/">/r/championmains</a>
-            flair system.</p>
+            of legends accounts linked with the <a href="https://www.reddit.com/r/ChampionMains/">/r/championmains</a>
+            <a href="http://flairs.championmains.com">flair system</a>.</p>
             <button type="button" onclick="redirect('/user')">Go Back</button>
             <button type="button" onclick="redirect('http://flairs.championmains.com/')">Set up account</button>`)
         .endFieldset();
-});
+}));
 
 
 module.exports = router;
