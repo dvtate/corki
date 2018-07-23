@@ -180,8 +180,11 @@ module.exports = [
 
                 fields: [
                     {
-                        name: "`-add-assignable-role <role(s)`",
+                        name: "`-add-assignable-role <role(s)>`",
                         value: "add a role that users in the server can self-assign [requires MANAGE_ROLES priveleges]"
+                    }, {
+                        name: "`-reset-assignable-roles`",
+                        value: "Stop all roles from being self-assignable [requires MANAGE_ROLES priveleges]"
                     }, {
                         name: "`-iam <role(s)>`",
                         value: "self assign server role(s)"

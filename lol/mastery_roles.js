@@ -20,26 +20,76 @@ function removeRoles(server, member, roles) {
 rules =
 [{
     "champ" : 42,
-    "pts_roles" : {
-        "0" : "newbie",
-        "50000" : "50k",
-        "100000" : "100k",
-        "150000" : "150k",
-        "200000" : "200k",
-        "250000" : "250k",
-        "300000" : "300k",
-        "350000" : "350k",
-        "400000" : "400k",
-        "450000" : "450k",
-        "500000" : "500k",
-        "600000" : "600k",
-        "700000" : "700k",
-        "800000" : "800k",
-        "900000" : "900k",
-        "1000000" : "1 Million"
-    },
+    "pts_roles" : []
+        {
+            required : 0,
+            role: "newbie",
+            announce: false
+        }, {
+            required : 50000,
+            role : "50k",
+            announce: true
+        }, {
+            required : 100000,
+            role : "100k",
+            announce: true
+        }, {
+            required : 150000,
+            role : "150k",
+            announce: true
+        }, {
+            required: 200000,
+            role : "200k",
+            announce: true
+        }, {
+            required: 250000,
+            role : "250k",
+            announce: true
+        }, {
+            required: 300000,
+            role : "300k",
+            announce: true
+        }, {
+            required: 350000,
+            role : "350k",
+            announce: true
+        }, {
+            required: 400000,
+            role : "400k",
+            announce: true
+        }, {
+            required: 450000,
+            role : "450k",
+            announce: true
+        }, {
+            required: 500000,
+            role : "500k",
+            announce: true
+        }, {
+            required: 600000,
+            role : "600k",
+            announce: true
+        }, {
+            required: 700000,
+            role : "700k",
+            announce: true
+        }, {
+            required: 800000,
+            role : "800k",
+            announce: true
+        }, {
+            required: 900000,
+            role : "900k",
+            announce: true
+        }, {
+            required: 1000000,
+            role : "1 Million",
+            announce: true
+        }
+    ],
     "announce" : "mastery"
 }]
+
 
 */
 
@@ -59,9 +109,8 @@ function checkin(server) {
     // proc each rule
     rules.forEach(rule => {
 
-        let keys = Object.keys(rule.pts_roles);
-        keys.sort((a, b) => b - a);
-        let roles = keys.map(k => rule.pts_roles[k]);
+
+        let roles = rule.pts_roles.sort((a, b) => b.required - a.required);
 
         let members = Array.from(guild.members);
 
@@ -76,12 +125,12 @@ function checkin(server) {
             }
 
             // see which role applies to user
-            for (let i = 0; i < keys.length; i++) {
+            for (let i = 0; i < roles.length; i++) {
 
                 // find qualifying role
-                if (mastery.pts > keys[i]) {
+                if (mastery.pts > roles[i].required) {
 
-                    let role = guild.roles.find("name", roles[i]);
+                    let role = guild.roles.find("name", roles[i].role);
 
                     // if they dont already have this role
                     if (!member[1]._roles.includes(role.id)) {
@@ -90,9 +139,9 @@ function checkin(server) {
                         member[1].addRole(role);
 
                         // announce achievement
-                        if (!!rule.announce)
+                        if (rule.announce && roles[i].announce)
                             guild.channels.find("name", rule.announce).send({ embed : {
-                                title: `${member[1].user.username} got promoted to ${roles[i]}!`,
+                                title: `${member[1].user.username} got promoted to ${roles[i].role}!`,
                                 description: `They currently have ${mastery.pts} points`
                             }});
 
@@ -104,7 +153,6 @@ function checkin(server) {
 
         });
 
-
     });
 
 }
@@ -112,7 +160,8 @@ function checkin(server) {
 
 
 function refresh() {
-    checkin("252833520282501122"); // corkimains server id
+    checkin("319518724774166531"); // testing server
+    //checkin("252833520282501122"); // corkimains server id
     setTimeout(refresh, 10000000); // a few times per day
 }
 setTimeout(refresh, 20000); // give 10 seconds for bot to start before checking

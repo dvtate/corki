@@ -36,11 +36,15 @@ function addRole(role, serverID) {
     fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`, JSON.stringify(roles));
 }
 
+// delete roles config file
+function resetRoles(serverID) {
+    fs.unlinkSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`);
+}
 
 module.exports = [
     { // mod add roles
 
-        condition: msg => msg.content.match(/^-add-assignable-role (.+)/),
+        condition: msg => msg.content.match(/^-add-(?:ssignable-roles?|sar) (.+)/),
 
         act: async function (msg) {
 
@@ -48,7 +52,7 @@ module.exports = [
 
             // if they don't have roles priveleges or are a bot then stop them
             if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES) || msg.author.bot) {
-                msg.channel.send("you are not authorized to use this command here");
+                msg.channel.send("You are not authorized to use this command here");
                 return;
             }
 
@@ -59,6 +63,22 @@ module.exports = [
                             .forEach(r => addRole(r, msg.guild.id)); // add the roles
 
             msg.channel.send("Done!");
+        }
+    },
+    { // make roles unassignable again
+        condition: msg => msg.content.match(/^-reset-(?:ssignable-roles?|sar)/),
+        act: async (msg) => {
+
+            // if they don't have roles priveleges or are a bot then stop them
+            if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES) || msg.author.bot) {
+                msg.channel.send("You are not authorized to use this command here");
+                return;
+            }
+
+            resetRoles(msg.guild.id);
+
+            msg.channel.send("Done!");
+
         }
     },
 
@@ -101,9 +121,12 @@ module.exports = [
 
         act: async function (msg) {
             logCmd(msg, "checked available -roles");
-            msg.channel.send(`Self-assignable roles on this server: ${getRoles(msg.guild.id).join(", ")}
-To self-assign a role you can use the command \`-iam <role>\`
-            `);
+            let roles = getRoles(msg.guild.id);
+            if (roles.length == 0)
+                msg.channel.send(`This server doesn't have any self-assignable roles. A moderator can configure them using \`-add-sar\`. After that point the can be added via \`-iam\``)
+            else
+                msg.channel.send(`Self-assignable roles on this server: ${role.join(", ")}
+To self-assign a role you can use the command \`-iam <role>\``);
         }
     },
 
