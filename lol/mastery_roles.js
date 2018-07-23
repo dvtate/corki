@@ -160,8 +160,8 @@ function checkin(server) {
 
 
 function refresh() {
-    checkin("319518724774166531"); // testing server
-    //checkin("252833520282501122"); // corkimains server id
+    //checkin("319518724774166531"); // testing server
+    checkin("252833520282501122"); // corkimains server id
     setTimeout(refresh, 10000000); // a few times per day
 }
 setTimeout(refresh, 20000); // give 10 seconds for bot to start before checking
