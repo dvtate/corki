@@ -20,8 +20,9 @@ router.get('/', bot.catchAsync(async (req, res) => {
         .addRaw(`
                 <h2>What brings you here?</h2>
                 <button type="button" onclick="redirect('/user')">User Settings</button>
-                <button type="button" onclick="redirect('/mod')">Server Moderation Panel</button>
                 <button type="button" onclick="redirect('/admin')">Server Admin Panel</button>
+                <button type="button" onclick="redirect('/mod')">Server Moderation Panel</button>
+                <button type="button" onclick="redirect('/server')">Server Preferences</button>
         `)
         .addImage("/resources/discord-logowhite.png", "corki discord logo")
         .endFieldset()

@@ -163,7 +163,7 @@ router.get("/user/lol/main/:id([0-9]+)", bot.catchAsync(async (req, res) => {
     res.redirect("/user");
 }));
 
-
+// add a summoner
 router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res) => {
     if (!req.cookies.token) {
         res.redirect("/login/user");
@@ -222,7 +222,7 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
 
 }));
 
-// when
+// verify ownership of a summmoner
 router.get("/user/lol/add/verify", bot.catchAsync(async (req, res) => {
     if (!req.cookies.token) {
         res.redirect("/login/user");
@@ -363,6 +363,7 @@ router.get("/user/lol/import/reddit/cb", bot.catchAsync(async (req, res) => {
 
 }));
 
+// linked reddit accound doesnt have any associated LoL accts.
 router.get("/user/lol/import/reddit/none", bot.catchAsync(async (req, res) => {
 
 
