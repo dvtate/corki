@@ -1,4 +1,3 @@
-
 const fs = require("fs");
 const fetch = require("node-fetch");
 const request = require("request");
@@ -94,7 +93,6 @@ router.get("/user", bot.catchAsync(async (req, res) => {
         `);
 
     page.endFieldset()
-        .add(`<h2>This page isn't done yet :/</h2>`)
 
     res.send(page.export());
 }));

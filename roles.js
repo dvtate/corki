@@ -123,7 +123,9 @@ module.exports = [
             logCmd(msg, "checked available -roles");
             let roles = getRoles(msg.guild.id);
             if (roles.length == 0)
-                msg.channel.send(`This server doesn't have any self-assignable roles. A moderator can configure them using \`-add-sar\`. After that point the can be added via \`-iam\``)
+                msg.channel.send(`This server doesn't have any self-assignable roles.
+A moderator can configure them using \`-add-sar\`.
+After that point they can be added via \`-iam\``)
             else
                 msg.channel.send(`Self-assignable roles on this server: ${roles.join(", ")}
 To self-assign a role you can use the command \`-iam <role>\``);
