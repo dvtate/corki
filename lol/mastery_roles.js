@@ -131,8 +131,8 @@ function checkin(server) {
                 if (mastery.pts > roles[i].required) {
 
                     let role = guild.roles.find("name", roles[i].role);
-                    console.log(`promoting ${member.user.username} to ${roles[i].role}`);
-                    
+                    console.log(`promoting ${member[1].user.username} to ${roles[i].role}`);
+
                     // if they dont already have this role
                     if (!member[1]._roles.includes(role.id)) {
                         // reset and replace associate roles
