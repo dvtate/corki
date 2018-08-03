@@ -132,56 +132,100 @@
                         }
                     </style>
                     <fieldset>
-                        <legend>Permissions Tree</legend>
+                        <legend>Permissions</legend>
                         Showing permissions for ${selected} moderator.
                         <div class="permissions-tree" >
                             <div class="input-group">
-                                <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                <label for="del-na-ridderhoff">Unlimited Power</label>
+                                <input type="checkbox" id="prem-admin portal" class="perm">
+                                <label for="del-na-ridderhoff">Access Admin Portal (this page)</label>
+                            </div><br/>
+                            <div class="input-group">
+                                <input type="checkbox" id="perm" class="perm" value="">
+                                <label for="del-na-ridderhoff">Access <a href="/mod">Server Moderation Portal</a></label>
+                            </div><br/>
+                            <div class="input-group">
+                                <input type="checkbox" id="del-na-ridderhoff" class="perm" value="">
+                                <label for="del-na-ridderhoff">Use Server Moderation Commands</label>
                             </div>
-                            <ul>
-                                <div class="input-group">
-                                    <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                    <label for="del-na-ridderhoff">Manage Server</label>
-                                </div>
-                                <ul>
-                                    <div class="input-group">
-                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                        <label for="del-na-ridderhoff">Manage Users</label>
-                                    </div>
-                                    <div class="input-group">
-                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                        <label for="del-na-ridderhoff">Manage Roles</label>
-                                    </div>
-                                    <div class="input-group">
-                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                        <label for="del-na-ridderhoff">Manage Channels</label>
-                                    </div>
-                                </ul>
-
-                                <div class="input-group">
-                                    <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                    <label for="del-na-ridderhoff">Manage Bot</label>
-                                </div>
-                                <ul>
-                                    <div class="input-group">
-                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                        <label for="del-na-ridderhoff">Manage Automated Messages</label>
-                                    </div>
-                                    <div class="input-group">
-                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                        <label for="del-na-ridderhoff">Manage Server Metadata</label>
-                                    </div>
-                                    <div class="input-group">
-                                        <input type="checkbox" id="del-na-ridderhoff" class="lol-acct-del-cb" value="">
-                                        <label for="del-na-ridderhoff">Manage Server Metadata</label>
-                                    </div>
-
-                                </ul>
-                            </ul>
                         </div>
                     </fieldset>
 
+                    <script>
+                        var permissions =
+                        // values:
+                        {
+                            id: 0,
+                            power: "Unlimited power",
+
+                            value: "inc",
+                            owned: [
+                                {
+                                    id: 1,
+                                    power: "Manage Server",
+                                    value: "``",
+                                    owned: [
+                                        {
+                                            id: 10,
+                                            power: "Manage Roles",
+                                            owned: false
+                                        },
+                                        {
+                                            id: 11,
+                                            power: "Manage Moderators"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 2,
+                                    power: "Manage Bot",
+                                    value: "inc",
+                                    owned: [
+                                        {
+                                            id: 20,
+                                            power: "Manage Automated Messages",
+                                            value: "inc",
+                                            owned: [
+                                                {   id: 200,
+                                                    power: "Welcome New Members",
+                                                    owned: false
+                                                },
+                                                {   id: 201,
+                                                    power: "RSS Forwarding",
+                                                    owned: false
+                                                },
+                                                {   id: 202,
+                                                    power: "LoL Leaderboard",
+                                                    owned: false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            id: 22,
+                                            power: "Manage Interactions",
+                                            value: "inc",
+                                            owned: [
+                                                {
+                                                    id: 220,
+                                                    power: "LoL Champion Mastery Roles",
+                                                    owned: false
+                                                },
+                                                {
+                                                    id: 221,
+                                                    power: "User DM reminders",
+                                                    owned: false
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            id: 21,
+                                            power: "Manage Metadata",
+                                            owned: false
+                                        },
+                                    ]
+                                }
+                            ]
+                        }
+                    </script>
                     <fieldset>
                         <legend>What brings you to the portal?</legend>
                         <a href="user"><button>User Settings</button></a>

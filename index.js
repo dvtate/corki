@@ -30,7 +30,8 @@ let commands = []
 	.concat(require("./basic_cmds.js"))
 	.concat(require("./international_cmds.js"))
 	.concat(require("./text_cmds.js"))
-	.concat(require("./roles.js"))
+	.concat(require("./sam/roles.js"))
+	.concat(require("./sam/new_members.js"))
 	.concat(require("./lol/lol_commands.js"))
 	.concat(require("./rss/rss_cmds.js"))
 	.concat(require("./reactions.js"))
@@ -64,22 +65,6 @@ global.client.on("error", async e => {
 	console.error(`Client Error: ${e.stack}`);
 });
 
-// welcome new members to the server
-global.client.on("guildMemberAdd", member => {
-
-    // server's new members channel
-    const channel = member.guild.channels.find("name", "new_members")
-		|| member.guild.channels.find("name", "new-members")
-		|| member.guild.channels.find("name", "member-log");
-
-    // if not found give up
-    if (!channel)
-		return;
-
-    // welcome them
-    channel.send(`Welcome to the server, ${member}`);
-
-});
 
 const token = `${require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key`)}`.trim();
 

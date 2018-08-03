@@ -35,7 +35,10 @@ module.exports.catchAsync = fn => (
 
 
 function mutualServers(userid) {
-    let guilds = Array.from(global.client.guilds).filter(g => g[1].members.has(userid));
-    
+    return Array.from(global.client.guilds).filter(g => g[1].members.has(userid));
 }
 module.exports.mutualServers = mutualServers;
+
+function adminServers(userid) {
+    
+}
