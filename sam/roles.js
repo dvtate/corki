@@ -4,6 +4,8 @@
 const logCmd = require("../logging.js");
 const fs = require("fs");
 
+const mods = require("./mods")
+
 function makeServer(serverID) {
     if (fs.existsSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`))
         return true;
@@ -50,8 +52,10 @@ module.exports = [
 
             logCmd(msg, "added a self-assignable role");
 
+            let perms = mods.getModData(msg.guild.id, msg.author.id);
+
             // if they don't have roles priveleges or are a bot then stop them
-            if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES) || msg.author.bot) {
+            if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES) && !perms.admin && !perms.mod_cmds) {
                 msg.channel.send("You are not authorized to use this command here");
                 return;
             }

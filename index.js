@@ -26,16 +26,16 @@ global.client.on("ready", () => {
 
 // set up our list of commands
 let commands = []
-	.concat(require("./dev_cmds.js"))
-	.concat(require("./basic_cmds.js"))
-	.concat(require("./international_cmds.js"))
-	.concat(require("./text_cmds.js"))
+	.concat(require("./cmds/dev_cmds.js"))
+	.concat(require("./cmds/basic_cmds.js"))
+	.concat(require("./cmds/international_cmds.js"))
+	.concat(require("./cmds/text_cmds.js"))
 	.concat(require("./sam/roles.js"))
 	.concat(require("./sam/new_members.js"))
 	.concat(require("./lol/lol_commands.js"))
 	.concat(require("./rss/rss_cmds.js"))
 	.concat(require("./reactions.js"))
-	.concat(require("./help_cmds.js"));
+	.concat(require("./cmds/help_cmds.js"));
 
 //commands.concat(require("./.js");
 

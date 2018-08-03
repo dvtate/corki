@@ -40,7 +40,6 @@
             <div class="col-sm col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
                 <form action="/">
                     <fieldset><legend>Select a user</legend>
-                        <div class="input-group">
                             <input list="users" name="userselect">
                             <datalist id="users">
                                 <option value="ridderhoff#6333">
@@ -49,8 +48,6 @@
                                 <option value="nerd64#5852">
                                 <option value="stan#4449">
                             </datalist>
-                            <label>Select a user</label>
-                        </div>
 
                     </fieldset>
 
@@ -123,14 +120,6 @@
                         </div>
                     </fieldset>
 
-                    <style>
-                        div.permissions-tree {
-                            padding: 5px;
-                        }
-                        div.permissions-tree ul {
-                            border-left: 1px solid grey;
-                        }
-                    </style>
                     <fieldset>
                         <legend>Permissions</legend>
                         Showing permissions for ${selected} moderator.
@@ -150,82 +139,6 @@
                         </div>
                     </fieldset>
 
-                    <script>
-                        var permissions =
-                        // values:
-                        {
-                            id: 0,
-                            power: "Unlimited power",
-
-                            value: "inc",
-                            owned: [
-                                {
-                                    id: 1,
-                                    power: "Manage Server",
-                                    value: "``",
-                                    owned: [
-                                        {
-                                            id: 10,
-                                            power: "Manage Roles",
-                                            owned: false
-                                        },
-                                        {
-                                            id: 11,
-                                            power: "Manage Moderators"
-                                        }
-                                    ]
-                                },
-                                {
-                                    id: 2,
-                                    power: "Manage Bot",
-                                    value: "inc",
-                                    owned: [
-                                        {
-                                            id: 20,
-                                            power: "Manage Automated Messages",
-                                            value: "inc",
-                                            owned: [
-                                                {   id: 200,
-                                                    power: "Welcome New Members",
-                                                    owned: false
-                                                },
-                                                {   id: 201,
-                                                    power: "RSS Forwarding",
-                                                    owned: false
-                                                },
-                                                {   id: 202,
-                                                    power: "LoL Leaderboard",
-                                                    owned: false
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            id: 22,
-                                            power: "Manage Interactions",
-                                            value: "inc",
-                                            owned: [
-                                                {
-                                                    id: 220,
-                                                    power: "LoL Champion Mastery Roles",
-                                                    owned: false
-                                                },
-                                                {
-                                                    id: 221,
-                                                    power: "User DM reminders",
-                                                    owned: false
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            id: 21,
-                                            power: "Manage Metadata",
-                                            owned: false
-                                        },
-                                    ]
-                                }
-                            ]
-                        }
-                    </script>
                     <fieldset>
                         <legend>What brings you to the portal?</legend>
                         <a href="user"><button>User Settings</button></a>
@@ -287,6 +200,7 @@
                 </form>
             </div>
 
-        </div>
+        </div>        
+        <script src="./resources/dl_polyfill.js"></script>
     </body>
 </html>

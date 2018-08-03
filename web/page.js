@@ -63,6 +63,7 @@ module.exports = class Page {
                         ${this.action ? "</form>" :""}
                     </div>
                 </div>
+                <script src="/resources/dl_polyfill.js"></script>
             </body>
         </html>
         `;
@@ -154,7 +155,24 @@ module.exports = class Page {
     }
 
 
+    static searchableSelector(options, label, id, name) {
 
+
+        // static counter so that datalists have unique ids
+        searchableSelector.datalistid = (searchableSelector.datalistid || 0) + 1;
+
+
+        return `
+            <input list="corki-page-ss-id-${searchableSelector.datalistid}"
+            ${id ? `id="${id}"` : ""} ${name ? `name="${name}"` : ""}
+            <datalist id="corki-page-ss-id-${searchableSelector.datalistid}">
+                <option value="${options.join("\">\n<option value=\"")}">
+            </datalist>`;
+    }
+
+    addSearchableSelector(options, label, id, name) {
+        this.html += Page.searchableSelector(options, label, id, name);
+    }
 
 
     addSubmitBox() {
@@ -168,6 +186,8 @@ module.exports = class Page {
             </span>`;
             return this;
     }
+
+
 
 
     export() {

@@ -57,11 +57,3 @@ table.data-table thead tr th {
 table.data-table td {
     background-color: #555;
 }
-
-
-div.permissions-tree {
-    padding: 5px;
-}
-div.permissions-tree ul {
-    border-left: 1px solid grey;
-}

@@ -40,5 +40,19 @@ function mutualServers(userid) {
 module.exports.mutualServers = mutualServers;
 
 function adminServers(userid) {
-    
+    return mutualServers(userid).filter(g => {
+
+        // if they are an owner
+        if (g[1].ownerID == userid)
+            return true;
+
+        // admin permissions
+        if (g[1].members.get(userid).member.permissions.FLAGS.ADMINISTRATOR)
+            return true;
+
+        // listed as admin in mod file
+
+
+
+    })
 }
