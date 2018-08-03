@@ -131,12 +131,8 @@ module.exports = [
     { // msg - send a message to a channel
         condition: msg => msg.content.match(/^\-msg (\S+) ([\s\S]+)/),
         act: async function (msg) {
-            if (!botAdmins.auth(msg.author.id)) {
-                msg.channel.send("You are not authorized to perform this action.\n"
-                               + "Ask @ridderhoff#6333 to add you to the botadmins list.");
-                logCmd(msg, "isn't authorized to use -msg");
-                return;
-            }
+
+
 
             logCmd(msg, "sent a -msg");
 
@@ -144,13 +140,25 @@ module.exports = [
             const channel = match[1];
             const contents = match[2];
 
+            const guild = global.client.channels.get(channel).guild;
+            let perms = mods.getModData(guild.id, msg.author.id);
+
+            // if they don't have roles priveleges or are a bot then stop them
+            if (!botAdmins.auth(msg.author.id) && !guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !perms.admin && !perms.mod_cmds) {
+                msg.channel.send("You are not authorized to perform this action. \
+Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
+                logCmd(msg, "isn't authorized to use -msg");
+                return;
+            }
+
             try {
-                global.client.channels.find("id", channel).send(contents);
+                msg.guild.channels.find("id", channel).send(contents);
             } catch (e) {
-                msg.channel.send("that didn't work.. probably wrong channel id");
+                msg.channel.send("That didn't work.. Probably wrong channel id");
                 console.log(e);
                 return;
             }
+
             msg.channel.send("Done!");
 
         }
