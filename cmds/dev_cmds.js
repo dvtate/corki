@@ -2,6 +2,7 @@
 const logCmd = require("../logging.js");
 
 const botAdmins = require("../bot_admins.js");
+const mods = require("../sam/mods");
 
 function jsonDump(object) {
     const circularJSON = require("circular-json");
@@ -141,7 +142,9 @@ module.exports = [
             const contents = match[2];
 
             const guild = global.client.channels.get(channel).guild;
-            let perms = mods.getModData(guild.id, msg.author.id);
+            let perms = guild ? mods.getModData(guild.id, msg.author.id) : {
+                admin: false, mod: false, mod_cmds: false
+            };
 
             // if they don't have roles priveleges or are a bot then stop them
             if (!botAdmins.auth(msg.author.id) && !guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !perms.admin && !perms.mod_cmds) {

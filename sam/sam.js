@@ -19,7 +19,7 @@ function populateServerDir(serverid) {
 
     // moderation permissions file
     if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/mods.json`))
-        setModData(serverid, generateModFile(serverid));
+        mods.setModData(serverid, mods.generateModData(serverid));
 
 }
 

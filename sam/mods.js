@@ -1,3 +1,4 @@
+const fs = require("fs");
 
 const sam = require("./sam");
 
@@ -33,20 +34,34 @@ function generateModData(serverid) {
 }
 module.exports.generateModData = generateModData;
 
-function getModData(guildid, userid) {
-
+function getMods(guildid) {
     sam.populateServerDir(guildid);
-
-    if (fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/mods.json`))
-        return fs.readFileSync(`${process.env.HOME}/.corki/servers/${serverid}/mods.json`);
-
-    // else return undefined
+    return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${guildid}/mods.json`));
 }
+module.exports.getMods = getMods;
 
+function getModData(guildid, userid) {
+    let ret = getMods(guildid).find(m => m.id == userid);
+    if (!ret)
+        ret = {
+            id: userid,
+            admin: false,
+            mod: false,
+            mod_cmds: false
+        }
+    return ret;
+}
 module.exports.getModData = getModData;
+
 
 function setModData(guildid, mods) {
     sam.makeServerDir(guildid);
-    fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/mods.json`, JSON.stringify(mods));
+    fs.writeFileSync(`${process.env.HOME}/.corki/servers/${guildid}/mods.json`, JSON.stringify(mods));
 }
 module.exports.setModData = setModData;
+
+function editMod(guildid, mod) {
+    sam.populateServerDir(guildid);
+
+    getModData(guildid)
+}
