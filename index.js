@@ -48,7 +48,7 @@ global.client.on("message", async msg => {
 		if (commands[i].condition(msg)) {
 			commands[i].act(msg)
 				.catch(e => {
-					msg.channel.send(`Sorry, that errored please send a \`-bug\` report\n\`\`\`\n${e.stack}\n\`\`\``);
+					msg.channel.send(`Sorry, that errored. If there's anything you would like to add, send a \`-bug\` report\n\`\`\`\n${e.stack}\n\`\`\``);
 					require("./bot_admins.js").sendBugReport(msg, ` Error:\n\`\`\`\n${e.stack}\n\`\`\``);
 					console.error(`Error(${msg.content}):`);
 					console.error(e.stack);
