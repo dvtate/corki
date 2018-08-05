@@ -189,6 +189,87 @@
                         </table>
                     </fieldset>
 
+
+                    <style>
+                        div.guild-entry {
+                            border-radius: 8px;
+                            border: 1px solid grey;
+                            background-color: rgb(60, 60, 70);
+                            transition: background-color 0.5s;
+                            cursor: pointer;
+                            margin: 2px;
+                        }
+                        div.guild-entry:hover {
+                            background-color: rgb(50, 50, 60);
+                        }
+
+                        div.guild-icon-container {
+                            border-bottom-left-radius: 8px;
+                            border-top-left-radius: 8px;
+                            background-image: url(https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg);
+                            background-size: contain;
+                            height: 128px;
+                            width: 128px;
+
+                        }
+
+                        div.guild-icon-container img {
+                            width: 100%;
+                            padding: 0;
+                        }
+                    </style>
+
+                    <fieldset>
+                        <legend>Select a Server to Administrate</legend>
+
+                        <div class="guild-entry row" onclick="alert('testing')">
+                            <div class="guild-icon-container">
+                                <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
+                            </div>
+                            <div>
+                                <h3>aTest Server</h3><hr/>
+                            </div>
+                        </div>
+                        <div class="guild-entry row" onclick="alert('testing')">
+                            <div class="guild-icon-container">
+                                <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
+                            </div>
+                            <div>
+                                <h3>aTest Server</h3><hr/>
+                            </div>
+                        </div>
+                        <div class="guild-entry row" onclick="alert('testing')">
+                            <div class="guild-icon-container">
+                                <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
+                            </div>
+                            <div>
+                                <h3>aTest Server</h3><hr/>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Corki mains server</legend>
+
+                        <div class="container">
+                            Select the channel and fill in the <a onclick="toggleHelp()">message template</a>.
+                            <input id="modal-toggle" type="checkbox" class="modal" hidden/>
+                            <div class="modal">
+                              <div class="card">
+                                <label for="modal-toggle" class="close"></label>
+                                <h3 class="section">Modal</h3>
+                                <p class="section">This is a modal window!</p>
+                              </div>
+                            </div>
+
+                            <button type="button" onclick="togglemodal()">modal</button>
+                            <script>
+                                function toggleHelp() {
+                                    document.getElementById("modal-toggle").checked = !document.getElementById("modal-toggle").checked;
+                                }
+                            </script>
+                        </div>
+                    </fieldset>
                     <span id="submit-box" class="row">
                         <div class="col-md-6">
                             <button type="reset">Reset</button>
@@ -200,7 +281,7 @@
                 </form>
             </div>
 
-        </div>        
+        </div>
         <script src="./resources/dl_polyfill.js"></script>
     </body>
 </html>

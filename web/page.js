@@ -73,7 +73,7 @@ module.exports = class Page {
         if (!src)
             this.html += `<script>${code}</script>`;
         else
-            this.html += `<script src=${src}>${code}</script>`;
+            this.html += `<script src=${src}>${code || ""}</script>`;
 
     }
     addScript(code, src) {
@@ -81,8 +81,8 @@ module.exports = class Page {
         return this;
     }
 
-    static style(code) {
-        return `<style>${code}</style>`;
+    static style(code, src) {
+        return `<style ${src ? `src="${src}"` : ""}>${code || ""}</style>`;
     }
     addStyle(code) {
         this.html += Page.style(code);

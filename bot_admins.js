@@ -15,17 +15,17 @@ module.exports.auth = id => botAdmins.includes(id);
 
 const root = [ "253784341555970048" ]; // @ridderhoff
 
-
 // feel free to join the server btw: https://discord.gg/cXcXSmy
-module.exports.bugReportChannel = "455415485173858318"; // atest/botstuff#bugs
+const bugReportChannel = "455415485173858318";
+module.exports.bugReportChannel = bugReportChannel; // atest server:botstuff#bugs
 
 
 module.exports.sendBugReport = async (msg, bug) => {
     if (msg) {
-        global.client.channels.find("id", this.bugReportChannel)
+        global.client.channels.get(bugReportChannel)
             .send(`@${msg.author.username}#${msg.author.discriminator} found a bug(${msg.content}): ${bug}`);
     } else {
-        global.client.channels.find("id", this.bugReportChannel)
-            .sent(`untraced error: ${bug}`);
+        global.client.channels.find.get(bugReportChannel)
+            .send(`untraced error: ${bug}`);
     }
 }

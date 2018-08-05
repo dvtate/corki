@@ -133,6 +133,8 @@ module.exports = [
         condition: msg => msg.content.match(/^\-msg (\S+) ([\s\S]+)/),
         act: async function (msg) {
 
+            if (msg.author.id == msg.client.user.id)
+                return;
 
 
             logCmd(msg, "sent a -msg");
@@ -182,6 +184,7 @@ is an open-source project, feel free to contribute. https://github.com/dvtate/co
     { // run sh
         condition: msg => msg.content.match(/^\-system (.+)/),
         act: async function (msg) {
+
             // make sure they're authorized
             if (!botAdmins.auth(msg.author.id)) {
                 msg.channel.send("You are not authorized to perform this action.\n"
@@ -218,7 +221,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
             try {
                     eval(code);
             } catch (err) {
-                    msg.channel.send(`error: ${err}`);
+                    msg.channel.send(`error: \`\`\`\n${err.stack}\n\`\`\``);
             }
 
         }

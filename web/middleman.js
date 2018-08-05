@@ -34,6 +34,7 @@ module.exports.catchAsync = fn => (
 
 
 
+
 function mutualServers(userid) {
     return Array.from(global.client.guilds).filter(g => g[1].members.has(userid));
 }
@@ -41,7 +42,7 @@ module.exports.mutualServers = mutualServers;
 
 
 const mods = require("../sam/mods");
-const bodAdmins = require("../../bot_admins");
+const botAdmins = require("../bot_admins");
 
 function adminServers(userid) {
     return mutualServers(userid).filter(g => {
