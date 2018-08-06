@@ -30,7 +30,7 @@ let commands = []
 	.concat(require("./cmds/basic_cmds.js"))
 	.concat(require("./cmds/international_cmds.js"))
 	.concat(require("./cmds/text_cmds.js"))
-	.concat(require("./sam/roles.js"))
+	.concat(require("./sam/roles_cmds.js"))
 	.concat(require("./sam/new_members.js"))
 	.concat(require("./lol/lol_commands.js"))
 	.concat(require("./rss/rss_cmds.js"))

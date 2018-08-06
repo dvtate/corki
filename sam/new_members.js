@@ -29,10 +29,14 @@ module.exports = [
     {
         condition: (msg) => msg.content.match(/^-announce-new-members/),
         act: async (msg) => {
+
+            if (msg.author.bot)
+                return;
+
 			logCmd(msg, "added a new member announcement");
 
 			if (!msg.guild) {
-				msg.channel.send("This command can only be used in a DM");
+				msg.channel.send("This command can not be used in a DM");
 				return;
 			}
 
@@ -67,6 +71,30 @@ Ask the server's owner to promote you to admin or grant you access to this comma
     }, {
         condition: (msg) => msg.content.match(/^-ignore-new-members/),
         act: async (msg) => {
+
+
+            if (msg.author.bot)
+                return;
+
+			logCmd(msg, "reset new member announcement(s)");
+
+			if (!msg.guild) {
+				msg.channel.send("This command can not be used in a DM");
+				return;
+			}
+
+			let perms = mods.getModData(msg.guild.id, msg.author.id);
+
+			// if they don't have roles priveleges or are a bot then stop them
+			if (!botAdmins.auth(msg.author.id) && !guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !perms.admin && !perms.mod_cmds) {
+				msg.channel.send("You are not authorized to perform this action. \
+Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
+				logCmd(msg, "isn't authorized to use -msg");
+				return;
+			}
+
+
+
             // go ahead and make a server directory, doesnt hurt anything
 			sam.makeServerDir(msg.guild.id);
 

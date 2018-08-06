@@ -72,8 +72,8 @@ router.get("/mod", bot.catchAsync(async (req, res) => {
             padding: 0;
         }
     `);
-    page.startFieldset("Select Server to Administrate")
-        .add(`<p>The following is a list of servers you have administrator priviliges in.</p>`);
+    page.startFieldset("Select Server to Moderate")
+        .add(`<p>The following is a list of servers you have moderator priviliges in.</p>`);
 
     guilds.forEach(g => {
         page.add(`
