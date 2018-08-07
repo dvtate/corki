@@ -112,7 +112,7 @@ module.exports = [
 
             };
         },
-        tests: [ "-tz America/New_York", "-tz UTC+2", "-timezone UTC-2" ];
+        tests: [ "-tz America/New_York", "-tz UTC+2", "-timezone UTC-2" ]
     },
 
     { // exchange help
