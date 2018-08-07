@@ -1,9 +1,8 @@
 
 
 // list of people who are trustworthy of not breaking my server
-const botAdmins = [ "253784341555970048",   // @ridderhoff
+const botAdmins = [ "253784341555970048",   // @ridderhoff#6333
                     "186157998538883092",   // @fsm
-                    "126008190067408897",   // @yon g
                   ];
 
 // export list
@@ -21,11 +20,10 @@ module.exports.bugReportChannel = bugReportChannel; // atest server:botstuff#bug
 
 
 module.exports.sendBugReport = async (msg, bug) => {
-    if (msg) {
+    if (msg)
         global.client.channels.get(bugReportChannel)
             .send(`@${msg.author.username}#${msg.author.discriminator} found a bug(${msg.content}): ${bug}`);
-    } else {
-        global.client.channels.get(bugReportChannel)
+    else
+        global.client.channels.lget(bugReportChannel)
             .send(`untraced error: ${bug}`);
-    }
 }

@@ -22,7 +22,7 @@ function populateServerDir(serverid) {
         mods.setModData(serverid, mods.generateModData(serverid));
 
     // self assignable roles
-    if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`))
+    if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`))
         fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`, "[]");
 
 }

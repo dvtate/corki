@@ -71,9 +71,9 @@ module.exports = class Page {
 
     static script(code, src) {
         if (!src)
-            this.html += `<script>${code}</script>`;
+            return `<script>${code}</script>`;
         else
-            this.html += `<script src=${src}>${code || ""}</script>`;
+            return `<script src=${src}>${code || ""}</script>`;
 
     }
     addScript(code, src) {

@@ -3,13 +3,28 @@ const fs = require("fs");
 const sam = require("./sam");
 
 
+/* Server moderators and admins file interface
+    file-format: json
+    containing an array of mod objects
+    {
+        id: relevant user id,
+        admin: if the user has access to the admin portal and/or discord lists them as admin,
+        mod: if the user has access to server management portal,
+        mod_cmds: if the user is allowed to use the server management commands
+    }
+
+*/
+
+
+
+
+
 function generateModData(serverid) {
 
     const guild = global.client.guilds.get(serverid);
 
     // [ { id, admin, mod, mod_cmds } }
     let mods = [];
-
 
     if (guild.ownerID)
         mods.push({
@@ -53,15 +68,26 @@ function getModData(guildid, userid) {
 }
 module.exports.getModData = getModData;
 
-
+// write mod data
 function setModData(guildid, mods) {
     sam.makeServerDir(guildid);
     fs.writeFileSync(`${process.env.HOME}/.corki/servers/${guildid}/mods.json`, JSON.stringify(mods));
 }
 module.exports.setModData = setModData;
 
+
+// edit a mods permissions
+// TODO: finish pls
 function editMod(guildid, mod) {
     sam.populateServerDir(guildid);
 
     getModData(guildid)
 }
+module.exports.editMod = editMod;
+
+
+// delete mod file
+function resetMods(guildid) {
+    fs.unlinkSync(fs.readFileSync(`${process.env.HOME}/.corki/servers/${guildid}/mods.json`));
+}
+module.exports.resetMods = resetMods;

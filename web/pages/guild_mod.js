@@ -39,7 +39,7 @@ router.get("/mod", bot.catchAsync(async (req, res) => {
             .add(`<p>To continue, you must be an administrator/mod of a server where
                  <a href="https://corki.js.org">Corki Bot</a> is used. In addition,
                  if you are a mod, a server Administrator must grant you access to the
-                 moderation page via the <a href="/admin">Admin Portal</a>.</p>
+                 management page via the <a href="/admin">Admin Portal</a>.</p>
                  <button type="button" onclick="redirect('https://corki.js.org')">Add Corki to Server</button>
                  <button type="button" onclick="redirect('/')">Return to Portal Home</button>`);
         res.send(page.export());
