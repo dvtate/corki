@@ -8,8 +8,8 @@ const sam = require("./sam")
 
 // welcome new members to the server
 global.client.on("guildMemberAdd", member => {
-	if (fs.existsSync(`${process.env.HOME}/.corki/servers/${member.guild.id}/announce_new_members.json`)) {
-		const rules = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${member.guild.id}/announce_new_members.json`));
+
+		const rules = getAnnouncementData(member.guild.id);
 		rules.forEach(r => {
 			// replace specials
 			const msg = r.msg.replace("{{server}}", msg.guild.name)
@@ -19,10 +19,26 @@ global.client.on("guildMemberAdd", member => {
 
 			global.client.channels.get(r.id).send(msg)
 		});
-	}
 });
 
 
+function setAnnouncementData(serverid, data) {
+	sam.makeServerDir(serverid);
+
+	fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/announce_new_members.json`,
+		data ? JSON.stringify(data) : "[]");
+}
+module.exports.setAnnouncementData = setAnnouncementData;
+
+function getAnnouncementData(serverid) {
+	// if no configuration data return array with no rules
+	if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/announce_new_members.json`))
+		return [];
+
+	// else return rules array
+	return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${serverid}/announce_new_members.json`));
+}
+module.exports.getAnnouncementData = getAnnouncementData;
 
 module.exports = [
 
@@ -30,40 +46,34 @@ module.exports = [
         condition: (msg) => msg.content.match(/^-announce-new-members/),
         act: async (msg) => {
 
+			// no bot users
             if (msg.author.bot)
                 return;
 
 			logCmd(msg, "added a new member announcement");
 
+			// doesn't make sense for htis in dms
 			if (!msg.guild) {
 				msg.channel.send("This command can not be used in a DM");
 				return;
 			}
 
-			let perms = mods.getModData(msg.guild.id, msg.author.id);
-
-            // if they don't have roles priveleges or are a bot then stop them
-            if (!botAdmins.auth(msg.author.id) && !guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !perms.admin && !perms.mod_cmds) {
+            // mod only cmd
+            if (!mods.isMod(msg.author.id)) {
                 msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
                 logCmd(msg, "isn't authorized to use -msg");
                 return;
             }
 
-
-			sam.makeServerDir(msg.guild.id);
-
-
-            let chans = [];
-            if (fs.existsSync(`${process.env.HOME}/.corki/servers/${msg.guild.id}/announce_new_members.json`))
-                chans = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${msg.guild.id}/announce_new_members.json`));
+            let chans = getAnnouncementData(msg.guild.id);
 
             chans.push({
 				id: msg.channel.id,
 				msg: "Welcome to {{server}}, {{mention}}!"
 			});
 
-            fs.writeFileSync(`${process.env.HOME}/.corki/servers/${msg.guild.id}/announce_new_members.json`, JSON.stringify(chans));
+			setAnnouncementData(msg.guild.id, chans);
 
             msg.channel.send("New members will be welcomed here");
         }
@@ -72,42 +82,33 @@ Ask the server's owner to promote you to admin or grant you access to this comma
         condition: (msg) => msg.content.match(/^-ignore-new-members/),
         act: async (msg) => {
 
-
+			// no bots
             if (msg.author.bot)
                 return;
 
 			logCmd(msg, "reset new member announcement(s)");
 
+			// dms dont make sense for this
 			if (!msg.guild) {
 				msg.channel.send("This command can not be used in a DM");
 				return;
 			}
 
-			let perms = mods.getModData(msg.guild.id, msg.author.id);
-
-			// if they don't have roles priveleges or are a bot then stop them
-			if (!botAdmins.auth(msg.author.id) && !guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !perms.admin && !perms.mod_cmds) {
+			// mod cmd
+			if (!mods.isMod(msg.author.id)) {
 				msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
 				logCmd(msg, "isn't authorized to use -msg");
 				return;
 			}
 
+			// list of new member announcement rules
+			let rules = getAnnouncementData(msg.guild.id);
 
+			// remove all rules involving this channel
+			rules = rules.filter(c => c.id != msg.channel.id);
 
-            // go ahead and make a server directory, doesnt hurt anything
-			sam.makeServerDir(msg.guild.id);
-
-            // if they have rules
-            if (fs.existsSync(`${process.env.HOME}/.corki/servers/${msg.guild.id}/announce_new_members.json`)) {
-                // list of new member announcement rules
-                let rules = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${msg.guild.id}/announce_new_members.json`));
-                // remove all rules involving this channel
-                rules = rules.filter(c => c.id != msg.channel.id);
-                // apply changes
-                fs.writeFileSync(`${process.env.HOME}/.corki/servers/${msg.guild.id}/announce_new_members.json`,
-                                 JSON.stringify(chans));
-            }
+			setAnnouncementData(msg.guild.id, rules);
 
             msg.channel.send("New Members will not be welcomed here");
 

@@ -615,7 +615,7 @@ last played: ${Date(data[i].lastPlayTime)}`
     },
 
 
-    {
+    { // list user's mastery 7 champs
         condition: msg => msg.content.match(/^-lol (?:mastery7|m7|mastery seven)(?:$|\s)/),
         act: async msg => {
             logCmd(msg, "checked m7 champs");
@@ -709,6 +709,8 @@ last played: ${Date(data[i].lastPlayTime)}`
                 msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
                 return;
             }
+
+            msg.channel.send("sorry this hasn't been implemented yet. If you want to see this implemented sooner send a `-bug` report");
         }
     }
 

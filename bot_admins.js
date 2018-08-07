@@ -24,6 +24,6 @@ module.exports.sendBugReport = async (msg, bug) => {
         global.client.channels.get(bugReportChannel)
             .send(`@${msg.author.username}#${msg.author.discriminator} found a bug(${msg.content}): ${bug}`);
     else
-        global.client.channels.lget(bugReportChannel)
+        global.client.channels.get(bugReportChannel)
             .send(`untraced error: ${bug}`);
 }

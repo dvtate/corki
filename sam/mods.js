@@ -91,3 +91,21 @@ function resetMods(guildid) {
     fs.unlinkSync(fs.readFileSync(`${process.env.HOME}/.corki/servers/${guildid}/mods.json`));
 }
 module.exports.resetMods = resetMods;
+
+
+
+
+const botAdmin = require("../bot_admins");
+
+function isMod(guildid, userid, unauthorized) {
+
+	let perms = mods.getModData(guildid, userid);
+
+    // if they don't have roles priveleges or are a bot then stop them
+    if (!botAdmins.auth(userid) && !guild.members.get(userid).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !perms.admin && !perms.mod_cmds)
+        return false;
+    return true;
+
+}
+
+module.exports.isMod = isMod;
