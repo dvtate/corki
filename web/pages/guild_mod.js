@@ -120,21 +120,18 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     let page = new Page(`${guild.name} <span style="font-size: 70%;">Management</span>`, userid);
 
-    /* Services
+    /* Services to add
 
     League Stuff
         Mastery roles
         Leaderboard
 
     RSS feeds
-    Roles
     welcome msg
-
-    coming soon
 
     */
 
-    // sar
+    // self assignable roles
     page.startFieldset("Self-Assignable Roles")
         .add(`<button type="button" onclick="redirect('/mod/${req.params.serverid}/resetroles')">Reset Self Assignable Roles</button>`)
         .add(`<p>The following is a list of roles you have designated as self-assignable. Roles will appear here even if the server doesn't have the given roles created so make sure you spelled and capitalized everything correctly</p>`)

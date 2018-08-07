@@ -28,7 +28,7 @@ module.exports = [
     { // generate an error
         condition: msg => msg.content.match(/^-err (.+)/),
 
-        act: async msg => {
+        act: async function (msg) {
             logCmd(msg, "-err'd");
             throw new Error(this.condition(msg)[1]);
         }
@@ -36,7 +36,8 @@ module.exports = [
 
     { // expose raw message content
         condition: msg => msg.content.match(/^-deformat (.+)/),
-        act: async msg => {
+        act: async function (msg) {
+
             logCmd(msg, "-deformat'd text");
             msg.channel.send(`\`${this.condition(msg)[1]}\``);
         }
@@ -44,7 +45,7 @@ module.exports = [
 
     { // opposite of deformat
         condition: msg => msg.content.match(/^-reformat `(.+)`/),
-        act: async msg => {
+        act: async function (msg) {
             logCmd(msg, "-reformat'd text");
             msg.channel.send(this.condition(msg)[1]);
         }

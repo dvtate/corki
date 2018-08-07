@@ -61,13 +61,26 @@ module.exports.getMods = getMods;
 
 function getModData(guildid, userid) {
     let ret = getMods(guildid).find(m => m.id == userid);
-    if (!ret)
-        ret = {
+
+
+    // botadmin override perms in case of need for debugging
+    if (botAdmins.auth(userid))
+        return {
+            id: userid,
+            admin: true,
+            mod: true,
+            mod_cmds: true
+        };
+
+    // not special enough to be an admin
+    else if (!ret)
+        return {
             id: userid,
             admin: false,
             mod: false,
             mod_cmds: false
-        }
+        };
+
     return ret;
 }
 module.exports.getModData = getModData;
@@ -113,3 +126,14 @@ function isMod(guildid, userid, unauthorized) {
 }
 
 module.exports.isMod = isMod;
+
+
+function pruneMods(guildid) {
+    let mods = getMods(guildid);
+    const guild = global.client.guilds.get(guildid);
+    if (!guild)
+        return;
+    mods.filter(m => {
+        m.id
+    })
+}

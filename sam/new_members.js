@@ -41,6 +41,46 @@ module.exports.getAnnouncementData = getAnnouncementData;
 
 module.exports = [
 
+	{ // with custom welcome msg
+		condition: msg => msg.content.match(/^-announce-new-members ([\s\S]+)/),
+		act: async function (msg) {
+
+			// no bot users
+	        if (msg.author.bot)
+	            return;
+
+			logCmd(msg, "added a new member announcement");
+
+			// doesn't make sense for htis in dms
+			if (!msg.guild) {
+				msg.channel.send("This command can not be used in a DM");
+				return;
+			}
+
+	        // mod only cmd
+	        if (!mods.isMod(msg.guild.id, msg.author.id)) {
+	            msg.channel.send("You are not authorized to perform this action. \
+Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
+	            logCmd(msg, "isn't authorized to use -msg");
+	            return;
+	        }
+
+			const msgTemplate = this.conditionmsg[1];
+
+	        let chans = getAnnouncementData(msg.guild.id);
+
+	        chans.push({
+				id: msg.channel.id,
+				msg: msgTemplate
+			});
+
+			setAnnouncementData(msg.guild.id, chans);
+
+	        msg.channel.send("New members will be welcomed here");
+		}
+
+	},
+
     {
         condition: msg => msg.content.match(/^-announce-new-members(?:$|\s)/),
         act: async msg => {
@@ -78,46 +118,6 @@ Ask the server's owner to promote you to admin or grant you access to this comma
         }
 
     },
-
-	{ // with custom welcome msg
-		condition: msg => msg.content.match(/^-announce-new-members ([\s\S]+)/),
-		act: async msg => {
-
-			// no bot users
-	        if (msg.author.bot)
-	            return;
-
-			logCmd(msg, "added a new member announcement");
-
-			// doesn't make sense for htis in dms
-			if (!msg.guild) {
-				msg.channel.send("This command can not be used in a DM");
-				return;
-			}
-
-	        // mod only cmd
-	        if (!mods.isMod(msg.guild.id, msg.author.id)) {
-	            msg.channel.send("You are not authorized to perform this action. \
-Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
-	            logCmd(msg, "isn't authorized to use -msg");
-	            return;
-	        }
-
-			const msgTemplate = this.conditionmsg[1];
-
-	        let chans = getAnnouncementData(msg.guild.id);
-
-	        chans.push({
-				id: msg.channel.id,
-				msg: msgTemplate
-			});
-
-			setAnnouncementData(msg.guild.id, chans);
-
-	        msg.channel.send("New members will be welcomed here");
-		}
-
-	},
 
 
 	{
