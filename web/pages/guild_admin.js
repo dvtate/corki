@@ -47,7 +47,7 @@ router.get("/admin", bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token, res);
 
-    let page = new Page(null, userid);
+    let page = new Page("Server Administration", userid);
 
 
     const guilds = bot.adminServers(userid);
@@ -111,17 +111,18 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         return;
     }
 
-
     const userid = await bot.getUserID(req.cookies.token, res);
 
-    let page = new Page(null, userid);
 
 
     let perms = mods.getModData(req.params.serverid, userid);
     let guild = global.client.guilds.get(req.params.serverid);
 
+
     // unauthorized
     if (!guild || !perms.admin) {
+        let page = new Page(null, userid);
+
         page.startFieldset("Access Denied")
             .add(`
                 <p>In order to access this page you must be a designated admin in ${
@@ -136,6 +137,7 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             return;
     }
 
+        let page = new Page(`${guild.name} <span style="font-size: 70%;">Administration</span>`, userid);
 
     // user-select
     page.startFieldset("Select Server Member")
@@ -311,18 +313,15 @@ router.get("/admin/:serverid([0-9]+)/apply/:modsjson", bot.catchAsync(async (req
     const perms = mods.getModData(req.params.serverid, userid);
     const guild = global.client.guilds.get(req.params.serverid);
 
-    console.log(!!guild);
-    console.log(perms.admin);
-
 
     // if authorized apply desired changes
     if (guild && perms.admin) {
         const modData = JSON.parse(decodeURIComponent(req.params.modsjson));
-        console.log(modData);
         mods.setModData(guild.id, modData);
     }
 
-    res.redirect(`/admin/${req.params.serverid}`);
+    res.redirect("/admin/");
+
 }));
 
 

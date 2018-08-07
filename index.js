@@ -63,6 +63,12 @@ global.client.on("error", async e => {
 	console.error(`Client Error: ${e.stack}`);
 });
 
+global.client.on("guildCreate", async g => {
+	guild.owner.createDM.then(dm => dm.send(`Hey, you just added me to ${g.name}. :D
+- To set up your server, add features, change behavior, etc. goto corki.js.org/portal?rdr=mod
+- To allow mods to do it for you goto corki.js.org/portal?rdr=admin
+- For some general info on the bot go to corki.js.org`));
+})
 
 const token = `${require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key`)}`.trim();
 

@@ -12,9 +12,13 @@ function getRoles(serverID) {
 
 module.exports.getRoles = getRoles;
 
+function setRoles(serverID, roles) {
+    sam.makeServerDir(serverID);
+    fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`, JSON.stringify(roles));
+}
+module.exports.setRoles = setRoles;
 
-function addRole(role, serverID) {
-    sam.populateServerDir(serverID); // be safe
+function addRole(serverID, role) {
 
     // get roles from file
     let roles = getRoles(serverID);
@@ -24,10 +28,10 @@ function addRole(role, serverID) {
         return;
 
     // add it to list of roles
-    roles = roles.concat(role);
+    roles.push(role);
 
     // write role to file
-    fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`, JSON.stringify(roles));
+    setRoles(serverID, roles);
 }
 
 module.exports.addRole = addRole;

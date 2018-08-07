@@ -1,5 +1,7 @@
-const roles = require("./roles");
+const logCmd = require("../logging");
 
+const roles = require("./roles");
+const mods = require("./mods");
 
 module.exports = [
     { // mod add roles
@@ -10,21 +12,27 @@ module.exports = [
 
             if (msg.author.bot)
                 return;
-
-            logCmd(msg, "added a self-assignable role");
-
-            let perms = mods.getModData(msg.guild.id, msg.author.id);
-
-            // if they don't have roles priveleges or are a bot then stop them
-            if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES) && !perms.admin && !perms.mod_cmds) {
-                msg.channel.send("You are not authorized to use this command here");
+            if (!msg.guild) {
+                msg.channel.send("This command cannot be used in DM's")
                 return;
             }
+            if (!mods.isMod(msg.guild.id, msg.author.id) && (
+                    !msg.member
+                    || !msg.member.permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES))
+            ) {
+                msg.channel.send("You must be given permission to run server \
+management commands in order to perform this action. Ask an administrator to grant \
+you these powers via https://corki.js.org/admin");
+                return;
+            }
+
+
+            logCmd(msg, "added a self-assignable role");
 
             this.condition(msg)[1] // find roles argument
                     .split(",")                         // take each role (separated by commas)
                         .map(r => r.trim())             // trim whitespace
-                            .forEach(r => roles.addRole(r, msg.guild.id)); // add the roles
+                            .forEach(r => roles.addRole(msg.guild.id, r)); // add the roles
 
             msg.channel.send("Done!");
         }
@@ -33,9 +41,19 @@ module.exports = [
         condition: msg => msg.content.match(/^-reset-(?:ssignable-roles?|sar)/),
         act: async (msg) => {
 
-            // if they don't have roles priveleges or are a bot then stop them
-            if (!msg.guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES) || msg.author.bot) {
-                msg.channel.send("You are not authorized to use this command here");
+            if (msg.author.bot)
+                return;
+            if (!msg.guild) {
+                msg.channel.send("This command cannot be used in DM's")
+                return;
+            }
+            if (!mods.isMod(msg.guild.id, msg.author.id) && (
+                    !msg.member
+                    || !msg.member.permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES))
+            ) {
+                msg.channel.send("You must be given permission to run server \
+management commands in order to perform this action. Ask an administrator to grant \
+you these powers via https://corki.js.org/admin");
                 return;
             }
 
@@ -56,21 +74,26 @@ module.exports = [
             // designated self assignable roles for server
             const serverRoles = roles.getRoles(msg.guild.id);
 
-            let roles = this.condition(msg)[1]  // find roles argument
+            let desiredRoles =
+                this.condition(msg)[1]          // find roles argument
                     .split(',')                 // take each role (separated by commas)
                         .map(r => r.trim());    // trim whitespace
 
             // verify the roles are valid
-            for (let i = 0; i < roles.length; i++)
-                if (!serverRoles.includes(roles[i])) {
+            for (let i = 0; i < desiredRoles.length; i++)
+                if (!serverRoles.includes(desiredRoles[i])) {
                     msg.channel.send(`Invalid role "${roles[i]}"`);
                     return;
                 }
 
             // map each role to its coresponding id
-            roles.map(r => msg.guild.roles.find("name", r))
+            desiredRoles.map(r => msg.guild.roles.find("name", r))
                 // give user each of the roles they asked for
-                .forEach(r => msg.member.addRole(r).catch(console.error));
+                .forEach(r => msg.member.addRole(r).catch(e => {
+                    if (e.name == "TypeError")
+                        msg.channel.send("It appears the server administrator hasn't \
+added this role to the server yet. Maybe you should remind them about it");
+                }));
 
             msg.channel.send("done!");
 
@@ -122,34 +145,3 @@ To self-assign a role you can use the command \`-iam <role>\``);
 
 
 ];
-
-const rolesHelpInfo = { embed: {
-        title: "Roles",
-        description: "Use the bot to set your roles on the server!",
-        fields: [
-            {
-                name: "Skins",
-                value: "If you want a [colorful name](https://raw.githubusercontent.com/dvtate/dvtate.github.io/master/dls/perm/corki-roles.png) \
-you should use `-iam` to set your skin to one of the following: \
-Urfrider, Arcade, Dragonwing, Ice Toboggan, Red Baron, Hot Rod, Fnatic, UFO"
-            }, {
-                name: "Regions",
-                value: "You can also use `-iam` to specify your region. The following are supported: \
-TR, RU, OCE, LAS, LAN, KR, JP, BR, EUNE, NA, EUW"
-            }, {
-                name: "Example",
-                value: `
-I just joined the serer so I'll set my roles now. I play in NA and like the color green.
-\`-iam NA, UFO\`
-
-I decided to move to Brazil so I'll change my region.
-\`-iamnot NA\`
-\`-iam BR\``
-            }
-        ],
-
-        thumbnail: {
-            url: "https://raw.githubusercontent.com/dvtate/dvtate.github.io/master/dls/perm/corki-roles.png",
-            width: 94, height: 188
-        }
-}};
