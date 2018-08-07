@@ -2,9 +2,8 @@
 const fs = require("fs");
 
 const logCmd = require("../logging");
-const sam = require("./sam")
-
-
+const sam = require("./sam");
+const mods = require("./mods");
 
 // welcome new members to the server
 global.client.on("guildMemberAdd", member => {
@@ -12,12 +11,12 @@ global.client.on("guildMemberAdd", member => {
 		const rules = getAnnouncementData(member.guild.id);
 		rules.forEach(r => {
 			// replace specials
-			const msg = r.msg.replace("{{server}}", msg.guild.name)
+			const msg = r.msg.replace("{{server}}", member.guild.name)
 				.replace(/\{\{(?:mention|member)\}\}/, member.toString())
 				.replace("{{server}}", member.guild.name)
 				.replace("{{memberCount}}", member.guild.memberCount);
 
-			global.client.channels.get(r.id).send(msg)
+			global.client.channels.get(r.id).sendmsg
 		});
 });
 
@@ -43,8 +42,8 @@ module.exports.getAnnouncementData = getAnnouncementData;
 module.exports = [
 
     {
-        condition: (msg) => msg.content.match(/^-announce-new-members/),
-        act: async (msg) => {
+        condition: msg => msg.content.match(/^-announce-new-members(?:$|\s)/),
+        act: async msg => {
 
 			// no bot users
             if (msg.author.bot)
@@ -59,7 +58,7 @@ module.exports = [
 			}
 
             // mod only cmd
-            if (!mods.isMod(msg.author.id)) {
+            if (!mods.isMod(msg.guild.id, msg.author.id)) {
                 msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
                 logCmd(msg, "isn't authorized to use -msg");
@@ -78,9 +77,52 @@ Ask the server's owner to promote you to admin or grant you access to this comma
             msg.channel.send("New members will be welcomed here");
         }
 
-    }, {
-        condition: (msg) => msg.content.match(/^-ignore-new-members/),
-        act: async (msg) => {
+    },
+
+	{ // with custom welcome msg
+		condition: msg => msg.content.match(/^-announce-new-members ([\s\S]+)/),
+		act: async msg => {
+
+			// no bot users
+	        if (msg.author.bot)
+	            return;
+
+			logCmd(msg, "added a new member announcement");
+
+			// doesn't make sense for htis in dms
+			if (!msg.guild) {
+				msg.channel.send("This command can not be used in a DM");
+				return;
+			}
+
+	        // mod only cmd
+	        if (!mods.isMod(msg.guild.id, msg.author.id)) {
+	            msg.channel.send("You are not authorized to perform this action. \
+Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
+	            logCmd(msg, "isn't authorized to use -msg");
+	            return;
+	        }
+
+			const msgTemplate = this.conditionmsg[1];
+
+	        let chans = getAnnouncementData(msg.guild.id);
+
+	        chans.push({
+				id: msg.channel.id,
+				msg: msgTemplate
+			});
+
+			setAnnouncementData(msg.guild.id, chans);
+
+	        msg.channel.send("New members will be welcomed here");
+		}
+
+	},
+
+
+	{
+        condition: msg => msg.content.match(/^-ignore-new-members(?:$|\s)/),
+        act: async msg => {
 
 			// no bots
             if (msg.author.bot)
@@ -95,7 +137,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
 			}
 
 			// mod cmd
-			if (!mods.isMod(msg.author.id)) {
+            if (!mods.isMod(msg.guild.id, msg.author.id)) {
 				msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
 				logCmd(msg, "isn't authorized to use -msg");

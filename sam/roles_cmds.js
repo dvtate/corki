@@ -21,8 +21,7 @@ module.exports = [
                 return;
             }
 
-            msg.content
-                .match(/^-add-(?:ssignable-roles?|sar) (.+)/)[1] // find roles argument
+            this.condition(msg)[1] // find roles argument
                     .split(",")                         // take each role (separated by commas)
                         .map(r => r.trim())             // trim whitespace
                             .forEach(r => roles.addRole(r, msg.guild.id)); // add the roles
@@ -57,8 +56,7 @@ module.exports = [
             // designated self assignable roles for server
             const serverRoles = roles.getRoles(msg.guild.id);
 
-            let roles = msg.content
-                .match(/^-iam (.+)/)[1]         // find roles argument
+            let roles = this.condition(msg)[1]  // find roles argument
                     .split(',')                 // take each role (separated by commas)
                         .map(r => r.trim());    // trim whitespace
 
@@ -101,8 +99,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
         condition: msg => msg.content.match(/^-iamnot (.+)/),
 
         act: async function (msg) {
-            let roles = msg.content
-                .match(/^-iamnot (.+)/)[1]      // find roles argument
+            let roles = this.condition(msg)[1]  // find roles argument
                     .split(",")                 // take each role (separated by commas)
                         .map(r => r.trim());    // reomve excess whitespace
 

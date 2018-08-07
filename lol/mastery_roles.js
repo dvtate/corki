@@ -16,7 +16,7 @@ function removeRoles(server, member, roles) {
     });
 }
 
-/*
+/* example comfig
 rules =
 [{
     "champ" : 42,
@@ -32,58 +32,6 @@ rules =
         }, {
             required : 100000,
             role : "100k",
-            announce: true
-        }, {
-            required : 150000,
-            role : "150k",
-            announce: true
-        }, {
-            required: 200000,
-            role : "200k",
-            announce: true
-        }, {
-            required: 250000,
-            role : "250k",
-            announce: true
-        }, {
-            required: 300000,
-            role : "300k",
-            announce: true
-        }, {
-            required: 350000,
-            role : "350k",
-            announce: true
-        }, {
-            required: 400000,
-            role : "400k",
-            announce: true
-        }, {
-            required: 450000,
-            role : "450k",
-            announce: true
-        }, {
-            required: 500000,
-            role : "500k",
-            announce: true
-        }, {
-            required: 600000,
-            role : "600k",
-            announce: true
-        }, {
-            required: 700000,
-            role : "700k",
-            announce: true
-        }, {
-            required: 800000,
-            role : "800k",
-            announce: true
-        }, {
-            required: 900000,
-            role : "900k",
-            announce: true
-        }, {
-            required: 1000000,
-            role : "1 Million",
             announce: true
         }
     ],

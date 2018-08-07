@@ -8,7 +8,7 @@ module.exports = [
         condition: msg => msg.content.match(/^\-exchange ([0-9\.]+)\s?([a-zA-Z]{3})(?:\sto\s|\s)?([a-zA-Z]{3})(?:$|\s)/),
 
         act: async function (msg) {
-            const match = msg.content.match(/^\-exchange ([0-9\.]+)\s?([a-zA-Z]{3})(?:\sto\s|\s)?([a-zA-Z]{3})(?:$|\s)/);
+            const match = this.condition(msg);
 
             // currency conversion api
         	let exchange = require("open-exchange-rates"),
@@ -61,7 +61,8 @@ module.exports = [
         			logCmd(msg, `-exchange caught error: ${e}`);
         		}
         	});
-        }
+        },
+        tests: [ "-exchange 20 usd to CAD", "-exchange 20cnygbp" ]
     },
 
     { // exchange help
@@ -80,7 +81,7 @@ module.exports = [
 
             logCmd(msg, "/timezone'd");
 
-            const match = msg.content.match(/^\-(?:timezone|tz) (.+)/)[1];
+            const match = this.condition(msg)[1];
 
             let tz;
 
@@ -110,7 +111,8 @@ module.exports = [
                 msg.channel.send(timezoneHelpInfo);
 
             };
-        }
+        },
+        tests: [ "-tz America/New_York", "-tz UTC+2", "-timezone UTC-2" ];
     },
 
     { // exchange help

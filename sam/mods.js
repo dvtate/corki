@@ -21,7 +21,11 @@ const sam = require("./sam");
 
 function generateModData(serverid) {
 
+    console.log(serverid)
     const guild = global.client.guilds.get(serverid);
+
+    if (!guild)
+        return null;
 
     // [ { id, admin, mod, mod_cmds } }
     let mods = [];
@@ -95,14 +99,14 @@ module.exports.resetMods = resetMods;
 
 
 
-const botAdmin = require("../bot_admins");
+const botAdmins = require("../bot_admins");
 
 function isMod(guildid, userid, unauthorized) {
 
-	let perms = mods.getModData(guildid, userid);
+	let perms = getModData(guildid, userid);
 
     // if they don't have roles priveleges or are a bot then stop them
-    if (!botAdmins.auth(userid) && !guild.members.get(userid).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !perms.admin && !perms.mod_cmds)
+    if (!botAdmins.auth(userid) && !perms.admin && !perms.mod_cmds)
         return false;
     return true;
 

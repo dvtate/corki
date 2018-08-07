@@ -5,7 +5,7 @@ const request = require("request");
 module.exports = [
 
     { // 8ball
-        condition: msg => msg.content.match(/^-8ball(?:$|\s)/),
+        condition: msg => msg.content.match(/^-(?:8ball|7rockets)(?:$|\s)/),
 
         act: async function (msg) {
             logCmd(msg, "shook -8ball");
@@ -26,7 +26,8 @@ module.exports = [
 
             msg.channel.send(responses[Math.floor(Math.random() * responses.length)]);
             */
-        }
+        },
+        tests: [ "-8ball" ]
     },
 
     { // echo
@@ -35,17 +36,19 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "caused an -echo");
 
-            const content = msg.content.match(/^-echo (.+)/)[1];
+            const content = this.condition(msg)[1];
             msg.channel.send(content);
-        }
+        },
+        tests: [ "-echo test", "-echo -echo test"]
     },
 
     { // echo help
         condition: msg => msg.content.match(/^-echo(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "-echo'd a message"),
+            logCmd(msg, "-echo'd for help"),
             msg.channel.send("`-echo` expected a message");
-        }
+        },
+        tests: [ "-echo" ]
     },
 
     { // coin flip
@@ -54,16 +57,17 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "flipped a coin");
             msg.channel.send(Math.random() < 0.5 ? "tails" : "heads");
-        }
+        },
+        tests: [ "-coinflip" ]
     },
 
     { // random
-        condition: msg => msg.content.match(/^-random (.+)/),
+        condition: msg => msg.content.match(/^-rand(?:om)? (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "used RNG");
 
-            const args = msg.content.match(/^-random (.+)/)[1];
+            const args = this.condition(msg)[1];
         	let lims = args.split(/ |,|\n|, /);
         	//logCmd(msg, `random :: ${lims}`);
 
@@ -83,13 +87,15 @@ module.exports = [
     		msg.channel.send(`random number = ${rand}`);
 
 
-        }
+        },
+        tests: [ "-random 99", "-random 0 1000", "-random -1000 0", "-random 0,100" ]
 
     },
 
     { // random help
         condition: msg => msg.content.match(/^-random(?:$|\s)|^-help random(?:$|\s)/),
-        act: async msg => msg.channel.send(randomHelpInfo)
+        act: async msg => msg.channel.send(randomHelpInfo),
+        tests: [ "-random" ]
 
     },
 
@@ -100,7 +106,7 @@ module.exports = [
 
             logCmd(msg, "read -xkcd");
 
-            const num = msg.content.match(/^-xkcd (.+)/)[1];
+            const num = this.condition(msg)[1];
             const url = `https://xkcd.com/${num == "latest" ? "" : num}`;
 
 
@@ -125,7 +131,8 @@ module.exports = [
 
             });
 
-        }
+        },
+        tests: [ "-xkcd 123", "-xkcd latest" ]
 
     },
 
@@ -143,14 +150,21 @@ module.exports = [
                     return;
                 }
 
-                const imgurl = `https:${body.match(/<div id="comic">\n<img src="(.+?)"\s/)[1]}`;
-                const title = body.match(/<div id="ctitle">(.+?)<\/div>/)[1];
-                msg.channel.send(`${title} ${imgurl}`);
+                try {
+                    const imgurl = `https:${ body.match(/<div id="comic">\n<img src="(.+?)"\s/)[1] }`;
+                    const title = body.match(/<div id="ctitle">(.+?)<\/div>/)[1];
+                    msg.channel.send(`${title} ${imgurl}`);
+                } catch (e) {
+                    console.log("xkcd error: page: ", body);
+                    msg.channel.send("xkcd errored, try again");
+                    return;
+                }
 
             });
-        }
+        },
+        tests: [ "-xkcd" ]
 
-    }
+    },
 
 
 ];

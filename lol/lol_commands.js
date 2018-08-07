@@ -49,7 +49,7 @@ module.exports = [
         condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "checked lol mastery");
-            const match = msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/);
+            const match = this.condition(msg);
             const champName = match[1].toLowerCase();
             const champID = teemo.champIDs[champName];
             const id = match[2];
@@ -73,7 +73,7 @@ module.exports = [
         condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+)/),
         act: async function (msg) {
             logCmd(msg, "checked lol mastery");
-            const champName = msg.content.match(/^-(?:mastery|lol mastery) (\S+)/)[1].toLowerCase();
+            const champName = this.condition(msg)[1].toLowerCase();
             const champID =  teemo.champIDs[champName];
 
             if (!champID) {
@@ -104,7 +104,7 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "linked an LoL acct (-lol add)");
 
-            const match = msg.content.match(/-lol add (\S+) (.+)/);
+            const match = this.condition(msg);
             const server = teemo.serverNames[match[1].toLowerCase()];
             if (!server) {
                 msg.channel.send("Invalid/Missing region. Use `-lol servers` to see a list of regions");
@@ -144,7 +144,7 @@ region and summoner name\nFor example: `-lol add na ridderhoff`")
             logCmd(msg, "listed a user's lol accts. (-lol list)");
 
 
-            const id = msg.content.match(/^-lol list <@!?([0-9]+)>/)[1];
+            const id = this.condition(msg)[1];
             const userObj = lol.getUserData(id);
 
             if (!userObj) {
@@ -185,7 +185,7 @@ region and summoner name\nFor example: `-lol add na ridderhoff`")
         act: async function (msg) {
             logCmd(msg, "modified their main account");
             let userObj = lol.getUserData(msg.author.id);
-            userObj.main = msg.content.match(/^-lol main ([0-9])/)[1];
+            userObj.main = this.condition(msg)[1];
             lol.setUserData(msg.author.id, userObj);
             msg.channel.send("main account updated");
         }
@@ -207,7 +207,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         act: async function (msg) {
             logCmd(msg, "made a call to teemo.js");
 
-            const args = msg.content.match(/^-lol api ([\S\s]+)/)[1].split(" ");
+            const args = this.condition(msg)[1].split(" ");
             teemo.riot.get.apply(teemo.riot, args)
                 .then(data => msg.channel.send(JSON.stringify(data)))
                 .catch(err => msg.channel.send(`err: ${err}`) );
@@ -221,7 +221,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let timer = process.hrtime();
             logCmd(msg, "generated leaderboard");
 
-            const champName = msg.content.match(/^-lol (?:leaderboard|lb) (\S+)/)[1].replace(/\s/g, '');
+            const champName = this.condition(msg)[1].replace(/\s/g, '');
             const champID = teemo.champIDs[champName.toLowerCase()];
 
 
@@ -253,7 +253,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             let timer = process.hrtime();
 
-            const champName = msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/)[1].replace(/\s/g, '');
+            const champName = this.condition(msg)[1].replace(/\s/g, '');
             const champID = teemo.champIDs[champName.toLowerCase()];
 
 
@@ -283,7 +283,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         act: async function (msg) {
             logCmd(msg, "checked an account's -lol rank");
 
-            const match = msg.content.match(/^-lol rank (\S+) (.+)/);
+            const match = this.condition(msg);
             const server = teemo.serverNames[match[1].toLowerCase()];
 
             if (!server) {
@@ -315,7 +315,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         act: async function (msg) {
             logCmd(msg, "checked a user's -lol rank");
 
-            const id = msg.content.match(/^-lol rank <@!?([0-9]+)>/)[1];
+            const id = this.condition(msg)[1];
             let userObj = lol.getUserData(id);
 
             if (!userObj) {
@@ -374,7 +374,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
         act: async function (msg) {
             logCmd(msg, "asked about a matchup");
-            const match = msg.content.match(/^-lol matchup (\S+) (?:vs?\.? )?(\S+)/);
+            const match = this.condition(msg);
 
             const champ1id = teemo.champIDs[match[1].toLowerCase()];
             const champ2id = teemo.champIDs[match[2].toLowerCase()];
@@ -446,7 +446,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
         act: async function (msg) {
             logCmd(msg, "asked about a matchup");
-            const match = msg.content.match(/^-lol matchup (\S+) (\S+) (?:vs?\.? )?(\S+)/);
+            const match = this.condition(msg);
 
 
             const roleNames = {
@@ -546,7 +546,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     { // champgg winrate
         condition: msg => msg.content.match(/^-lol wr (\S+)/),
         act: async function (msg) {
-            const champName = msg.content.match(/^-lol wr (\S+)/)[1];
+            const champName = this.condition(msg)[1];
             const champ = teemo.champIDs[champName.toLowerCase()];
             if (!champ) {
                 msg.channel.send(`Unknown champion ${champName}. Make sure spelling is correct and there are no spaces or special characters`);
@@ -565,7 +565,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         condition: msg => msg.content.match(/^-lol c (\S+)/),
         act: async function (msg) {
             logCmd(msg, "got a champ name/id (-lol c)");
-            msg.channel.send(teemo.champs[msg.content.match(/^-lol c (\S+)/)[1].toLowerCase()]);
+            msg.channel.send(teemo.champs[this.condition(msg)[1].toLowerCase()]);
         }
     },
 

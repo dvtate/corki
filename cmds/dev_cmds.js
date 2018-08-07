@@ -21,7 +21,8 @@ module.exports = [
         act: async msg => {
             logCmd(msg, "-ping'd");
             msg.channel.send(`pong (lag: ${global.client.ping}ms)`);
-        }
+        },
+        tests: [ "ping" ]
     },
 
     { // generate an error
@@ -29,7 +30,7 @@ module.exports = [
 
         act: async msg => {
             logCmd(msg, "-err'd");
-            throw new Error(msg.content.match(/^-err (.+)/)[1]);
+            throw new Error(this.condition(msg)[1]);
         }
     },
 
@@ -37,7 +38,7 @@ module.exports = [
         condition: msg => msg.content.match(/^-deformat (.+)/),
         act: async msg => {
             logCmd(msg, "-deformat'd text");
-            msg.channel.send(`\`${msg.content.match(/^-deformat (.+)/)[1]}\``);
+            msg.channel.send(`\`${this.condition(msg)[1]}\``);
         }
     },
 
@@ -45,7 +46,7 @@ module.exports = [
         condition: msg => msg.content.match(/^-reformat `(.+)`/),
         act: async msg => {
             logCmd(msg, "-reformat'd text");
-            msg.channel.send(msg.content.match(/^-reformat `(.+)`/)[1]);
+            msg.channel.send(this.condition(msg)[1]);
         }
     },
 
@@ -57,7 +58,7 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "asked for a -log");
 
-            const req = msg.content.match(/^\-log (.+)/)[1].split(' ');
+            const req = this.condition(msg)[1].split(' ');
             if (req.length == 1)
                 if (req[0] == "msg") {
                     console.log(msg);
@@ -117,7 +118,8 @@ module.exports = [
                 console.log(msg.contents);
             }
 
-        }
+        },
+        tests: [ "-log channel", "-log guild", "-log author", "-log help" ]
 
     },
 
@@ -139,7 +141,7 @@ module.exports = [
 
             logCmd(msg, "sent a -msg");
 
-            const match = msg.content.match(/\-msg (\S+) ([\s\S]+)/)
+            const match = this.condition(msg);
             const channel = match[1];
             const contents = match[2];
 
@@ -173,7 +175,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
     { // bug report
         condition: msg => msg.content.match(/^\-bug (.+)/),
         act: async function (msg) {
-            logCmd(msg, `found a -bug: ${msg.content.match(/^\-bug (.+)/)[1]}`);
+            logCmd(msg, `found a -bug: ${this.condition(msg)[1]}`);
             msg.channel.send(`Thank you for the bug report! ${global.client.user} \
 is an open-source project, feel free to contribute. https://github.com/dvtate/corki-bot/`);
 
@@ -182,7 +184,7 @@ is an open-source project, feel free to contribute. https://github.com/dvtate/co
     },
 
     { // run sh
-        condition: msg => msg.content.match(/^\-system (.+)/),
+        condition: msg => msg.content.match(/^\-sys(?:tem)? (.+)/),
         act: async function (msg) {
 
             // make sure they're authorized
@@ -193,7 +195,7 @@ is an open-source project, feel free to contribute. https://github.com/dvtate/co
                 return;
             }
 
-            const command = msg.content.match(/^\-system (.+)/)[1];
+            const command = this.condition(msg)[1];
 
             // run command and send output
             require("child_process")
@@ -217,7 +219,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
                 return;
             }
 
-            const code = msg.content.match(/^-eval ([\s\S]+)/)[1];
+            const code = this.condition(msg)[1];
             try {
                     eval(code);
             } catch (err) {
@@ -244,6 +246,25 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
 ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
 } hours, ${Math.floor(time / 60) % 60} minutes, and ${time % 60} seconds and counting`);
 
+        },
+        tests: [ "-uptime" ]
+    },
+
+    {
+        condition: msg => msg.content.match(/^-full-test/),
+        act: async msg => {
+            if (!botAdmins.auth(msg.author.id))
+                return;
+
+            let i = 0
+            global.commands.forEach(c => {
+                setTimeout(() => {
+                    if (c.tests)
+                        c.tests.forEach(testMsg =>
+                            global.client.channels.get("476246169652035595").send(testMsg));
+
+                }, i += 1000)
+            });
         }
     }
 ];

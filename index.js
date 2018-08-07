@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 
 // see file if ur concerned about privacy, its not bad
 const logCmd = require("./logging.js");
@@ -25,7 +25,7 @@ global.client.on("ready", () => {
 
 
 // set up our list of commands
-let commands = []
+global.commands = []
 	.concat(require("./cmds/dev_cmds.js"))
 	.concat(require("./cmds/basic_cmds.js"))
 	.concat(require("./cmds/international_cmds.js"))
@@ -36,8 +36,6 @@ let commands = []
 	.concat(require("./rss/rss_cmds.js"))
 	.concat(require("./reactions.js"))
 	.concat(require("./cmds/help_cmds.js"));
-
-//commands.concat(require("./.js");
 
 // message event listener
 global.client.on("message", async msg => {
