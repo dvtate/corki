@@ -31,7 +31,7 @@ global.commands = []
 	.concat(require("./cmds/international_cmds.js"))
 	.concat(require("./cmds/text_cmds.js"))
 	.concat(require("./sam/roles_cmds.js"))
-	.concat(require("./sam/new_members.js"))
+	.concat(require("./sam/welcome.js"))
 	.concat(require("./lol/lol_commands.js"))
 	.concat(require("./rss/rss_cmds.js"))
 	.concat(require("./reactions.js"))
@@ -63,12 +63,35 @@ global.client.on("error", async e => {
 	console.error(`Client Error: ${e.stack}`);
 });
 
+
+// when corki is added to a server
 global.client.on("guildCreate", async g => {
 	guild.owner.createDM.then(dm => dm.send(`Hey, you just added me to ${g.name}. :D
 - To set up your server, add features, change behavior, etc. goto corki.js.org/portal?rdr=mod
 - To allow mods to do it for you goto corki.js.org/portal?rdr=admin
 - For some general info on the bot go to corki.js.org`));
 })
+
+const welcome = require("./sam/welcome");
+
+// welcome new members to the server
+global.client.on("guildMemberAdd", member => {
+
+    // User-defined welcome messages
+    welcome.welcomeNewMember(member);
+
+    // TODO: ask new user to `-lol add` accts or sth
+
+});
+
+
+
+
+
+
+
+
+
 
 const token = `${require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key`)}`.trim();
 

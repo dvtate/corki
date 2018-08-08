@@ -30,14 +30,14 @@ app.use((err, req, res, next) => {
 
 app.use('/resources', express.static(path.join(__dirname, "resources")));
 
-app.use('/', require("./pages/home"));
-app.use('/', require("./pages/login"));
-app.use('/', require("./pages/user"));
-app.use('/', require("./pages/guild_admin"));
-app.use('/', require("./pages/guild_mod"));
+app.use('/', require("./pages/home"));          // /
+app.use('/', require("./pages/login"));         // /login
+app.use('/', require("./pages/user"));          // /user
+app.use('/', require("./pages/guild_admin"));   // /admin
+app.use('/', require("./pages/guild_mod"));     // /mod
 
 
-
+// use port 5050
 app.listen(5050, (req, res) => {
     console.info("portal running on port 5050");
 });

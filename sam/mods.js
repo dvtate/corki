@@ -133,6 +133,8 @@ function pruneMods(guildid) {
     const guild = global.client.guilds.get(guildid);
     if (!guild)
         return;
+
+
     mods.filter(m => {
         m.id
     })
