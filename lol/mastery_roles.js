@@ -3,7 +3,7 @@ const logCmd = require("../logging.js");
 const teemo = require("./teemo.js");
 const lol = require("./lol_stuff.js");
 const fs = require("fs");
-
+const sam = require("../sam/sam");
 
 function removeRoles(server, member, roles) {
     const guild = global.client.guilds.get(server)
@@ -14,6 +14,22 @@ function removeRoles(server, member, roles) {
         if (!!r)
             guild.members.get(member).removeRole(r);
     });
+}
+
+module.exports.removeRoles = removeRoles;
+
+function makeRolesFile(serverid) {
+    sam.makeServerDir();
+    fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/mastery_roles_rules.json`, '[]')
+}
+
+function getRolesData(serverid) {
+
+
+}
+
+function setRolesData(serverid, data) {
+
 }
 
 /* example comfig

@@ -35,6 +35,7 @@ app.use('/', require("./pages/login"));         // /login
 app.use('/', require("./pages/user"));          // /user
 app.use('/', require("./pages/guild_admin"));   // /admin
 app.use('/', require("./pages/guild_mod"));     // /mod
+app.use('/', require("./pages/guild_member"));  // /mod
 
 
 // use port 5050

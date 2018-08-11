@@ -8,7 +8,27 @@ const mods = require("../../sam/mods");
 const roles = require("../../sam/roles");
 const welcome = require("../../sam/welcome");
 
+
 const router = express.Router();
+
+
+/*
+
+tree:
+    /mod : showss list of servers user has mod in
+        /mod/:serverid : moderation portal for given server
+          - SAR:
+            /mod/:serverid/addole/:role : adds given :role
+            /mod/:serverid/rmrole/:role : removes given role
+            /mod/:serverid/resetroles : clears all SAR
+
+          - Welcome msgs:
+            /mod/:serverid/addwelcome/:channelid/:msg : add a welcome mesg
+            /mod/:serverid/rmwelcome/:welcomeobj : removes a welcome mesg
+*/
+
+
+
 
 
 
@@ -127,7 +147,6 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         Leaderboard
 
     RSS feeds
-    welcome msg
 
     */
 
@@ -154,9 +173,9 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         .add(`<br/>
             <input id="add-sar" type="text" placeholder="name of new role" />
             <button type="button" onclick="addSAR()" >Add Role</button>
-            <br/>
-            `)
-        .add(`<button type="button" style="background-color: red;" onclick="redirect('/mod/${req.params.serverid}/resetroles')">Reset Self Assignable Roles</button>`)
+            <button type="button" style="background-color: red;"
+                onclick="redirect('/mod/${req.params.serverid}/resetroles')">
+                    Reset Self Assignable Roles</button>`)
         .endFieldset();
 
 
@@ -172,7 +191,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         return [
             '#' + global.client.channels.get(rule.id).name,
             rule.msg,
-            `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrule/${
+            `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmwelcome/${
                 encodeURIComponent(JSON.stringify(rule))}')">Remove</button>`
         ]
     });
@@ -187,7 +206,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             const msg = document.getElementById("welcome-msg-template").value;
             if (!chan || !msg)
                 return;
-            redirect("/mod/${req.params.serverid}/addWelcome/"
+            redirect("/mod/${req.params.serverid}/addwelcome/"
                 + encodeURIComponent(chan) + '/'
                 + encodeURIComponent(msg)
             );
@@ -206,8 +225,16 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         <br/><br/>
         #<input type="text" id="welcome-channel" placeholder="new-members" /> :
         <input type="text" id="welcome-msg-template" value="Welcome to {{server}}, {{mention}}!" />
-        `)
+        <button type="button" onclick="addNewMemberAnnouncement()">Add New Member Announcement Rule</button>
+    `)
     page.endFieldset();
+
+    page.startFieldset("League of Legends Roles");
+
+
+    page.add("coming soon :D").endFieldset();
+
+
     res.send(page.export());
 
     // welcome msgs
@@ -225,17 +252,13 @@ router.get("/mod/:serverid([0-9]+)/rmrole/:role", bot.catchAsync(async (req, res
     let perms = mods.getModData(req.params.serverid, userid);
     let guild = global.client.guilds.get(req.params.serverid);
 
-    // unauthorized
-    if (!guild || (!perms.admin && !perms.mod)) {
-            res.redirect(`/mod/${req.params.serverid}`);
-            return;
+
+    if (guild && (perms.admin || perms.mod)) {
+        // remove all instances of given role from roles file
+        const role = decodeURIComponent(req.params.role);
+        roles.setRoles(req.params.serverid,
+            roles.getRoles(req.params.serverid).filter(r => r != role));
     }
-
-    // remove all instances of given role from roles file
-    const role = decodeURIComponent(req.params.role);
-    roles.setRoles(req.params.serverid,
-        roles.getRoles(req.params.serverid).filter(r => r != role));
-
     res.redirect(`/mod/${req.params.serverid}`);
 
 }));
@@ -251,15 +274,10 @@ router.get("/mod/:serverid([0-9]+)/addrole/:role", bot.catchAsync(async (req, re
     let perms = mods.getModData(req.params.serverid, userid);
     let guild = global.client.guilds.get(req.params.serverid);
 
-    // unauthorized
-    if (!guild || (!perms.admin && !perms.mod)) {
-            res.redirect(`/mod/${req.params.serverid}`);
-            return;
+    if (guild && (perms.admin || perms.mod)) {
+        const role = decodeURIComponent(req.params.role);
+        roles.addRole(req.params.serverid, role);
     }
-
-    const role = decodeURIComponent(req.params.role);
-    roles.addRole(req.params.serverid, role);
-
     res.redirect(`/mod/${req.params.serverid}`);
 
 }));
@@ -276,16 +294,90 @@ router.get("/mod/:serverid([0-9]+)/resetroles", bot.catchAsync(async (req, res) 
     let perms = mods.getModData(req.params.serverid, userid);
     let guild = global.client.guilds.get(req.params.serverid);
 
+    if (guild && (perms.admin || perms.mod))
+        roles.resetRoles(req.params.serverid);
+
+    res.redirect(`/mod/${req.params.serverid}`);
+
+}));
+
+
+// delete given role
+router.get("/mod/:serverid([0-9]+)/addwelcome/:chan/:msg", bot.catchAsync(async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
     // unauthorized
     if (!guild || (!perms.admin && !perms.mod)) {
             res.redirect(`/mod/${req.params.serverid}`);
             return;
     }
 
-    roles.resetRoles(req.params.serverid);
+    if (guild && (perms.admin || perms.mod)) {
+        const channame = decodeURIComponent(req.params.chan)
+        const chan = guild.channels.find("name", channame);
 
+        // TODO: also check if chan is a category and doesn't allow sending
+        if (!chan) {
+            let page = new Page("Invalid Channel", userid);
+            page.startFieldset("Invalid Channel")
+                .add(`
+                    <p>${guild.name} doesn't appear to have a channel #${channame}.
+                     Check and make sure you typed the name correctly</p>
+                     <button type="button" onclick="redirect('/mod/${req.params.serverid}')">Go back</button>
+                `).endFieldset();
+
+            res.send(page.export());
+            return;
+        }
+        if (!req.params.chan || !req.params.msg) {
+            res.redirect("/mod/" + req.params.serverid);
+            return;
+        }
+
+        welcome.pruneRules(guild.id);
+        let rules = welcome.getAnnouncementData(guild.id);
+        rules.push({
+            id: chan.id,
+            msg: decodeURIComponent(req.params.msg)
+        });
+        welcome.setAnnouncementData(guild.id, rules);
+
+    }
     res.redirect(`/mod/${req.params.serverid}`);
 
 }));
 
+
+// delete given rule
+router.get("/mod/:serverid([0-9]+)/rmwelcome/:rule", bot.catchAsync(async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
+    if (guild && (perms.admin || perms.mod)) {
+
+        welcome.pruneRules(guild.id);
+        let rules = welcome.getAnnouncementData(guild.id);
+        rules = rules.filter(r => {
+            const rule = JSON.parse(decodeURIComponent(req.params.rule));
+            return rule.id != r.id || rule.msg != r.msg;
+        });
+        welcome.setAnnouncementData(guild.id, rules);
+
+    }
+    res.redirect(`/mod/${req.params.serverid}`);
+
+}));
 module.exports = router;

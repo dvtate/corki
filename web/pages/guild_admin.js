@@ -1,5 +1,6 @@
 const express = require("express");
 
+const logCmd = require("../../logging");
 
 const bot = require("../middleman.js");
 const Page = require("../page.js");
@@ -316,8 +317,23 @@ router.get("/admin/:serverid([0-9]+)/apply/:modsjson", bot.catchAsync(async (req
 
     // if authorized apply desired changes
     if (guild && perms.admin) {
-        const modData = JSON.parse(decodeURIComponent(req.params.modsjson));
-        mods.setModData(guild.id, modData);
+
+        try {
+            const modData = JSON.parse(decodeURIComponent(req.params.modsjson));
+
+            // prevent them from trolling server with extra properties
+            modData.map(mod => {
+                return {
+                    id: mod.id,
+                    admin: mod.admin,
+                    mod: mod.mod,
+                    mod_cmds: mod.mod_cmds
+                };
+            })
+            mods.setModData(guild.id, modData);
+        } catch (e) {
+            console.error("/admin/apply", e);
+        }
     }
 
     res.redirect("/admin/");

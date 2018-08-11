@@ -25,6 +25,16 @@ function populateServerDir(serverid) {
     if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`))
         fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`, "[]");
 
+    // LoL mastery roles
+    if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`))
+        fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`, "[]");
+
+
 }
 
 module.exports.populateServerDir = populateServerDir;
+
+
+module.exports.serverDirsList = () => {
+    return fs.readdirSync(`${process.env.HOME}/.corki/servers`);
+}
