@@ -13,7 +13,7 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "likes -vaporwave");
             const arg = this.condition(msg)[1]
-            msg.channel.send(require("./vaporwave.js").toVaporwave(arg));
+            msg.channel.send(require("../vaporwave.js").toVaporwave(arg));
         },
         tests: [ "-vaporwave test" ]
     },

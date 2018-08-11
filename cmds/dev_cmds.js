@@ -22,7 +22,7 @@ module.exports = [
             logCmd(msg, "-ping'd");
             msg.channel.send(`pong (lag: ${global.client.ping}ms)`);
         },
-        tests: [ "ping" ]
+        tests: [ "-ping" ]
     },
 
     { // generate an error
@@ -262,7 +262,7 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
                 setTimeout(() => {
                     if (c.tests)
                         c.tests.forEach(testMsg =>
-                            global.client.channels.get("476246169652035595").send(testMsg));
+                            msg.channel.send(testMsg));
 
                 }, i += 1000)
             });
