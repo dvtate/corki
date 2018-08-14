@@ -4,6 +4,7 @@ const fs = require("fs");
 const mods = require("./mods");
 const sam = require("./sam");
 
+module.exports.path;
 
 function getRoles(serverID) {
     sam.populateServerDir(serverID); // be safe

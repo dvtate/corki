@@ -5,6 +5,8 @@ const lol = require("./lol_stuff.js");
 const fs = require("fs");
 const sam = require("../sam/sam");
 
+
+
 function removeRoles(server, member, roles) {
     const guild = global.client.guilds.get(server)
     const guildRoles = guild.roles;
@@ -18,25 +20,45 @@ function removeRoles(server, member, roles) {
 
 module.exports.removeRoles = removeRoles;
 
+
+
 function makeRolesFile(serverid) {
-    sam.makeServerDir();
-    fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/mastery_roles_rules.json`, '[]')
+    sam.makeServerDir(serverid);
+    fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/mastery_roles_rules.json`, '[]');
 }
+module.exports.makeRolesFile = makeRolesFile;
+
+
 
 function getRolesData(serverid) {
+    sam.populateServerDir(serverid);
 
-
+    try {
+        return JSON.parse(
+            fs.readFileSync(
+                `${process.env.HOME}/.corki/servers/${serverid}/mastery_roles_rules.json`));
+    } catch (e) {
+        return [];
+    }
 }
+module.exports.getRolesData = getRolesData;
+
+
 
 function setRolesData(serverid, data) {
-
+    sam.makeServerDir(serverid);
+    fs.writeFileSync(
+        `${process.env.HOME}/.corki/servers/${serverid}/mastery_roles_rules.json`,
+        JSON.stringify(data));
 }
+module.exports.setRolesData = setRolesData;
+
 
 /* example comfig
 rules =
 [{
     "champ" : 42,
-    "pts_roles" : []
+    "pts_roles" : [
         {
             required : 0,
             role: "newbie",
@@ -53,8 +75,6 @@ rules =
     ],
     "announce" : "mastery"
 }]
-
-
 */
 
 
@@ -63,7 +83,7 @@ function checkin(server) {
     let rules;
     let guild;
     try {
-        rules = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${server}/mastery_roles_rules.json`));
+        rules = getRolesData(server);
         guild = global.client.guilds.get(server);
     } catch (e) {
         console.log("err: corki server not found");
@@ -127,8 +147,10 @@ function checkin(server) {
 
 
 function refresh() {
-    //checkin("319518724774166531"); // testing server
-    checkin("252833520282501122"); // corkimains server id
-    setTimeout(refresh, 10000000); // a few times per day
+    sam.serverDirsList().forEach(serverid => {
+        if (getRolesData(serverid).length)
+            checkin(serverid);
+    });
+    setTimeout(refresh, 3600000); // check every hr
 }
 setTimeout(refresh, 20000); // give 10 seconds for bot to start before checking

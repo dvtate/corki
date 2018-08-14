@@ -12,9 +12,9 @@ module.exports = [
 
 
     { // a specific summoner's mastery of a specific champ
-        condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+) (\S+) (.+)/),
+        condition: msg => msg.content.match(/^-lol mastery (\S+) (\S+) (.+)/),
         act: async function (msg) {
-            const match = msg.content.match(/^\-(?:mastery|lol mastery) (\S+) (\S+) (.+)/);
+            const match = msg.content.match(/^-lol mastery (\S+) (\S+) (.+)/);
 
             const champ = teemo.champIDs[match[1].toLowerCase()];
             const server = teemo.serverNames[match[2].toLowerCase()];
@@ -46,7 +46,7 @@ module.exports = [
     },
 
     { // mastery of a different user
-        condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+) <@!?([0-9]+)>/),
+        condition: msg => msg.content.match(/^-lol mastery (\S+) <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "checked lol mastery");
             const match = this.condition(msg);
@@ -70,7 +70,7 @@ module.exports = [
 
 
     { // self mastery of a champ
-        condition: msg => msg.content.match(/^-(?:mastery|lol mastery) (\S+)/),
+        condition: msg => msg.content.match(/^-lol mastery (\S+)/),
         act: async function (msg) {
             logCmd(msg, "checked lol mastery");
             const champName = this.condition(msg)[1].toLowerCase();
@@ -124,8 +124,11 @@ module.exports = [
 
     { // -lol add help
         condition: msg => msg.content.match(/^-lol add(?:$|\s)/),
-        act: msg => msg.channel.send("To add your account you need to include your \
-region and summoner name\nFor example: `-lol add na ridderhoff`")
+        act: msg => msg.channel.send(`
+            To add your account you need to include your region and summoner name
+For example: \`-lol add na ridderhoff\`
+
+Alternatively, you can use the web portal to add your account. https://corki.js.org/portal?rdr=user`)
     },
 
     { // reset accounts list
@@ -196,8 +199,23 @@ region and summoner name\nFor example: `-lol add na ridderhoff`")
         act: async function (msg) {
             logCmd(msg, "checked their main -lol acct");
             let userObj = lol.getUserData(msg.author.id);
-            msg.channel.send(`Your main account is ${userObj.accounts[userObj.main].server} ${userObj.accounts[userObj.main].name}
+            if (userObj.accounts)
+                msg.channel.send(`Your main account is ${userObj.accounts[userObj.main].server} ${userObj.accounts[userObj.main].name}
 to change it use \`-lol main <account-number>\`, (account number can be fonud via \`-lol list\``);
+            else
+                msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
+
+        }
+    },
+
+    { // refresh mastery info, if its needed
+        condition: msg => msg.content.match(/^-lol refresh(?:$|\s)/),
+        act: async msg => {
+            logCmd(msg, "-lol refreshed mastery pts");
+            if (!lol.getUserData(msg.author.id))
+                msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
+
+            require("./user_mastery").refresh(msg.author.id);
 
         }
     },
@@ -206,12 +224,13 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         condition: msg => msg.content.match(/^-lol api ([\S\s]+)/),
         act: async function (msg) {
             logCmd(msg, "made a call to teemo.js");
+            if (!require("../bot_admins").auth(msg.author.id))
+                return;
 
             const args = this.condition(msg)[1].split(" ");
             teemo.riot.get.apply(teemo.riot, args)
                 .then(data => msg.channel.send(JSON.stringify(data)))
-                .catch(err => msg.channel.send(`err: ${err}`) );
-
+                .catch(err => msg.channel.send(`err: ${err}`));
         }
     },
 

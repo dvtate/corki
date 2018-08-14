@@ -1,15 +1,8 @@
-
-
 /*
-
-
 ~/.corki/                       -- bot configuration and stuff
     users/                      -- users
     userid/                     -- user directory
         lol.json                -- contains league acct info
-        *profile_verif.tmp*     -- tmp file for verifying acct ownership (won't be added in first iteration)
-
-
 */
 
 const fs = require("fs");
@@ -69,47 +62,17 @@ module.exports.removeDir = removeDir;
 
 
 function getUserData (id) {
-
     if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}/lol.json`))
         return null;
 
     return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol.json`));
-
 }
 module.exports.getUserData = getUserData;
 
-// total number of mastery points on a specific champ across multiple accts
-function getUserMastery (id, champ) {
-    return new Promise(async (resolve, reject) => {
 
-        // get their acct list
-        let data = getUserData(id);
-        if (!data) {
-            reject("account not found :/");
-            return;
-        }
 
-        // total mastery from each of the user's accounts
-        let ret = { pts : 0, lvl : 0 };
-        for (let i = 0; i < data.accounts.length; i++) {
 
-            const acctMastery = await teemo.riot.get(data.accounts[i].server,
-                "championMastery.getChampionMastery", data.accounts[i].id, champ);
-
-            ret.pts += !!acctMastery ? acctMastery.championPoints : 0;
-            ret.lvl = !!acctMastery && acctMastery.championLevel > ret.lvl
-                ? acctMastery.championLevel : ret.lvl;
-
-        }
-        // return total
-        resolve(ret);
-
-    });
-
-}
-
-module.exports.getUserMastery = getUserMastery;
-
+module.exports.getUserMastery = require("./user_mastery").getUserMastery;
 
 
 // associate a new acct with user
