@@ -176,6 +176,11 @@ const c_lol = [
         example: `<kbd>-lol mastery7</kbd><br/>
 <kbd>-lol m7 @testuser</kbd><br/>
 <kbd>-lol mastery7 kr hide on bush</kbd>`
+    }, {
+        name: "-lol refresh",
+        usage: "<p>Purge your cached mastery information</p>",
+        args: "takes no arguments",
+        example: "<kbd>-lol refresh</kbd>"
     }
 
 ];
@@ -252,6 +257,12 @@ const c_sam = [
         usage: "<p>show all subscriptions for current channel</p>",
         args: "takes no arguments",
         example: "<kbd>-rss list</kbd>"
+    }, {
+        name: "-announce-new-members",
+        usage: "<p>Make an announcement every time a new member joins the server</p>",
+        args: `optionally accepts a message template.<br/>
+<kbd>-announce-new-members [announcement-tempalte]
+        `
     }
 
 ];
@@ -335,7 +346,7 @@ const c_devtools = [
         example: "<kbd>-uptime</kbd>"
     }, {
         name: "-lol api",
-        usage: "<p>Make a Riot API call through corki</p>",
+        usage: "<p>Make a Riot API call through corki</p><br/><b>(requires BotAdmin priveleges)</b>",
         args: "api call arguments",
         example: "<kbd>-lol api na1 summoner.getBySummonerName ridderhoff</kbd>"
     }, {
@@ -365,3 +376,13 @@ commands = {
     "text" : c_text,
     "devtools" : c_devtools
 };
+
+
+function addMulti(cmd_obj, categories) {
+    categories.forEach(cat => commands[cat].push(cmd_obj));
+}
+/*
+addMulti({
+
+}, [ ]);
+*/

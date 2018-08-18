@@ -7,14 +7,15 @@
 		<title>Corki Bot</title>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v2.3.7/dist/mini-default.min.css" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" />
+		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v2.3.7/dist/mini-default.min.css" />
         <link rel="stylesheet" href="style.css" />
 
-        <style>
+        <script src="utils.js"></script>
 
+        <style>
             #about_blurb {
-                background-color: RGBA(211, 211, 211, 0.8);
+                background-color: RGBA(211, 211, 211, 0.4);
                 color: black;
             }
 
@@ -27,8 +28,50 @@
 
     </head><body>
 
-        <center><h1 style="font-size:70px">Corki Bot</h1></center>
+        <style>
+            div.button-area {
+                height: 50px;
+                width: 100%;
+                background-color: rgba(220,220,220,0.75);
+                transition: background-color 0.5s;
+                cursor: pointer;
+                text-align: center;
+                font-size: 30px;
+                border-radius: 5px;
+            }
 
+            div.button-area:hover {
+                background-color: darkblue;
+            }
+
+            div#disc-inv-button-area {
+                background-color: #7289da;
+            }
+
+            div#disc-inv-button-area:hover {
+
+            }
+
+        </style>
+        <center>
+            <img src="corki-discord.png" style="width: 25%;display:inline;" />
+            <h1 style="font-size:70px">Corki Bot</h1>
+        </center>
+
+
+        <!--
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-3" style="padding: 10px">
+                <div class="button-area" id="disc-inv-button-area" onclick="redirect('/invite')">
+                    Add Corki to your Server
+
+                </div>
+            </div><div class="col-sm-3" style="padding: 10px">
+                <div class="button-area">
+                    Access Web-Portal
+                </div>
+            </div>
+        </div>
         <div class="row">
 
             <div class="col-sm-12 col-md-4 col-lg-3">
@@ -53,7 +96,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 col-md-4 col-lg-3">
+            <div class="col-sm-12 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-3">
                 <div class="card fluid">
                     <img class="section media" src="code_demo.png" />
                     <div class="section">
@@ -64,7 +107,7 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 col-sm-offset-0 col-md-offset-4 col-md-4 col-lg-3 col-lg-offset-0">
+            <div class="col-sm-12 col-md-4 col-lg-3">
                 <div class="card fluid">
                     <img class="section media" src="help_server.png" />
                     <div class="section">
@@ -75,11 +118,29 @@
                 </div>
             </div>
         </div>
+    -->
+        <style>
+            button.disc-button {
+                background-color: #7289da;
+                transition: background-color 0.5s;
+            }
+
+            button.disc-button:hover {
+                background-color: #7590c0;
+            }
+        </style>
 
         <div class="page-slice" id="about_blurb">
             <div class="pad20">
                 <h2>About</h2>
-                <p>Corki bot was created by <a href="https://me.dvtate.com/">a member</a> of the <a href="https://discord.gg/q7CK7Ty">CorkiMains Discord server</a> in order to provide features not found on other bots and to improve on the featuresets of other bots</p>
+                <p>Corki bot was created by <a href="https://me.dvtate.com/">a member</a>
+                     of the <a href="https://discord.gg/q7CK7Ty">CorkiMains Discord server</a>
+                      in order to provide features not found on other bots and to improve on
+                       the featuresets of other bots</p>
+                       <button class="disc-button" onclick="redirect('/invite')"><i class="fab fa-discord"></i> Add to Server</button>
+                       <button onclick="redirect('/portal')"><i class="fas fa-sliders-h"></i> Access Web Portal</button>
+                       <button onclick="redirect('https://github.com/dvtate/corki')"><i class="fab fa-github"></i> See on Github</button>
+                       <br/><a href="https://discord.gg/cXcXSmy"><img src="https://discordapp.com/api/guilds/319518724774166531/embed.png" style="margin-left: 8px;"/></a>
             </div>
         </div>
 
@@ -133,6 +194,34 @@
                 padding-left: 5px;
                 border-right: 1px solid #101;
             }
+
+            table.data-table {
+                width: 100%;
+                color: #fff;
+            }
+
+            table.data-table thead tr th {
+                background-color: purple;
+            }
+
+            table.data-table tr {
+                padding: 0;
+            }
+
+            table.data-table td {
+                transition: background-color 0.5s;
+            }
+            table.data-table tr:hover td {
+                background-color: #302020;
+            }
+
+            table.data-table td {
+                background-color: #22111a;
+            }
+
+            table.data-table td:hover {
+                background-color: #000 !important;
+            }
         </style>
         <div class="page-slice" id="commands-list">
             <div class="container pad10">
@@ -169,28 +258,8 @@
                         </div>
                 </form>
 
-                <div class="row" id="cmd-col-labels">
-                    <div class="col-sm">Command</div>
-                    <div class="col-sm">Usage</div>
-                    <div class="col-sm">Arguments</div>
-                    <div class="col-sm">Examples</div>
-                </div>
-
                 <div class="cmdlist" id="cmdlist">
-                    <div class="row cmd-row">
-                        <div class="col-sm cmd-col">
-                            <kbd>-help</kbd>
-                        </div>
-                        <div class="col-sm cmd-col">
-                            <p>View a list of help commands to help you get started with the bot</p>
-                        </div>
-                        <div class="col-sm cmd-col">
-                            takes no arguments
-                        </div>
-                        <div class="col-sm cmd-col">
-                            <kbd>-help</kdb>
-                        </div>
-                    </div>
+
                 </div>
 
             </div>
@@ -214,27 +283,19 @@
                     cmds.sort((a,b) =>
                         (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
 
-                    // generate list hmtl
-                    let html = "";
-                    cmds.forEach(c =>
-                        html += `<div class="row cmd-row">
-                                    <div class="col-sm cmd-col">
-                                        <kbd>${c.name}</kbd>
-                                    </div>
-                                    <div class="col-sm cmd-col">
-                                        ${c.usage}
-                                    </div>
-                                    <div class="col-sm cmd-col">
-                                        ${c.args}
-                                    </div>
-                                    <div class="col-sm cmd-col">
-                                        ${c.example}
-                                    </div>
-                                </div>`
+                    // remove any duplicates (required for commands which fit in multiple categories)
+                    cmds = cmds.filter((c, ind) =>
+                        !cmds.find((cmd, ind2) => {
+                            if (ind2 <= ind || JSON.stringify(c) != JSON.stringify(cmd))
+                                return false;
+                        })
                     );
 
+                    let cmdlist = table(["Command", "Usage", "Arguments", "Examples"],
+                        cmds.map(c => [ c.name, c.usage, c.args, c.example ]));
+
                     // add list to site
-                    document.getElementById("cmdlist").innerHTML = html;
+                    document.getElementById("cmdlist").innerHTML = cmdlist;
                 }
                 chkin();
             </script>
