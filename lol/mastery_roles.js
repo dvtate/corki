@@ -1,8 +1,9 @@
+const fs = require("fs");
+
 const logCmd = require("../logging.js");
 
 const teemo = require("./teemo.js");
 const lol = require("./lol_stuff.js");
-const fs = require("fs");
 const sam = require("../sam/sam");
 
 
@@ -27,7 +28,6 @@ function makeRolesFile(serverid) {
     fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/mastery_roles_rules.json`, '[]');
 }
 module.exports.makeRolesFile = makeRolesFile;
-
 
 
 function getRolesData(serverid) {
@@ -93,7 +93,6 @@ function checkin(server) {
     // proc each rule
     rules.forEach(rule => {
 
-
         let roles = rule.pts_roles.sort((a, b) => b.required - a.required);
 
         let members = Array.from(guild.members);
@@ -118,6 +117,7 @@ function checkin(server) {
 
                     // if they dont already have this role
                     if (!member[1]._roles.includes(role.id)) {
+                        console.log("roles:", member[1]._roles.map(r => msg.guild.roles.get(r).name));
 
                         console.log(`promoting ${member[1].user.username} to ${roles[i].role}`);
 

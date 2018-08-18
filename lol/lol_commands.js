@@ -727,8 +727,14 @@ last played: ${Date(data[i].lastPlayTime)}`
     { // convert champ name/id
         condition: msg => msg.content.match(/^-lol c (\S+)/),
         act: async function (msg) {
-            logCmd(msg, "got a champ name/id (-lol c)");
             msg.channel.send(teemo.champs[this.condition(msg)[1].toLowerCase()]);
+        }
+    },
+
+    {
+        condition: msg => msg.content.match(/^-lol ddragon (\S+)/),
+        act: async function (msg) {
+            msg.channel.send(teemo.ddragon.url + this.condition(msg)[1]);
         }
     }
 ];
