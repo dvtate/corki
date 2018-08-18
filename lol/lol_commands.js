@@ -580,14 +580,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         }
     },
 
-    { // convert champ name/id
-        condition: msg => msg.content.match(/^-lol c (\S+)/),
-        act: async function (msg) {
-            logCmd(msg, "got a champ name/id (-lol c)");
-            msg.channel.send(teemo.champs[this.condition(msg)[1].toLowerCase()]);
-        }
-    },
-
     { // summary of user champion mastery levels
         condition: msg => msg.content.match(/^-lol masteries(?:$|\s)/),
         act: async msg => {
@@ -712,8 +704,6 @@ last played: ${Date(data[i].lastPlayTime)}`
 
     },
 
-
-
     { // info for latest game
         condition: msg => msg.content.match(/^-lol lastgame/),
         act: async msg => {
@@ -731,8 +721,16 @@ last played: ${Date(data[i].lastPlayTime)}`
 
             msg.channel.send("sorry this hasn't been implemented yet. If you want to see this implemented sooner send a `-bug` report");
         }
-    }
+    },
 
+
+    { // convert champ name/id
+        condition: msg => msg.content.match(/^-lol c (\S+)/),
+        act: async function (msg) {
+            logCmd(msg, "got a champ name/id (-lol c)");
+            msg.channel.send(teemo.champs[this.condition(msg)[1].toLowerCase()]);
+        }
+    }
 ];
 
 

@@ -56,13 +56,6 @@ you these powers via https://corki.js.org/admin");
         condition: msg => msg.content.match(/^-rss list/),
         act: async msg => {
 
-            if (!mods.isMod(msg.guild.id, msg.author.id)) {
-                msg.channel.send("You must be given permission to run server \
-management commands in order to perform this action. Ask an administrator to grant \
-you these powers via https://corki.js.org/admin");
-                return;
-            }
-
             // make the list of rules from rss.conf into a string
             let rules = rss.getRules()                      // get rules from file
                 .filter(r => r.channel == msg.channel.id)   // take rules applicable to current channel
@@ -72,7 +65,6 @@ you these powers via https://corki.js.org/admin");
             msg.channel.send("This channel is subscribed to the following rss feeds: " + rules);
 
         }
-
     },
 
 

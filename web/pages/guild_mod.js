@@ -286,13 +286,14 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             redirect("/mod/${guild.id}/addMasteryRoleset/"
                 + encodeURIComponent(champ) + '/'
                 + encodeURIComponent(chan));
-        }
+        }tt
     `)
     page.startFieldset("Add New Roleset")
-    page.add(`
+        .add(`
         Roleset Champion: <input type="text" id="new-mroleset-champ" placeholder="corki" /><br/>
         Roleset Announcement Channel: #<input type="text" id="new-mroleset-chan" placeholder="general"><br/>
         <button onclick="addRoleSet()">Add Another Champion Roleset</button>`)
+        .endFieldset()
         .endFieldset();
 
     page.startFieldset("More Coming soon").add(`Corki has so many more features
@@ -441,6 +442,5 @@ router.get("/mod/:serverid([0-9]+)/rmwelcome/:rule", bot.catchAsync(async (req, 
 
     }
     res.redirect(`/mod/${req.params.serverid}`);
-
 }));
 module.exports = router;

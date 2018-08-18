@@ -1,4 +1,3 @@
-
 const fetch = require("node-fetch");
 
 
@@ -31,7 +30,6 @@ module.exports.catchAsync = fn => (
             routePromise.catch(err => next(err));
     }
 );
-
 
 
 
