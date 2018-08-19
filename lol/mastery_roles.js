@@ -117,20 +117,22 @@ function checkin(server) {
 
                     // if they dont already have this role
                     if (!member[1]._roles.includes(role.id)) {
-                        console.log("roles:", member[1]._roles.map(r => msg.guild.roles.get(r).name));
+                        console.log("roles:", member[1]._roles.map(r => guild.roles.get(r).name));
 
                         console.log(`promoting ${member[1].user.username} to ${roles[i].role}`);
+
 
                         // reset and replace associate roles
                         removeRoles(server, member[0], roles);
                         member[1].addRole(role);
-
+/*
                         // announce achievement
                         if (rule.announce && roles[i].announce)
                             guild.channels.find("name", rule.announce).send({ embed : {
                                 title: `${member[1].user.username} got promoted to ${roles[i].role}!`,
                                 description: `They currently have ${mastery.pts} points`
                             }});
+*/
 
                     }
 

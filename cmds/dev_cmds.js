@@ -160,7 +160,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
             }
 
             try {
-                msg.guild.channels.find("id", channel).send(contents);
+                msg.guild.channels.get(channel).send(contents);
             } catch (e) {
                 msg.channel.send("That didn't work.. Probably wrong channel id");
                 console.log(e);

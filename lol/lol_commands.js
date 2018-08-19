@@ -28,6 +28,7 @@ module.exports = [
                 return;
             }
 
+
             // get summoner id
             teemo.riot.get(server, "summoner.getBySummonerName", match[3]).then(summoner => {
                 // get champ mastery
@@ -42,6 +43,7 @@ module.exports = [
             }).catch(err => {
                 msg.channel.send(`${match[3]} wasn't found on ${match[2]} (run \`-lol mastery help\` for more)`);
             });
+
         }
     },
 
@@ -59,10 +61,13 @@ module.exports = [
                 return;
             }
 
+            msg.channel.startTyping();
             lol.getUserMastery(id, champID).then(data => {
                 msg.channel.send(`<@!${id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`);
+                msg.channel.stopTyping();
             }).catch(err => {
                 msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+                msg.channel.stopTyping();
             });
 
         }
@@ -81,12 +86,14 @@ module.exports = [
                 return;
             }
 
+            msg.channel.startTyping();
             lol.getUserMastery(msg.author.id, champID).then(data => {
                 msg.channel.send(`<@!${msg.author.id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`);
             }).catch(err => {
                 console.log(err);
                 msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
             });
+            msg.channel.stopTyping();
         }
 
     },
@@ -215,7 +222,9 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             if (!lol.getUserData(msg.author.id))
                 msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
 
+            msg.channel.startTyping();
             require("./user_mastery").refresh(msg.author.id);
+            msg.channel.stopTyping();
 
         }
     },
@@ -249,8 +258,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 return;
             }
 
-            msg.channel.send("This could take a few seconds");
-
+            msg.channel.startTyping();
             lol_lb.getLeaderBoard(msg.guild.members, champID).then(data => {
                 msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
 
@@ -259,6 +267,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 time = (time[0] * ns_per_s + time[1]) / (ns_per_s)
 
                 msg.channel.send(`that took ${time} seconds to complete`);
+                msg.channel.stopTyping();
             });
 
 
