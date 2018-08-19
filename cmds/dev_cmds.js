@@ -146,7 +146,13 @@ module.exports = [
             const channel = match[1];
             const contents = match[2];
 
-            const guild = global.client.channels.get(channel).guild;
+            const chan = global.client.channels.get(channel);
+            if (!chan) {
+                msg.channel.send("Invalid Channel. (Corki must be mutual member of server)");
+                return;
+            }
+
+            const guild = chan.guild;
             let perms = guild ? mods.getModData(guild.id, msg.author.id) : {
                 admin: false, mod: false, mod_cmds: false
             };
@@ -160,7 +166,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
             }
 
             try {
-                msg.guild.channels.get(channel).send(contents);
+                global.client.channels.get(channel).send(contents);
             } catch (e) {
                 msg.channel.send("That didn't work.. Probably wrong channel id");
                 console.log(e);
