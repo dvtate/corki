@@ -3,8 +3,6 @@ const fs = require("fs");
 const teemo = require("./teemo.js");
 const lol = require("./lol_stuff.js");
 
-const chanID = "418965788448391168";
-//const chanID = "435548322120335360"; // test server
 
 // gonna need a file to keep track of all accts masteries and
 module.exports.configure = async function () {
@@ -138,7 +136,7 @@ function lb_delta(lb) {
 
 
 // weekly post of leaderboard to #mastery in corkimains server
-async function postLeaderBoard() {
+async function postLeaderBoard(chanID, champID) {
     // make sure it's been a week
     if (!cd())
         return;
@@ -149,7 +147,7 @@ async function postLeaderBoard() {
     const members = global.client.channels.get(chanID).guild.members;
 
     // mastery leaderboard
-    const data = await getLeaderBoard(members, 42); // 42 = corki-id
+    const data = await getLeaderBoard(members, champID); // 42 = corki-id
 
     // changes since last week
     const delta = lb_delta(data);
@@ -189,7 +187,7 @@ async function postLeaderBoard() {
 
 // 2 min checkin intervals
 function refresh() {
-    postLeaderBoard();
+    postLeaderBoard("418965788448391168", 42);
     setTimeout(refresh, 120000); // every 2 mins
 }
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking

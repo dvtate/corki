@@ -60,7 +60,7 @@ global.client.on("message", async msg => {
 // something broke
 global.client.on("error", async e => {
 	require("./bot_admins.js").sendBugReport(null, `Client Error:\n\`\`\`\n${e.stack}\n\`\`\``);
-	console.error(`Client Error: ${e.stack}`);
+	console.error(`Client Error: ${e}`);
 });
 
 

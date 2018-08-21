@@ -117,10 +117,8 @@ function checkin(server) {
 
                     // if they dont already have this role
                     if (!member[1]._roles.includes(role.id)) {
-                        console.log("roles:", member[1]._roles.map(r => guild.roles.get(r).name));
 
-                        console.log(`promoting ${member[1].user.username} to ${roles[i].role}`);
-
+                        console.log(`${guild.name}: promoting ${member[1].user.username} to ${roles[i].role}`);
 
                         // reset and replace associate roles
                         removeRoles(server, member[0], roles);
