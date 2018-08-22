@@ -282,7 +282,7 @@ module.exports = [
 
 
     { // help overview (table of contents)
-        condition: msg => msg.content.match(/^(?:h(?:elp)?(?:$|\s))?/),
+        condition: msg => msg.content.match(/^h(?:elp)?(?:$|\s)|^$/),
         act: async function (msg) {
             logCmd(msg, "asked for -help");
 
