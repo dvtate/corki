@@ -44,15 +44,16 @@ const interactions = []
 global.client.on("message", async msg => {
 
 	// check for prefix
-	const prefixes = require("./sam/prefix").getGuildPrefixes(msg.guild.id);
+	const prefixes = require("./sam/prefix").getGuildPrefixes(msg.guild ? msg.guild.id : 1337);
+
 	let hascmd = false;
-	for (let i = 0; i < prefixes.length; i++) {
+	for (let i = 0; i < prefixes.length; i++)
 		if (msg.content.match(new RegExp('^' + prefixes[i]))) {
 			msg.content = msg.content.replace(new RegExp('^' + prefixes[i]), "").trim();
 			hascmd = true;
 			break;
 		}
-	}
+	
 
 	if (hascmd)
 		// check each possible command

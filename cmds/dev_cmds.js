@@ -273,6 +273,63 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
                 }, i += 1000)
             });
         }
+    },
+
+    {
+        condition: msg => msg.content.match(/^about/),
+        act: async msg => {
+
+            let version = await new Promise((resolve, reject) =>
+                // run command and send output
+                require("child_process")
+                    .exec("git log -1 --pretty=format:\"%h(%s)\"",
+                        (error, stdout, stderr) => {
+                            if (error) return reject(error);
+                            resolve(stdout);
+                        }));
+
+            const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}D ${Math.floor(time / 60 / 60) % 24
+    }H, ${Math.floor(time / 60) % 60}M, and ${time % 60}S`;
+
+            msg.channel.send({ embed: {
+                title: "About Corki",
+                description: `${global.client.user.toString()} is an [open source](https://github.com/dvtate/corki) Discord bot designed with a wide variety of use cases in mind.`,
+                fields: [
+                    {
+                        name: "Version",
+                        value: `Corki is on a roling release system.
+The currently running patch is ${version}`
+                    }, {
+                        name: "Severs",
+                        value: global.client.guilds.array().length,
+                        inline: true
+                    }, {
+                        name: "Channels",
+                        value: global.client.channels.array().length,
+                        inline: true
+                    }, {
+                        name: "Users",
+                        value: global.client.users.array().length,
+                        inline: true
+                    }, {
+                        name: "Memory",
+                        value: Math.round(process.memoryUsage().rss / 1000) / 1000 + "mb",
+                        inline: true
+                    }, {
+                        name: "Corki Uptime",
+                        value: formatUptimeSecs(process.uptime()),
+                        inline: true
+                    }, {
+                        name: "Server Uptime",
+                        value: formatUptimeSecs(require("os").uptime),
+                        inline: true
+                    }
+                ]
+
+
+
+            }})
+        }
     }
 ];
 
