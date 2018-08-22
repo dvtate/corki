@@ -7,7 +7,7 @@ module.exports = [
     { // vaporwave
 
         // if returns true then its correct command
-        condition: msg => msg.content.match(/^\-vaporwave (.+)/),
+        condition: msg => msg.content.match(/^vaporwave (.+)/),
 
         // run when command is triggered
         act: async function (msg) {
@@ -19,7 +19,7 @@ module.exports = [
     },
 
     { // glitch
-        condition: msg => msg.content.match(/^\-glitch (.+)/),
+        condition: msg => msg.content.match(/^glitch (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "-glitch'd text");
@@ -30,7 +30,7 @@ module.exports = [
     },
 
     { // tinycaps
-        condition: msg => msg.content.match(/^\-tinycaps (.+)/),
+        condition: msg => msg.content.match(/^tinycaps (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "made text into -tinycaps");
@@ -40,7 +40,7 @@ module.exports = [
     },
 
     { // mirror
-        condition: msg => msg.content.match(/^\-mirror (.+)/),
+        condition: msg => msg.content.match(/^mirror (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "reflected text with -mirror");
@@ -50,7 +50,7 @@ module.exports = [
     },
 
     { // flip
-        condition: msg => msg.content.match(/^\-flip (.+)/),
+        condition: msg => msg.content.match(/^flip (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "-flipped text");
@@ -60,7 +60,7 @@ module.exports = [
     },
 
     { // spell
-        condition: msg => msg.content.match(/^\-spell (.+)/),
+        condition: msg => msg.content.match(/^spell (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "-spell'd a word");
@@ -92,7 +92,7 @@ module.exports = [
     },
 
     { // help entry
-        condition: msg => msg.content.match(/^\-(?:help )?(vaporwave|glitch|flip|mirror|tinycaps|spell)/),
+        condition: msg => msg.content.match(/^(?:help )?(vaporwave|glitch|flip|mirror|tinycaps|spell)/),
         act: async function (msg) {
             logCmd(msg, `got help with a text command`);
             const cmd = this.condition(msg)[1];

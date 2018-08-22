@@ -15,7 +15,7 @@ module.exports = [
     { // ping
 
         // returns true if command fits
-        condition: msg => msg.content.match(/^-ping/),
+        condition: msg => msg.content.match(/^ping/),
 
         // run to perform command
         act: async msg => {
@@ -26,7 +26,7 @@ module.exports = [
     },
 
     { // generate an error
-        condition: msg => msg.content.match(/^-err (.+)/),
+        condition: msg => msg.content.match(/^err (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "-err'd");
@@ -35,7 +35,7 @@ module.exports = [
     },
 
     { // expose raw message content
-        condition: msg => msg.content.match(/^-deformat (.+)/),
+        condition: msg => msg.content.match(/^deformat (.+)/),
         act: async function (msg) {
 
             logCmd(msg, "-deformat'd text");
@@ -44,7 +44,7 @@ module.exports = [
     },
 
     { // opposite of deformat
-        condition: msg => msg.content.match(/^-reformat `(.+)`/),
+        condition: msg => msg.content.match(/^reformat `(.+)`/),
         act: async function (msg) {
             logCmd(msg, "-reformat'd text");
             msg.channel.send(this.condition(msg)[1]);
@@ -54,7 +54,7 @@ module.exports = [
     { // log info
       // useful for getting technical info on things
 
-        condition: msg => msg.content.match(/^\-log (.+)/),
+        condition: msg => msg.content.match(/^log (.+)/),
 
         act: async function (msg) {
             logCmd(msg, "asked for a -log");
@@ -125,7 +125,7 @@ module.exports = [
     },
 
     { // log help if no args
-        condition: msg => msg.content.match(/^\-log(?:$|\s)|^-help log(?:$|\s)/),
+        condition: msg => msg.content.match(/^log(?:$|\s)|^-help log(?:$|\s)/),
         act: async function (msg) {
             msg.channel.send(logHelpInfo);
         }
@@ -133,7 +133,7 @@ module.exports = [
 
 
     { // msg - send a message to a channel
-        condition: msg => msg.content.match(/^\-msg (\S+) ([\s\S]+)/),
+        condition: msg => msg.content.match(/^msg (\S+) ([\s\S]+)/),
         act: async function (msg) {
 
             if (msg.author.id == msg.client.user.id)
@@ -180,18 +180,18 @@ Ask the server's owner to promote you to admin or grant you access to this comma
     },
 
     { // bug report
-        condition: msg => msg.content.match(/^\-bug (.+)/),
+        condition: msg => msg.content.match(/^bug (.+)/),
         act: async function (msg) {
             logCmd(msg, `found a -bug: ${this.condition(msg)[1]}`);
             msg.channel.send(`Thank you for the bug report! ${global.client.user} \
 is an open-source project, feel free to contribute. https://github.com/dvtate/corki-bot/`);
 
-            botAdmins.sendBugReport(msg, msg.content.match(/^\-bug (.+)/)[1]);
+            botAdmins.sendBugReport(msg, this.condition(msg)[1]);
         }
     },
 
     { // run sh
-        condition: msg => msg.content.match(/^\-sys(?:tem)? (.+)/),
+        condition: msg => msg.content.match(/^sys(?:tem)? (.+)/),
         act: async function (msg) {
 
             // make sure they're authorized
@@ -215,7 +215,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
 
     { // eval
       // instead of making a new command just use -eval :S
-        condition: msg => msg.content.match(/^\-eval ([\s\S]+)/),
+        condition: msg => msg.content.match(/^eval ([\s\S]+)/),
         act: async function (msg) {
 
             // make sure they're authorized
@@ -240,7 +240,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
     { // how long has the bot been running?
         start_time: process.hrtime(),
 
-        condition: msg => msg.content.match(/^-uptime(?:$|\s)/),
+        condition: msg => msg.content.match(/^uptime(?:$|\s)/),
 
         act: async function (msg) {
             logCmd(msg, "checked -uptime");
@@ -258,7 +258,7 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
     },
 
     {
-        condition: msg => msg.content.match(/^-full-test/),
+        condition: msg => msg.content.match(/^full-test/),
         act: async msg => {
             if (!botAdmins.auth(msg.author.id))
                 return;

@@ -34,26 +34,50 @@ global.commands = []
 	.concat(require("./sam/welcome.js"))
 	.concat(require("./lol/lol_commands.js"))
 	.concat(require("./rss/rss_cmds.js"))
-	.concat(require("./reactions.js"))
 	.concat(require("./cmds/help_cmds.js"));
+
+
+const interactions = []
+	.concat(require("./reactions"));
 
 // message event listener
 global.client.on("message", async msg => {
 
-	// check each possible command
-	for (let i = 0; i < commands.length; i++)
-		// if it matches, run it
-		if (commands[i].condition(msg)) {
-			commands[i].act(msg)
-				.catch(e => {
-					msg.channel.send(`Sorry, that errored. If there's anything you would like to add, send a \`-bug\` report\n\`\`\`\n${e.stack}\n\`\`\``);
-					require("./bot_admins.js").sendBugReport(msg, ` Error:\n\`\`\`\n${e.stack}\n\`\`\``);
-					console.error(`Error(${msg.content}):`);
-					console.error(e.stack);
-				});
-			break; // we're done here
+	// check for prefix
+	const prefixes = require("./sam/prefix").getGuildPrefixes(msg.guild.id);
+	let hascmd = false;
+	for (let i = 0; i < prefixes.length; i++) {
+		if (msg.content.match(new RegExp('^' + prefixes[i]))) {
+			msg.content = msg.content.replace(new RegExp('^' + prefixes[i]), "").trim();
+			hascmd = true;
+			break;
 		}
+	}
 
+	if (hascmd)
+		// check each possible command
+		for (let i = 0; i < commands.length; i++)
+			// if it matches, run it
+			if (commands[i].condition(msg)) {
+				commands[i].act(msg)
+					.catch(e => {
+						msg.channel.send(`Sorry, that errored. If there's anything you would like to add, send a \`-bug\` report\n\`\`\`\n${e.stack}\n\`\`\``);
+						require("./bot_admins.js").sendBugReport(msg, ` Error:\n\`\`\`\n${e.stack}\n\`\`\``);
+						console.error(`Error(${msg.content}):`);
+						console.error(e.stack);
+					});
+				break; // we're done here
+			}
+
+	interactions.forEach(i => {
+		if (i.condition(msg))
+			i.act(msg)
+			 .catch(e => {
+				require("./bot_admins.js").sendBugReport(msg, `Interaction Error:\n\`\`\`\n${e.stack}\n\`\`\``);
+				console.error(`InteractionError(${msg.content}):`);
+				console.error(e.stack);
+			 })
+	})
 
 });
 

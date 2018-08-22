@@ -12,9 +12,9 @@ module.exports = [
 
 
     { // a specific summoner's mastery of a specific champ
-        condition: msg => msg.content.match(/^-lol mastery (\S+) (\S+) (.+)/),
+        condition: msg => msg.content.match(/^lol mastery (\S+) (\S+) (.+)/),
         act: async function (msg) {
-            const match = msg.content.match(/^-lol mastery (\S+) (\S+) (.+)/);
+            const match = this.condition(msg);
 
             const champ = teemo.champIDs[match[1].toLowerCase()];
             const server = teemo.serverNames[match[2].toLowerCase()];
@@ -48,7 +48,7 @@ module.exports = [
     },
 
     { // mastery of a different user
-        condition: msg => msg.content.match(/^-lol mastery (\S+) <@!?([0-9]+)>/),
+        condition: msg => msg.content.match(/^lol mastery (\S+) <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "checked lol mastery");
             const match = this.condition(msg);
@@ -75,7 +75,7 @@ module.exports = [
 
 
     { // self mastery of a champ
-        condition: msg => msg.content.match(/^-lol mastery (\S+)/),
+        condition: msg => msg.content.match(/^lol mastery (\S+)/),
         act: async function (msg) {
             logCmd(msg, "checked lol mastery");
             const champName = this.condition(msg)[1].toLowerCase();
@@ -99,7 +99,7 @@ module.exports = [
     },
 
     { // -mastery help
-        condition: msg => msg.content.match(/^-(?:mastery|lol mastery|help lol mastery)(?:$|\s)/),
+        condition: msg => msg.content.match(/^(?:mastery|lol mastery|help lol mastery)(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "got help with `-lol mastery`");
             msg.channel.send(masteryHelpInfo);
@@ -107,7 +107,7 @@ module.exports = [
     },
 
     { // add acct
-        condition: msg => msg.content.match(/^-lol add (\S+) (.+)/),
+        condition: msg => msg.content.match(/^lol add (\S+) (.+)/),
         act: async function (msg) {
             logCmd(msg, "linked an LoL acct (-lol add)");
 
@@ -130,7 +130,7 @@ module.exports = [
     },
 
     { // -lol add help
-        condition: msg => msg.content.match(/^-lol add(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol add(?:$|\s)/),
         act: msg => msg.channel.send(`
             To add your account you need to include your region and summoner name
 For example: \`-lol add na ridderhoff\`
@@ -139,7 +139,7 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
     },
 
     { // reset accounts list
-        condition: msg => msg.content.match(/^-lol reset/),
+        condition: msg => msg.content.match(/^lol reset/),
         act: async function (msg) {
             logCmd(msg, "reset lol data (-lol reset)");
             lol.removeDir(msg.author.id);
@@ -149,7 +149,7 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
     },
 
     { // list another user's accts
-        condition: msg => msg.content.match(/^-lol list <@!?([0-9]+)>/),
+        condition: msg => msg.content.match(/^lol list <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "listed a user's lol accts. (-lol list)");
 
@@ -172,7 +172,7 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
     },
 
     { // list accts
-        condition: msg => msg.content.match(/^\-lol list/),
+        condition: msg => msg.content.match(/^lol list/),
         act: async function (msg) {
             logCmd(msg, "listed lol accts. (-list-lol)")
             let userObj = lol.getUserData(msg.author.id);
@@ -191,7 +191,7 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
     },
 
     { // main acct
-        condition: msg => msg.content.match(/^-lol main ([0-9])/),
+        condition: msg => msg.content.match(/^lol main ([0-9])/),
         act: async function (msg) {
             logCmd(msg, "modified their main account");
             let userObj = lol.getUserData(msg.author.id);
@@ -202,7 +202,7 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
     },
 
     {
-        condition: msg => msg.content.match(/^-lol main/),
+        condition: msg => msg.content.match(/^lol main/),
         act: async function (msg) {
             logCmd(msg, "checked their main -lol acct");
             let userObj = lol.getUserData(msg.author.id);
@@ -216,7 +216,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // refresh mastery info, if its needed
-        condition: msg => msg.content.match(/^-lol refresh(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol refresh(?:$|\s)/),
         act: async msg => {
             logCmd(msg, "-lol refreshed mastery pts");
             if (!lol.getUserData(msg.author.id))
@@ -230,7 +230,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // dev tool
-        condition: msg => msg.content.match(/^-lol api ([\S\s]+)/),
+        condition: msg => msg.content.match(/^lol api ([\S\s]+)/),
         act: async function (msg) {
             logCmd(msg, "made a call to teemo.js");
             if (!require("../bot_admins").auth(msg.author.id))
@@ -244,7 +244,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // mastery leaderboard for server members
-        condition: msg => msg.content.match(/^-lol (?:leaderboard|lb) (\S+)/),
+        condition: msg => msg.content.match(/^lol (?:leaderboard|lb) (\S+)/),
         act: async function (msg) {
             let timer = process.hrtime();
             logCmd(msg, "generated leaderboard");
@@ -275,7 +275,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // mastery leaderboard for all of the bot's users
-        condition: msg => msg.content.match(/^-lol (?:global (?:leaderboard|lb)|glb) (\S+)/),
+        condition: msg => msg.content.match(/^lol (?:global (?:leaderboard|lb)|glb) (\S+)/),
         act: async function (msg) {
             logCmd(msg, "generated leaderboard");
 
@@ -307,7 +307,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // given summoner's rank
-        condition: msg => msg.content.match(/^-lol rank (\S+) (.+)/),
+        condition: msg => msg.content.match(/^lol rank (\S+) (.+)/),
         act: async function (msg) {
             logCmd(msg, "checked an account's -lol rank");
 
@@ -339,7 +339,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // other user's rank
-        condition: msg => msg.content.match(/^-lol rank <@!?([0-9]+)>/),
+        condition: msg => msg.content.match(/^lol rank <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "checked a user's -lol rank");
 
@@ -363,7 +363,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // self rank
-        condition: msg => msg.content.match(/^-lol rank(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol rank(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "checked their -lol rank");
             let userObj = lol.getUserData(msg.author.id);
@@ -386,7 +386,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // list supported server names
-        condition: msg => msg.content.match(/^-lol servers(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol servers(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "asked for -lol servers");
             msg.channel.send("Corki supports LoL accounts on the following servers: "
@@ -398,7 +398,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     { // champgg matchup
         condition: msg =>
             // -lol matchup <champ1> vs. <champ2> [elo]
-            msg.content.match(/^-lol matchup (\S+) (?:vs?\.? )?(\S+)/),
+            msg.content.match(/^lol matchup (\S+) (?:vs?\.? )?(\S+)/),
 
         act: async function (msg) {
             logCmd(msg, "asked about a matchup");
@@ -470,7 +470,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     { // champgg matchup
         condition: msg =>
             // -lol matchup <role> <champ1> vs. <champ2> [elo]
-            msg.content.match(/^-lol matchup (\S+) (\S+) (?:vs?\.? )?(\S+)/i),
+            msg.content.match(/^lol matchup (\S+) (\S+) (?:vs?\.? )?(\S+)/i),
 
         act: async function (msg) {
             logCmd(msg, "asked about a matchup");
@@ -572,7 +572,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // champgg winrate
-        condition: msg => msg.content.match(/^-lol wr (\S+)/),
+        condition: msg => msg.content.match(/^lol wr (\S+)/),
         act: async function (msg) {
             const champName = this.condition(msg)[1];
             const champ = teemo.champIDs[champName.toLowerCase()];
@@ -590,7 +590,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // summary of user champion mastery levels
-        condition: msg => msg.content.match(/^-lol masteries(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol masteries(?:$|\s)/),
         act: async msg => {
             logCmd(msg, "got mastery info");
 
@@ -636,7 +636,7 @@ last played: ${Date(data[i].lastPlayTime)}`
 
 
     { // list user's mastery 7 champs
-        condition: msg => msg.content.match(/^-lol (?:mastery7|m7|mastery seven)(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol (?:mastery7|m7|mastery seven)(?:$|\s)/),
         act: async msg => {
             logCmd(msg, "checked m7 champs");
 
@@ -714,7 +714,7 @@ last played: ${Date(data[i].lastPlayTime)}`
     },
 
     { // info for latest game
-        condition: msg => msg.content.match(/^-lol lastgame/),
+        condition: msg => msg.content.match(/^lol lastgame/),
         act: async msg => {
 
             logCmd(msg, "checked last game stats");
@@ -734,14 +734,14 @@ last played: ${Date(data[i].lastPlayTime)}`
 
 
     { // convert champ name/id
-        condition: msg => msg.content.match(/^-lol c (\S+)/),
+        condition: msg => msg.content.match(/^lol c (\S+)/),
         act: async function (msg) {
             msg.channel.send(teemo.champs[this.condition(msg)[1].toLowerCase()]);
         }
     },
 
     {
-        condition: msg => msg.content.match(/^-lol ddragon (\S+)/),
+        condition: msg => msg.content.match(/^lol ddragon (\S+)/),
         act: async function (msg) {
             msg.channel.send(teemo.ddragon.url + this.condition(msg)[1]);
         }

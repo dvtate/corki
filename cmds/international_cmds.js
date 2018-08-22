@@ -5,7 +5,7 @@ const logCmd = require("../logging.js");
 module.exports = [
 
     { // currency exchange
-        condition: msg => msg.content.match(/^\-exchange ([0-9\.]+)\s?([a-zA-Z]{3})(?:\sto\s|\s)?([a-zA-Z]{3})(?:$|\s)/),
+        condition: msg => msg.content.match(/^exchange ([0-9\.]+)\s?([a-zA-Z]{3})(?:\sto\s|\s)?([a-zA-Z]{3})(?:$|\s)/),
 
         act: async function (msg) {
             const match = this.condition(msg);
@@ -66,7 +66,7 @@ module.exports = [
     },
 
     { // exchange help
-        condition: msg => msg.content.match(/^\-exchange(?:\s|$)|-help exchange(?:$|\s)/),
+        condition: msg => msg.content.match(/^exchange(?:\s|$)|-help exchange(?:$|\s)/),
         act: async function (msg) {
             msg.channel.send(exchangeHelpInfo);
         }
@@ -74,7 +74,7 @@ module.exports = [
 
     { // timezone convert
 
-        condition: msg => msg.content.match(/^\-(?:timezone|tz) (.+)/),
+        condition: msg => msg.content.match(/^(?:timezone|tz) (.+)/),
 
         act: async function (msg) {
 
@@ -116,7 +116,7 @@ module.exports = [
     },
 
     { // exchange help
-        condition: msg => msg.content.match(/^\-timezone(?:\s|$)|^-help timezone(?:$|\s)/),
+        condition: msg => msg.content.match(/^timezone(?:\s|$)|^-help timezone(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "got -help w/ timezone");
             msg.channel.send(timezoneHelpInfo);
