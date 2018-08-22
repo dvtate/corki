@@ -9,7 +9,7 @@ module.exports = [
 
     { // no friends feelbadman
         condition: msg =>
-            msg.content.match(/^I (?:feel like |think |recognize |\'ve recognized (?:that)?\s?i? |really(?: do)? )?have no friends|^I (?:don['`]?t have|haven['`]?t got) any friends/i),
+            msg.content.match(/I (?:feel like |think |recognize |\'ve recognized (?:that)?\s?i? |really(?: do)? )?have no friends|^I (?:don['`]?t have|haven['`]?t got) any friends/i),
         act: async function (msg) {
             console.log("feels bad");
             msg.channel.send("-tinycaps but i'm your friend!");

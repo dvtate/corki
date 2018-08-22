@@ -6,7 +6,7 @@ const mods = require("./mods");
 module.exports = [
     { // mod add roles
 
-        condition: msg => msg.content.match(/^-add-(?:ssignable-roles?|sar) (.+)/),
+        condition: msg => msg.content.match(/^add-(?:ssignable-roles?|sar) (.+)/),
 
         act: async function (msg) {
 
@@ -38,7 +38,7 @@ you these powers via https://corki.js.org/admin");
         }
     },
     { // make roles unassignable again
-        condition: msg => msg.content.match(/^-reset-(?:ssignable-roles?|sar)/),
+        condition: msg => msg.content.match(/^reset-(?:ssignable-roles?|sar)/),
         act: async (msg) => {
 
             if (msg.author.bot)
@@ -65,7 +65,7 @@ you these powers via https://corki.js.org/admin");
     },
 
     { // self assign role
-        condition: msg => msg.content.match(/^-iam (.+)/),
+        condition: msg => msg.content.match(/^iam (.+)/),
 
         act: async function (msg) {
 
@@ -103,7 +103,7 @@ added this role to the server yet. Maybe you should remind them about it");
     },
 
     { // list roles
-        condition: msg => msg.content.match(/^-(?:roles|iam)(?:$|\s)/),
+        condition: msg => msg.content.match(/^(?:roles|iam)(?:$|\s)/),
 
         act: async function (msg) {
             logCmd(msg, "checked available -roles");
@@ -119,7 +119,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
     },
 
     { // remove role
-        condition: msg => msg.content.match(/^-iamnot (.+)/),
+        condition: msg => msg.content.match(/^iamnot (.+)/),
 
         act: async function (msg) {
             let roles = this.condition(msg)[1]  // find roles argument

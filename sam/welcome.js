@@ -71,7 +71,7 @@ function pruneRules(serverid) {
 module.exports = [
 
 	{ // with custom welcome msg
-		condition: msg => msg.content.match(/^-announce-new-members ([\s\S]+)/),
+		condition: msg => msg.content.match(/^announce-new-members ([\s\S]+)/),
 		act: async function (msg) {
 
 			// no bot users
@@ -111,7 +111,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
 	},
 
     {
-        condition: msg => msg.content.match(/^-announce-new-members(?:$|\s)/),
+        condition: msg => msg.content.match(/^announce-new-members(?:$|\s)/),
         act: async msg => {
 
 			// no bot users
@@ -150,7 +150,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
 
 
 	{
-        condition: msg => msg.content.match(/^-ignore-new-members(?:$|\s)/),
+        condition: msg => msg.content.match(/^ignore-new-members(?:$|\s)/),
         act: async msg => {
 
 			// no bots

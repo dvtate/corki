@@ -7,7 +7,7 @@ module.exports = [
 
     { // add a subscription to a channel
         condition: function (msg) {
-            return msg.content.match(/^-rss (?:add|sub) (\S+)/);
+            return msg.content.match(/^rss (?:add|sub) (\S+)/);
         },
         act: async function (msg) {
             logCmd(msg, "added a -rss sub (-rss add)");
@@ -36,7 +36,7 @@ you these powers via https://corki.js.org/admin");
 
     {
         condition: function (msg) {
-            return msg.content.match(/^-rss reset(?:$|\s)/);
+            return msg.content.match(/^rss reset(?:$|\s)/);
         },
         act: async function (msg) {
             logCmd(msg, "unsubscribed to -rss feeds");
@@ -53,7 +53,7 @@ you these powers via https://corki.js.org/admin");
     },
 
     {
-        condition: msg => msg.content.match(/^-rss list/),
+        condition: msg => msg.content.match(/^rss list/),
         act: async msg => {
 
             // make the list of rules from rss.conf into a string
@@ -69,7 +69,7 @@ you these powers via https://corki.js.org/admin");
 
 
     { // -rss help
-        condition: msg => msg.content.match(/^-(?:help rss|rss help|rss)(?:$|\s)/),
+        condition: msg => msg.content.match(/^(?:help rss|rss help|rss)(?:$|\s)/),
         act: async msg => msg.channel.send(rssHelpInfo)
     },
 
