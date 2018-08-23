@@ -123,14 +123,13 @@ function checkin(server) {
                         // reset and replace associate roles
                         removeRoles(server, member[0], roles);
                         member[1].addRole(role);
-/*
+
                         // announce achievement
                         if (rule.announce && roles[i].announce)
                             guild.channels.find("name", rule.announce).send({ embed : {
                                 title: `${member[1].user.username} got promoted to ${roles[i].role}!`,
                                 description: `They currently have ${mastery.pts} points`
                             }});
-*/
 
                     }
 

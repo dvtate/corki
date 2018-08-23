@@ -1,10 +1,11 @@
+const fs = require("fs");
 const sam = require("./sam");
 
 function getGuildPrefixes(id){
     try {
         return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${id}/prefixes.json`));
     } catch (e) {
-        return [ '-', global.client.user.toString() ];
+        return [ '-' ];
     }
 }
 module.exports.getGuildPrefixes = getGuildPrefixes;
@@ -15,3 +16,9 @@ function setGuildPrefixes(id, prefixes) {
 }
 
 module.exports.setGuildPrefixes = setGuildPrefixes;
+
+
+function resetGuildPrefixes(id) {
+    fs.unlinkSync(`${process.env.HOME}/.corki/servers/${id}/prefixes.json`);
+}
+module.exports.resetGuildPrefixes = resetGuildPrefixes;

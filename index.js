@@ -34,8 +34,8 @@ global.commands = []
 	.concat(require("./sam/welcome.js"))
 	.concat(require("./lol/lol_commands.js"))
 	.concat(require("./rss/rss_cmds.js"))
-	.concat(require("./cmds/help_cmds.js"));
-
+	.concat(require("./cmds/help_cmds.js"))
+	.concat(require("./sam/prefix_cmds"));
 
 const interactions = []
 	.concat(require("./reactions"));
@@ -44,7 +44,8 @@ const interactions = []
 global.client.on("message", async msg => {
 
 	// check for prefix
-	const prefixes = require("./sam/prefix").getGuildPrefixes(msg.guild ? msg.guild.id : 1337);
+	const prefixes = [ global.client.user.toString() ]
+		.concat(msg.guild ? require("./sam/prefix").getGuildPrefixes(msg.guild.id) : [ '-' ]);
 
 	let hascmd = false;
 	for (let i = 0; i < prefixes.length; i++)
@@ -53,7 +54,7 @@ global.client.on("message", async msg => {
 			hascmd = true;
 			break;
 		}
-	
+
 
 	if (hascmd)
 		// check each possible command
