@@ -456,9 +456,9 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 });
 
                 if (!foundMatchup && !msg.author.bot)
-                    msg.channel.send(`-lol matchup ${match[2]} ${match[1]}`);
+                    msg.channel.send(`${global.client.user} lol matchup ${match[2]} ${match[1]}`);
                 else if (!foundMatchup)
-                    msg.channel.send("not enough data for that matchup :/");
+                    msg.channel.send("not enough data in plat+ for that matchup :/");
 
             }).catch(console.error);
 

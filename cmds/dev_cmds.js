@@ -288,8 +288,8 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
                             resolve(stdout);
                         }));
 
-            const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}D ${Math.floor(time / 60 / 60) % 24
-    }H, ${Math.floor(time / 60) % 60}M, and ${time % 60}S`;
+            const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}d ${Math.floor(time / 60 / 60) % 24
+    }h, ${Math.floor(time / 60) % 60}m, and ${Math.round(time % 60)}s`;
 
             msg.channel.send({ embed: {
                 title: "About Corki",
