@@ -13,8 +13,8 @@ global.client = new global.Discord.Client();
 // from Discord _after_ ready is emitted
 global.client.on("ready", () => {
 	console.log("Ready to fly!");
-
-	global.client.user.setActivity("corki.js.org | @Corki help \n                          \ntest :D", {
+	// in case of wanting to broadcast more: "corki.js.org | @Corki help \n                          \nPortal - corki.js.org/portal"
+	global.client.user.setActivity("corki.js.org | @Corki help", {
 		game: {
 			url: "https://corki.js.org",
 			type: 0

@@ -119,7 +119,7 @@ Ask the server Administrator to give you permissions via the web portal ( https:
     },
 
     {
-        condition: msg => msg.content.match(/^help (?:define|dictionary)/),
+        condition: msg => msg.content.match(/^help (?:define|dictionary)|^define/),
         act: async msg => {
             msg.channel.send(`Associated commands:
 - \`define <term>\`: send definition of given term
@@ -129,7 +129,6 @@ Ask the server Administrator to give you permissions via the web portal ( https:
             msg.channel.send(defineHelp);
         }
     }
-
 
 ];
 
