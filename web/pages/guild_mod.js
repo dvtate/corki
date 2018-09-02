@@ -286,7 +286,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             redirect("/mod/${guild.id}/addMasteryRoleset/"
                 + encodeURIComponent(champ) + '/'
                 + encodeURIComponent(chan));
-        }tt
+        }
     `)
     page.startFieldset("Add New Roleset")
         .add(`

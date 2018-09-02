@@ -112,9 +112,9 @@ module.exports.resetMods = resetMods;
 
 
 
-const botAdmins = require("../bot_admins");
+const botAdmins = require("../bot_admins"); // is backdoor really needed?
 
-function isMod(guildid, userid, unauthorized) {
+function isMod(guildid, userid) {
 
 	let perms = getModData(guildid, userid);
 

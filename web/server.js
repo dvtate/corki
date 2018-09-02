@@ -28,7 +28,7 @@ app.use((err, req, res, next) => {
 });
 
 
-app.use('/resources', express.static(path.join(__dirname, "resources")));
+app.use("/resources", express.static(path.join(__dirname, "resources")));
 
 app.use('/', require("./pages/home"));          // /
 app.use('/', require("./pages/login"));         // /login

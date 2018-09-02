@@ -14,10 +14,10 @@ global.client = new global.Discord.Client();
 global.client.on("ready", () => {
 	console.log("Ready to fly!");
 
-	global.client.user.setActivity("corki.js.org | -help", {
+	global.client.user.setActivity("corki.js.org | @Corki help \n                          \ntest :D", {
 		game: {
 			url: "https://corki.js.org",
-			type: "PLAYING"
+			type: 0
 		}
 	}).catch(console.error);
 
@@ -34,8 +34,9 @@ global.commands = []
 	.concat(require("./sam/welcome.js"))
 	.concat(require("./lol/lol_commands.js"))
 	.concat(require("./rss/rss_cmds.js"))
-	.concat(require("./cmds/help_cmds.js"))
-	.concat(require("./sam/prefix_cmds"));
+	.concat(require("./sam/prefix_cmds"))
+	.concat(require("./cmds/define"))
+	.concat(require("./cmds/help_cmds.js"));
 
 const interactions = []
 	.concat(require("./reactions"));
@@ -79,7 +80,8 @@ global.client.on("message", async msg => {
 				console.error(`InteractionError(${msg.content}):`);
 				console.error(e.stack);
 			 })
-	})
+	});
+
 
 });
 

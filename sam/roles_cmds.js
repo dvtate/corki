@@ -12,6 +12,7 @@ module.exports = [
 
             if (msg.author.bot)
                 return;
+
             if (!msg.guild) {
                 msg.channel.send("This command cannot be used in DM's")
                 return;

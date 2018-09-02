@@ -26,7 +26,6 @@ router.get('/', bot.catchAsync(async (req, res) => {
         `)
         .addImage("/resources/discord-logowhite.png", "corki discord logo")
         .endFieldset()
-        .addRaw(`<h4>token: ${req.cookies.token}</h4>`);
 
     res.send(page.export());
 

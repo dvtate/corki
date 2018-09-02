@@ -124,9 +124,7 @@ module.exports = [
             ).catch(err =>
                 msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err}\n\`\`\``)
             );
-
         }
-
     },
 
     { // -lol add help
@@ -145,14 +143,12 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
             lol.removeDir(msg.author.id);
             msg.channel.send("unlinked your accounts!");
         }
-
     },
 
     { // list another user's accts
         condition: msg => msg.content.match(/^lol list <@!?([0-9]+)>/),
         act: async function (msg) {
             logCmd(msg, "listed a user's lol accts. (-lol list)");
-
 
             const id = this.condition(msg)[1];
             const userObj = lol.getUserData(id);
