@@ -50,7 +50,7 @@ module.exports = [
 
             //msg.channel.send(`**${term}:**\n${def}`);
             msg.channel.send({ embed: {
-                title: `**${term}:**`,
+                title: `${term}:`,
                 description: `${fields[0]}`,
 
                 fields: fields.slice(1).map((e, i) => {
