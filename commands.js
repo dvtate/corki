@@ -2,38 +2,17 @@
 const c_general = [
     {
         name: "-help",
-        usage: "<p>View a list of help commands to help you get started with the bot</p>",
+        usage: "<p>View a list of help commands to help you get started with the bot. This page is more up to date.</p>",
         args: "takes no arguments",
         example: "<kbd>-help</kbd>"
     }, {
-        name: "-echo",
-        usage: "<p>repeats a given message</p>",
-        args: "message to repeat<br><kbd>-echo &lt;message></kbd>",
-        example: "<kbd>-echo repeat after me</kbd><br><kbd>-echo -echo -echo hehe x3</kbd>"
-    }, {
-        name: "-coinflip",
-        usage: "<p>sends heads or tails</p>",
+        name: "-about",
+        usage: "<p>Give some general information about Corki bot</p>",
         args: "takes no arguments",
-        example: "<kbd>-coinflip heads i win tails u loose</kbd><br><kbd>-coinflip</kbd>"
-    }, {
-        name: "-random",
-        usage: "<p>Use an RNG to generate a whole number on a given range</p>",
-        args: `
-<kbd>-random &lt;a> &lt;b></kbd>: generate a random number between a & b inclusive <br/>
-<kbd>-random &lt;a></kbd>: generate a random number n where 0 &le; n &lt; a <br/>
-<ul>
-    <li>running this command without arguments provides this help entry</li>
-    <li>arguments can be separated by spaces or commas</li>
-</ul>
-        `,
-        example: `
-<kbd>-random 10</kbd>: random base 10 numeral<br/>
-<kbd>-random 0 100</kbd>: random test grade<br/>
-<kbd>-random 0,100</kbd>: same as above but commas
-        `
+        example: "<kbd>-about</kbd>"
     }, {
         name: "-commands",
-        usage: "<p>Show a list of commmands the bot is capable of (website more up to date)",
+        usage: "<p>Show a list of commmands the bot is capable of (very outdated)</p>",
         args: "takes no arguments",
         example: "<kbd>-commands</kbd>"
     }
@@ -184,6 +163,7 @@ const c_lol = [
     }
 
 ];
+
 const c_international = [
     {
         name: "-exchange",
@@ -237,18 +217,18 @@ const c_sam = [
         example: `<kbd>-iamnot weeaboo</kbd><br/>
 <kbd>-iamnot Scammer, Unicorn Lover</kbd>`
     }, {
-        name: "-add-assignable-role",
+        name: "-add-assignable-role <div class=\"mod-box\">Mod</div>",
         usage: "<p>makes given role self-assignable</p><b>(requires MANAGE_ROLES permission)</b>",
         args: "self-assignable role(s)<br><kbd>-add-assignable-role &lt;role(s)>",
         example: `<kbd>-add-assignable-role dota2</kbd><br/>
         <kbd>-add-assignable-role NA, EUW, LAN, LAS</kbd>`
     }, {
-        name: "-rss add",
+        name: "-rss add <div class=\"mod-box\">Mod</div>",
         usage: "<p>forward all new post from an rss feed to this channel (see <kbd>-help rss</kbd> for more)</p>",
         args: "rss feed url<br/><kbd>-rss &lt;url></kbd>",
         example: "<kbd>-rss add https://reddit.com/r/leagueoflegends/new/.rss"
     }, {
-        name: "-rss reset",
+        name: "-rss reset <div class=\"mod-box\">Mod</div>",
         usage: "<p>unsubscribe this channel from all rss feeds</p>",
         args: "takes no arguments",
         example: "<kbd>-rss reset</kbd>"
@@ -258,17 +238,55 @@ const c_sam = [
         args: "takes no arguments",
         example: "<kbd>-rss list</kbd>"
     }, {
-        name: "-announce-new-members",
+        name: "-announce-new-members <div class=\"mod-box\">Mod</div>",
         usage: "<p>Make an announcement every time a new member joins the server</p>",
         args: `optionally accepts a message template.<br/>
 <kbd>-announce-new-members [announcement-tempalte]
+        `,
+        example: `
+<kbd>-announce-new-members</kbd><br/>
+<kbd>-announce-new-members Welcome to {{server}} {{user}}</kbd>
         `
+    }, {
+        name: "-prefix add <div class=\"mod-box\">Mod</div>",
+        usage: "<p>Allow commands with a different prefix to be processed by corki</p>",
+        args: `new prefix<br/>
+<kbd>-prefix add &lt;prefix></kbd>
+        `,
+        example: `
+<kbd>-prefix add +</kbd><br/>
+<kbd>-prefix add can u pls</kbd>`
+    }, {
+        name: "-prefix list",
+        usage: "<p>Show a list of all prefixes configured for given server</p>",
+        args: "takes no arguments",
+        example: "<kbd>-prefix list</kbd>"
+    }, {
+        name: "-prefix reset <div class=\"mod-box\">Mod</div>",
+        usage: "<p>Reset custom prefixes in server back to defaults (@mention and '-')</p>",
+        args: "takes no arguments",
+        example: "<kbd>-prefix reset</kbd>"
+    }, {
+        name: `-prefix set <div class=\"mod-box\">Mod</div>`,
+        usage: "<p>Only accept commands with given prefix in this server (Corki also accepts commands starting with a mention)</p>",
+        args: "new prefix<br/>\
+<kbd>-prefix set &lt;prefix></kbd>",
+        example: "<kbd>-prefix set ;</kbd>"
+    }, {
+        name: "-msg <div class=\"mod-box\">Mod</div>",
+        usage: "<p>Use the bot to send a message to a different channel</p>",
+        args: `<kbd>-msg &lt;channel> &lt;message></kbd><br/>
+<ul>
+    <li><b>channel:</b> the channel id of the destination channel (use <code>-log channel</code> to find)</li>
+    <li><b>message:</b> message contents</li>
+</ul>`,
+        example: "<kbd>-msg 1234 hello there</kbd>"
     }
 
 ];
 
 
-const c_text = [
+const c_tools = [
     {
         name: "-spell",
         usage: "<p>Uses the military phonetic alphabet to spell a given word</p>",
@@ -299,6 +317,32 @@ const c_text = [
         usage: "<p>Sends the mirror image of your text, (as text)</p>",
         args: "given text<br/><kbd>-mirror &lt;text></kbd>",
         example: "<kbd>-mirror something</kbd>"
+    }, {
+        name: "-echo",
+        usage: "<p>repeats a given message</p>",
+        args: "message to repeat<br><kbd>-echo &lt;message></kbd>",
+        example: "<kbd>-echo repeat after me</kbd><br><kbd>-echo -echo -echo hehe x3</kbd>"
+    }, {
+        name: "-coinflip",
+        usage: "<p>sends heads or tails</p>",
+        args: "takes no arguments",
+        example: "<kbd>-coinflip heads i win tails u loose</kbd><br><kbd>-coinflip</kbd>"
+    }, {
+        name: "-random",
+        usage: "<p>Use an RNG to generate a whole number on a given range</p>",
+        args: `
+<kbd>-random &lt;a> &lt;b></kbd>: generate a random number between a & b inclusive <br/>
+<kbd>-random &lt;a></kbd>: generate a random number n where 0 &le; n &lt; a <br/>
+<ul>
+    <li>running this command without arguments provides this help entry</li>
+    <li>arguments can be separated by spaces or commas</li>
+</ul>
+        `,
+        example: `
+<kbd>-random 10</kbd>: random base 10 numeral<br/>
+<kbd>-random 0 100</kbd>: random test grade<br/>
+<kbd>-random 0,100</kbd>: same as above but commas
+        `
     }
 ];
 
@@ -314,15 +358,6 @@ const c_devtools = [
         usage: "<p>Used to make sure the bot is online and/or to test a connection",
         args: "takes no arguments",
         example: "<kbd>-ping</kbd>"
-    }, {
-        name: "-msg",
-        usage: "<p>Use the bot to send a message to a different channel</p>",
-        args: `<kbd>-msg &lt;channel> &lt;message></kbd><br/>
-<ul>
-    <li><b>channel:</b> the channel id of the destination channel (use <code>-log channel</code> to find)</li>
-    <li><b>message:</b> message contents</li>
-</ul>`,
-        example: "<kbd>-msg 1234 hello there</kbd>"
     }, {
         name: "-bug",
         usage: "<p>Alerts the bot developers that something needs to be fixed</p>",
@@ -373,7 +408,7 @@ commands = {
     "lol" : c_lol,
     "international" : c_international,
     "sam" : c_sam,
-    "text" : c_text,
+    "tools" : c_tools,
     "devtools" : c_devtools
 };
 

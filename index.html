@@ -249,14 +249,26 @@
                             <label for="cat-sam">Server Automation & Management</label>
                         </div>
                         <div class="input-group cmd-cat">
-                            <input type="checkbox" class="category-select" id="cat-text" onclick="chkin()" value="text" tabindex="0" />
-                            <label for="cat-text">Text Tools</label>
+                            <input type="checkbox" class="category-select" id="cat-tools" onclick="chkin()" value="tools" tabindex="0" />
+                            <label for="cat-tools">Tools</label>
                         </div>
                         <div class="input-group cmd-cat">
                             <input type="checkbox" class="category-select" id="cat-devtools" onclick="chkin()" value="devtools" tabindex="0" />
                             <label for="cat-devtools">Developer Tools</label>
                         </div>
                 </form>
+                <style>
+                    .mod-box {
+                        border-radius: 3px;
+                        padding: 5px;
+                        display: inline-block;
+                        background-color: #4b00a9;
+                        transition: background-color, 0.5s;
+                    }
+                    .mod-box:hover {
+                        background-color: #4b00c9;
+                    }
+                </style>
 
                 <div class="cmdlist" id="cmdlist">
 
@@ -301,6 +313,28 @@
             </script>
 
         </div>
+        <div class="page-slice" >
+            <!--
+        - Features and other links/pictures go here
+        - feathub
+        - changelog
+
+            <div class="row">
+
+                <div class="col-sm-12 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-3">
+                    <div class="card fluid">
+                        <img class="section media" src="code_demo.png" />
+                        <div class="section">
+                            <h3>View On Github</h3>
+                            Corki bot is a open source project. Feel free to open a pull request or an issue
+                        </div>
+                        <a href="https://github.com/dvtate/corki-bot"><div class="button">View Code</div></a>
+                    </div>
+                </div>
+
+            </div>
+        -->
+        </div>
 
         <div class="page-slice" id="footer">
             <div class="pad10">
@@ -311,7 +345,6 @@
                      Games, Inc. League of Legends © Riot Games, Inc.</p>
             </div>
         </div>
-
 
     </body>
 </html>
