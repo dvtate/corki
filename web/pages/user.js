@@ -174,28 +174,24 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
         return;
     }
 
+    const badacct = () => {
+        page = new Page("Error", userid);
+        page.startFieldset("That didn't work :/")
+            .addRaw(`<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
+                        <button type="button" onclick="redirect('/user')">Try Again</button>`)
+            .endFieldset();
+        res.send(page.export());
+    };
+
     let summoner, page;
     try {
         summoner = await teemo.riot.get(teemo.serverNames[req.params.region], "summoner.getBySummonerName", req.params.name);
     } catch (e) {
-        page = new Page("Error", userid);
-        page.startFieldset("That didn't work :/")
-            .addRaw(`<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
-                        <button type="button" onclick="redirect('/user')">Try Again</button>`)
-            .endFieldset();
-        res.send(page.export());
-        return;
+        return badacct();
     }
+    if (!summoner)
+        return badacct();
 
-    if (!summoner) {
-        page = new Page("Error", userid);
-        page.startFieldset("That didn't work :/")
-            .addRaw(`<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
-                        <button type="button" onclick="redirect('/user')">Try Again</button>`)
-            .endFieldset();
-        res.send(page.export());
-        return;
-    }
 
 
     page = new Page("Verify Account", userid, "/user/lol/add/verify");
@@ -204,7 +200,8 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
     let pend = {
         icon: summoner.profileIconId == 20 ? 23 : 20,
         region: teemo.serverNames[req.params.region],
-        summoner: req.params.name
+        summoner: req.params.name,
+        id: summoner.accountId
     };
 
     fs.writeFileSync(`${process.env.HOME}/.corki/users/${userid}/pending.json`, JSON.stringify(pend));

@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const logCmd = require("../logging.js");
 
 const teemo = require("./teemo.js");
@@ -107,23 +109,68 @@ module.exports = [
     },
 
     { // add acct
+      // profile icon verification
+
         condition: msg => msg.content.match(/^lol add (\S+) (.+)/),
         act: async function (msg) {
             logCmd(msg, "linked an LoL acct (-lol add)");
 
             const match = this.condition(msg);
             const server = teemo.serverNames[match[1].toLowerCase()];
-            if (!server) {
-                msg.channel.send("Invalid/Missing region. Use `-lol servers` to see a list of regions");
-                return;
-            }
-            const summoner = match[2];
+            if (!server)
+                return msg.channel.send("Invalid/Missing region. Use `-lol servers` to see a list of regions");
 
-            lol.addUserAcct(msg.author.id, server, summoner).then(() =>
-                msg.channel.send(`${msg.author} is also ${summoner}`)
+            const name = match[2];
+            const summoner = await teemo.riot.get(server, "summoner.getBySummonerName", name);
+            if (!summoner)
+                return msg.channel.send(`Sorry, couldn't find ${name} on ${match[1]}. Make sure everything is spelled correctly.`);
+
+
+            // make userdir
+            lol.setupDir(msg.author.id);
+
+            let pend;
+            try {
+                pend = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${msg.author.id}/pending.json`));
+            } catch (e) {
+                pend = null;
+            }
+
+            if (!pend || pend.id != summoner.id || pend.region != server) {
+
+                msg.channel.send(`Change ${name}'s icon to ${
+                   summoner.profileIconId == 20 ? "<:icon23:470033522862587926>" :
+                   "<:icon20:470033547571494912>"} then run the command again.`);
+
+                pend = {
+                   icon: summoner.profileIconId == 20 ? 23 : 20,
+                   region: server,
+                   summoner: name,
+                   id: summoner.id
+                };
+
+                fs.writeFileSync(
+                   `${process.env.HOME}/.corki/users/${msg.author.id}/pending.json`,
+                   JSON.stringify(pend));
+
+                return;
+
+            } else if (summoner.profileIconId != pend.icon) {
+                return msg.channel.send(`change your profile icon to ${
+                    summoner.profileIconId == 20 ? "<:icon23:470033522862587926>" :
+                    "<:icon20:470033547571494912>" } then run the command again.`);
+            }
+
+            lol.addUserAcct(msg.author.id, server, name).then(() =>
+                msg.channel.send(`${msg.author} is also ${name}`)
             ).catch(err =>
-                msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err}\n\`\`\``)
+                msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err.stack}\n\`\`\``)
             );
+
+            fs.unlink(
+                `${process.env.HOME}/.corki/users/${msg.author.id}/pending.json`,
+                (e) => { if (e) throw e; });
+
         }
     },
 
@@ -281,12 +328,11 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             const champID = teemo.champIDs[champName.toLowerCase()];
 
 
-            if (!champID) {
-                msg.channel.send("invalid champion name (make sure to remove spaces)");
-                return;
-            }
+            if (!champID)
+                return msg.channel.send("invalid champion name (make sure to remove spaces)");
 
-            msg.channel.send("This could take a few seconds");
+
+            msg.channel.startTyping();
 
             lol_lb.getLeaderBoard(msg.client.users, champID).then(data => {
                 msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
@@ -296,6 +342,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 time = (time[0] * ns_per_s + time[1]) / ns_per_s;
 
                 msg.channel.send(`that took ${time} seconds to complete`);
+                msg.channel.stopTyping();
             });
 
         }
