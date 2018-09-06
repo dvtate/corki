@@ -217,18 +217,18 @@ const c_sam = [
         example: `<kbd>-iamnot weeaboo</kbd><br/>
 <kbd>-iamnot Scammer, Unicorn Lover</kbd>`
     }, {
-        name: "-add-assignable-role <div class=\"mod-box\">Mod</div>",
+        name: "-add-assignable-role<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>makes given role self-assignable</p><b>(requires MANAGE_ROLES permission)</b>",
         args: "self-assignable role(s)<br><kbd>-add-assignable-role &lt;role(s)>",
         example: `<kbd>-add-assignable-role dota2</kbd><br/>
         <kbd>-add-assignable-role NA, EUW, LAN, LAS</kbd>`
     }, {
-        name: "-rss add <div class=\"mod-box\">Mod</div>",
+        name: "-rss add<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>forward all new post from an rss feed to this channel (see <kbd>-help rss</kbd> for more)</p>",
         args: "rss feed url<br/><kbd>-rss &lt;url></kbd>",
         example: "<kbd>-rss add https://reddit.com/r/leagueoflegends/new/.rss"
     }, {
-        name: "-rss reset <div class=\"mod-box\">Mod</div>",
+        name: "-rss reset<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>unsubscribe this channel from all rss feeds</p>",
         args: "takes no arguments",
         example: "<kbd>-rss reset</kbd>"
@@ -238,7 +238,7 @@ const c_sam = [
         args: "takes no arguments",
         example: "<kbd>-rss list</kbd>"
     }, {
-        name: "-announce-new-members <div class=\"mod-box\">Mod</div>",
+        name: "-announce-new-members<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>Make an announcement every time a new member joins the server</p>",
         args: `optionally accepts a message template.<br/>
 <kbd>-announce-new-members [announcement-tempalte]
@@ -248,7 +248,7 @@ const c_sam = [
 <kbd>-announce-new-members Welcome to {{server}} {{user}}</kbd>
         `
     }, {
-        name: "-prefix add <div class=\"mod-box\">Mod</div>",
+        name: "-prefix add<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>Allow commands with a different prefix to be processed by corki</p>",
         args: `new prefix<br/>
 <kbd>-prefix add &lt;prefix></kbd>
@@ -262,18 +262,18 @@ const c_sam = [
         args: "takes no arguments",
         example: "<kbd>-prefix list</kbd>"
     }, {
-        name: "-prefix reset <div class=\"mod-box\">Mod</div>",
+        name: "-prefix reset<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>Reset custom prefixes in server back to defaults (@mention and '-')</p>",
         args: "takes no arguments",
         example: "<kbd>-prefix reset</kbd>"
     }, {
-        name: `-prefix set <div class=\"mod-box\">Mod</div>`,
+        name: `-prefix set<br/><div class=\"mod-box\">Mod</div>`,
         usage: "<p>Only accept commands with given prefix in this server (Corki also accepts commands starting with a mention)</p>",
         args: "new prefix<br/>\
 <kbd>-prefix set &lt;prefix></kbd>",
         example: "<kbd>-prefix set ;</kbd>"
     }, {
-        name: "-msg <div class=\"mod-box\">Mod</div>",
+        name: "-msg<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>Use the bot to send a message to a different channel</p>",
         args: `<kbd>-msg &lt;channel> &lt;message></kbd><br/>
 <ul>
