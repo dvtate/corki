@@ -16,13 +16,11 @@ touch "$HOME/.corki/reddit/clist"	# reddit channel forwarding
 
 mkdir "$HOME/.corki/users"			# user directories
 mkdir "$HOME/.corki/servers"		# server directories
-
+mkdir "$HOME/.corki/rss"			# rss feed configs
 mkdir "$HOME/.corki/lb"				# leaderboard
 
 
-
-# if token isn't already saved
-# then we need to prompt the user for it
+# discord key
 if [ ! -f $HOME/.corki/disc_key ]; then
 	# get bot token
 	printf "Enter your Discord token: "
@@ -34,6 +32,7 @@ if [ ! -f $HOME/.corki/disc_key ]; then
     echo "done"
 fi
 
+# riot api key
 if [ ! -f $HOME/.corki/riot_key ]; then
 	# get token
 	printf "Enter Riot API token: "
@@ -45,7 +44,7 @@ if [ ! -f $HOME/.corki/riot_key ]; then
 	echo "done"
 fi
 
-
+# champion.gg api key
 if [ ! -f $HOME/.corki/champgg_key ]; then
 	# get token
 	printf "Enter champion.gg API token: "
@@ -57,7 +56,7 @@ if [ ! -f $HOME/.corki/champgg_key ]; then
 	echo "done"
 fi
 
-
+# discord oauth2 client id
 if [ ! -f $HOME/.corki/client_id ]; then
 	# get token
 	printf "Enter client id: "
@@ -69,7 +68,7 @@ if [ ! -f $HOME/.corki/client_id ]; then
 	echo "done"
 fi
 
-
+# discord oauth2 client secret
 if [ ! -f $HOME/.corki/client_secret ]; then
 	# get token
 	printf "Enter client secret: "
@@ -81,6 +80,8 @@ if [ ! -f $HOME/.corki/client_secret ]; then
 	echo "done"
 fi
 
+# note: reddit oauth2 id is hard-coded in ./web/pages/user.js
+# reddit oauth2 secret
 if [ ! -f $HOME/.corki/reddit_secret ]; then
 	# get token
 	printf "Enter reddit secret: "
@@ -91,6 +92,7 @@ if [ ! -f $HOME/.corki/reddit_secret ]; then
 	echo $REDDIT_SECRET > $HOME/.corki/reddit_secret
 	echo "done"
 fi
+
 
 # install dependencies
 echo "installing dependencies..."

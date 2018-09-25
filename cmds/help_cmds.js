@@ -58,6 +58,9 @@ module.exports = [
                         name: "`-8ball [message]`",
                         value: "answers yes, no or maybe"
                     }, {
+                        name: "`-roulette`",
+                        value: "Mentions a random discord user. Great for giveaways. [[requires mod](https://corki.js.org/permissions.html)]"
+                    }, {
                         name: "`-xkcd [comic#|latest]`",
                         value: "sends an xkcd comic strip\
 \n + **no arguments:** sends random comic\
@@ -180,23 +183,42 @@ module.exports = [
 
                 fields: [
                     {
-                        name: "`-add-assignable-role <role(s)>`",
-                        value: "add a role that users in the server can self-assign [requires MANAGE_ROLES priveleges]"
+                        name: "`-add-sar <role(s)>`",
+                        value: "Make a given role self-assignable [[requires mod](https://corki.js.org/permissions.html)]"
                     }, {
-                        name: "`-reset-assignable-roles`",
-                        value: "Stop all roles from being self-assignable [requires MANAGE_ROLES priveleges]"
+                        name: "`-reset-sar`",
+                        value: "Stop all roles from being self-assignable [[requires mod](https://corki.js.org/permissions.html)]"
                     }, {
                         name: "`-iam <role(s)>`",
-                        value: "self assign server role(s)"
+                        value: "Self assign server role(s)"
                     }, {
                         name: "`-iamnot <role(s)>`",
-                        value: "unassign role(s) to self"
+                        value: "Unassign role(s) to self (only works on SAR)"
                     }, {
                         name: "`-rss add <feed-url>`",
                         value: "forward all elements of an rss feed to this channel (see `-help rss` for more)",
                     }, {
                         name: "`-rss reset`",
                         value: "unsubscribe this channel from all rss feeds"
+                    }, {
+                        name: "`-prefix add <prefix>`",
+                        value: "Make Corki accept commands starting with given prefix [[requires mod](https://corki.js.org/permissions.html)]"
+                    }, {
+                        name: "`-prefix set <prefix>`",
+                        value: "Removes all prefixes then adds given prefix [[requires mod](https://corki.js.org/permissions.html)]"
+                    }, {
+                        name: "`-prefix list`",
+                        value: "Show a list of prefixes available in given server if you (note: `@corki prefix list` cannot be disabled)"
+                    }, {
+                        name: "`-prefix reset`",
+                        value: "resets command prefixes back to defaults (accept @mention or `-`) [[requires mod](https://corki.js.org/permissions.html)]"
+                    }, {
+                        name: "`-announce-new-members [template string]`",
+                        value: "Every time a new member joins the server, corki will announce them in the channel this command is run in. \
+The template string can be used to set the announcement text. (note keywords `{{member}}`, `{{membersCount}}`, and `{{server}}`)\n[[requires mod](https://corki.js.org/permissions.html)]`"
+                    }, {
+                        name: "`-ignore-new-members`",
+                        value: "Remove new members announcements configured via `-announce-new-members` in the given channel. [[requires mod](https://corki.js.org/permissions.html)]"
                     }
                 ],
 
@@ -282,14 +304,14 @@ module.exports = [
 
 
     { // help overview (table of contents)
-        condition: msg => msg.content.match(/^h(?:elp)?(?:$|\s)|^$/),
+        condition: msg => msg.content.match(/^{?:h(?:elp)?|commands)(?:$|\s)|^$/),
         act: async function (msg) {
             logCmd(msg, "asked for -help");
 
             msg.channel.send({ embed : {
                 color: 0x3498db,
                 title: "Corki Bot Help",
-                description: "For a complete list of commands, their help info, and more please visit [corki.js.org](https://corki.js.org/#commands)",
+                description: "For an up-to-date complete list of commands, their help info, and more please visit [corki.js.org](https://corki.js.org/#commands)",
 
                 fields: [
                     {
@@ -325,86 +347,6 @@ module.exports = [
             }});
         }
 
-    },
-
-    { // commands list (depricated)
-        condition: msg => msg.content.match(/^commands/),
-        act: async function (msg) {
-
-            logCmd(msg, "asked for -commands");
-
-            msg.channel.send({ embed: {
-                color: 0x3498db,
-                title: "Corki Bot Commands list",
-                description: "If you don't know how to format arguments to a command try running it without them. For better list see [corki.js.org](https://corki.js.org/#commands)",
-
-
-                fields: [
-                    {
-                        name: "General Commands",
-                        value: `
-\`-help\`: access this message.
-\`-8ball [question]\`: answers yes, no, or maybe.
-\`-echo <quote>\`: repeats <quote>.
-\`-coinflip\`: sends heads or tails.
-\`-random <args>\`: sends random number.
-\`-xkcd [comic#|latest]\`: sends XKCD comic.
-                        `
-                    }, {
-                        name: "League of Legends related commands",
-                        value: `
-\`-lol add <region-code> <summoner-name>\`: link your LoL acct to your discord account.
-\`-lol list\`: list the League of legends accounts linked to your discord account.
-\`-lol main <account-number>\`: set an account as your main (use index from \`-lol list\`)
-\`-lol mastery <args>\`: champion mastery information (run \`-lol mastery\` for help)
-\`-lol reset\`: remove all linked accounts
-\`-lol leaderboard <champion>\`: gives mastery points leaderboard for server`
-                    }, {
-                        name: "International Commands",
-                        value: `
-\`-exchange <amount> <from> <to>\`: convert between currencies.
-\`-timezone <unix-tz>\`: gives local time in given unix timezone.`
-                    }, {
-                        name: "Server Roles",
-                        value: `
-\`-iam <role(s)>\`: give yourself a role (use commas to assign multiple at once).
-\`-iamnot <role(s)>\`: remove role from self.
-\`-add-assignable-role <role(s)>\`: mark given as self-assignable [admin]`
-                    }, {
-                        name: "Text Commands",
-                        value: `
-\`-spell <word>\`: spells word using military phonetic alphabet.
-\`-vaporwave <text>\`: formats text to vaporwave (full-width).
-\`-glitch <text>\`: add characters to make text glitchy.
-\`-flip <text>\`: flip text upside-down.
-\`-tinycaps <text>\`: switch letters for small caps.
-\`-mirror <text>\`: reverse text and characters.`
-                    }, {
-                        name: "Developer Commands:",
-                        value: `
-\`-log <args>\`: get/send useful info. (send \`-log help\` for more)
-\`-ping\`: test a connection.
-\`-msg <channel> <message>\`: send a message to a given channel. [admin]
-\`-bug <description>\`: send a bug report (or better yet, [GitHub](https://github.com/dvtate/corki-bot))
-\`-system <command>\`: run shell command on host server. [admin]
-\`-eval <node.js code>\`: run node.js code as the act of a command. [admin]`
-                    }, {
-                        name: "Other Commands",
-                        value: `
-\`-subreddit-link\`: forward all new posts from [/r/corkimains](https://reddit.com/r/corkimains) here
-\`-subreddit-unlink\`: stop forwarding reddit posts here`
-                    }
-                ],
-
-                timestamp: "2018-05-27T20:04:50.607Z",
-
-                footer: {
-                    text: "Corki - corki.js.org"
-                }
-
-            }});
-
-        }
     }
 
 

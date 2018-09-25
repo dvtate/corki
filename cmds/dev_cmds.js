@@ -172,8 +172,8 @@ Ask the server's owner to promote you to admin or grant you access to this comma
                 console.log(e);
                 return;
             }
-
-            msg.channel.send("Done!");
+            
+            msg.react("👍");
 
         }
 
@@ -233,6 +233,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
                     msg.channel.send(`error: \`\`\`\n${err.stack}\n\`\`\``);
             }
 
+            msg.react("👍");
         }
 
     },

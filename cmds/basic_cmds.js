@@ -2,6 +2,7 @@
 const logCmd = require("../logging.js");
 const request = require("request");
 
+const mods = require("../sam/mods.js");
 module.exports = [
 
     { // 8ball
@@ -90,6 +91,25 @@ module.exports = [
         },
         tests: [ "-random 99", "-random 0 1000", "-random -1000 0", "-random 0,100" ]
 
+    },
+
+    // mention a random user
+    {
+        condition: msg => msg.content.match(/^(?:roulette|ddg|duck\s?duck\s?goose)(?:$|\s)/),
+        act: async msg => {
+            if (!msg.guild)
+                return msg.channel.send("Sorry this command is only available for guilds. \
+Go to corki.js.org to add corki to yours.");
+
+            if (!mods.isMod(msg.guild.id, msg.author.id))
+                return msg.channel.send("This command is only available for server mods, \
+Ask a server administrator to add you to the mods list via the web portal (corki.js.org).");
+
+            const flock = Array.from(msg.guild.members);
+            const goose = flock[Math.floor(Math.random() * flock.length)][1];
+            msg.channel.send(goose.toString());
+
+        }
     },
 
     { // random help

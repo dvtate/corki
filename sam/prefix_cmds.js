@@ -30,7 +30,7 @@ you these powers via https://corki.js.org/admin");
 
             prefixes.push(escapeRegExp(this.condition(msg)[1].trim()));
             prefix.setGuildPrefixes(msg.guild.id, prefixes);
-            msg.channel.send(`Done!`);
+            msg.react("👍");
             msg.channel.send(`Configured prefixes:\n${prefixes.join("\n")}`);
         }
     },
@@ -40,12 +40,6 @@ you these powers via https://corki.js.org/admin");
         act: async msg => {
             logCmd(msg, "listed prefixes");
 
-            if (!mods.isMod(msg.guild.id, msg.author.id)) {
-                msg.channel.send("You must be given permission to run server \
-management commands in order to perform this action. Ask an administrator to grant \
-you these powers via https://corki.js.org/admin");
-                return;
-            }
             let prefixes = prefix.getGuildPrefixes(msg.guild.id);
             msg.channel.send(`Configured prefixes:\n${prefixes.join("\n")}`);
         }
@@ -69,6 +63,7 @@ you these powers via https://corki.js.org/admin");
 
             let prefixes = [ escapeRegExp(this.condition(msg)[1].trim()) ];
             prefix.setGuildPrefixes(msg.guild.id, prefixes);
+            msg.react("👍");
         }
     },
 
@@ -88,7 +83,7 @@ you these powers via https://corki.js.org/admin");
                 return;
             }
             prefix.resetGuildPrefixes(msg.guild.id);
-            msg.channel.send("Done!");
+            msg.react("👍");
         }
     }
 ];

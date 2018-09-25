@@ -56,7 +56,6 @@ global.client.on("message", async msg => {
 			break;
 		}
 
-
 	if (hascmd)
 		// check each possible command
 		for (let i = 0; i < commands.length; i++)

@@ -34,8 +34,7 @@ you these powers via https://corki.js.org/admin");
                     .split(",")                         // take each role (separated by commas)
                         .map(r => r.trim())             // trim whitespace
                             .forEach(r => roles.addRole(msg.guild.id, r)); // add the roles
-
-            msg.channel.send("Done!");
+            msg.react("👍");
         }
     },
     { // make roles unassignable again
@@ -60,7 +59,7 @@ you these powers via https://corki.js.org/admin");
 
             roles.resetRoles(msg.guild.id);
 
-            msg.channel.send("Done!");
+            msg.react("👍");
 
         }
     },
@@ -96,8 +95,7 @@ you these powers via https://corki.js.org/admin");
 added this role to the server yet. Maybe you should remind them about it");
                 }));
 
-            msg.channel.send("done!");
-
+            msg.react("👍");
 
         }
 
@@ -138,8 +136,8 @@ To self-assign a role you can use the command \`-iam <role>\``);
                 else
                     msg.member.removeRole(r).catch(console.error);
             });
-
-            msg.channel.send("done!");
+            
+            msg.react("👍");
 
         }
     },
