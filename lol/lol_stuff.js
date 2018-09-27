@@ -29,7 +29,7 @@ function setupDir(id) {
 
 module.exports.setupDir = setupDir;
 
-function removeDir(id) {
+async function removeDir(id) {
     // if they don't already have a dir
     if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}`))
         return true;
@@ -53,7 +53,6 @@ module.exports.removeDir = removeDir;
             name: "",
             server: "",
             id: "num num",
-            icon: num,
             accountId:""
         }
     ]
@@ -91,12 +90,11 @@ async function addUserAcct(id, server, username) {
                 return;
             }
             if (!usrObj.accounts.find(acct => acct.id == summoner.id)) {
-                usrObj.accounts = usrObj.accounts.concat({
+                usrObj.accounts.push({
                     name: summoner.name,
                     server: server,
                     id: summoner.id,
-                    accountId: summoner.accountId,
-                    icon: summoner.profileIconId
+                    accountId: summoner.accountId
                 });
 
                 // write account info

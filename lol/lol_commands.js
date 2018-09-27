@@ -9,7 +9,6 @@ const lol_lb = require("./lol_leaderboard.js");
 lol_lb.configure();
 
 
-
 module.exports = [
 
 
@@ -162,7 +161,7 @@ module.exports = [
             }
 
             lol.addUserAcct(msg.author.id, server, name).then(() =>
-                msg.channel.send(`${msg.author} is also ${name}`)
+                msg.react("👍")
             ).catch(err =>
                 msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err.stack}\n\`\`\``)
             );
@@ -411,6 +410,11 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             logCmd(msg, "checked their -lol rank");
             let userObj = lol.getUserData(msg.author.id);
 
+            // no accts.
+            if (userObj.accounts.length == 0) {
+                removeDir(msg.author.id);
+                userObj = null;
+            }
             if (!userObj) {
                 msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
                 return;
@@ -787,6 +791,32 @@ last played: ${Date(data[i].lastPlayTime)}`
         condition: msg => msg.content.match(/^lol ddragon (\S+)/),
         act: async function (msg) {
             msg.channel.send(teemo.ddragon.url + this.condition(msg)[1]);
+        }
+    },
+
+    // botAdmin command to manually add a user's account, like for example if they're banned or sth..
+    {
+        condition: msg => msg.content.match(/^lol ba-add <@!?([0-9]+)> (\S+) (.+)/),
+        act: async function (msg) {
+
+            if (!require("../bot_admins").auth(msg.author.id))
+                return msg.channel.send("You are unauthorized to use this command");
+
+            const match = this.condition(msg);
+            const userid = match[1],
+                  region = teemo.serverNames[match[2].toLowerCase()],
+                  summoner = match[3];
+
+            if (!region)
+                return msg.channel.send("invalid region");
+
+
+            lol.addUserAcct(userid, region, summoner).then(() =>
+                msg.react("👍")
+            ).catch(err =>
+                msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err.stack}\n\`\`\``)
+            );
+
         }
     }
 ];

@@ -39,8 +39,9 @@ function generateModData(serverid) {
         });
 
     Array.from(guild.members).forEach(m => {
-        // admin permissions
-        if (m[1].permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR))
+        // admin permissions (you have to manually give bot users permisions)
+        // new admins not automatically added.. 
+        if (m[1].permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !m[1].user.bot)
             mods.push({
                 id: m[1].id,
                 admin: true,

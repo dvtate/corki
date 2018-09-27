@@ -9,6 +9,7 @@ const mods = require("../../sam/mods");
 const roles = require("../../sam/roles");
 const welcome = require("../../sam/welcome");
 const masteryRoles = require("../../lol/mastery_roles");
+const prefix = require("../../sam/prefix.js");
 
 const router = express.Router();
 
@@ -100,7 +101,6 @@ router.get("/mod", bot.catchAsync(async (req, res) => {
 
     page.endFieldset().add("<h5>Select a Server to Continue</h5>");
 
-
     // present a list of mutual servers they have admin in
 
 
@@ -145,11 +145,24 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     League Stuff
         Mastery roles
-        Leaderboard
+        Leaderboard - make modular so this can be managed here...
 
     RSS feeds
-
+    Dictionary
     */
+
+    page.startFieldset("Command Prefixes")
+        .add(`
+            <p>In case another, more important bot also uses <kbd>-</kbd> to prefix its commands,
+ Corki can respond to commands of a different prefix. In addition, Corki will always respond to
+ commands starting with his mention (@Corki Bot#2838).`);
+
+
+    const prefixTable = prefix.getGuildPrefixes(req.params.serverid).map(p =>
+        [`<kbd>${p}</kbd>` ,  `<button type="button" onclick="redirect('/mod/rmprefix/${encodeURIComponent(p)}')">Remove</button>`]);
+    page.addTable([ "Prefix", "Action" ], prefixTable, "Command Prefixes")
+        .add(``)
+        .endFieldset();
 
     // self assignable roles
     page.startFieldset("Self-Assignable Roles")
@@ -270,7 +283,6 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
                         + encodeURIComponent(name) + '/' + minPts + '/' + announce);
 
                 }
-
             `).endFieldset().endFieldset();
 
     }
