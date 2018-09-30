@@ -133,7 +133,7 @@ module.exports = [
                     }
                 ],
 
-                timestamp: "2018-06-24",
+                timestamp: "2018-9-30",
 
                 footer: {
                     text: "Corki - corki.js.org"
@@ -164,7 +164,7 @@ module.exports = [
                     }
                 ],
 
-                timestamp: "2018-05-27T20:04:50.607Z",
+                timestamp: "2018-09-30T20:04:50.607Z",
 
                 footer: {
                     text: "Corki - corki.js.org"

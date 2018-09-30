@@ -83,7 +83,7 @@ async function refreshUserData(id) {
                 id: summ.id, accountId: summ.accountId
             } : null);
         })).catch(e => null)
-    });
+    );
     let new_accts = await Promise.all(rep_req);
     for (let i = 0; i < data.accounts.length; i++)
         if (new_accts[i])

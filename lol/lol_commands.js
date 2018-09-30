@@ -260,7 +260,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     { // refresh mastery info, if its needed
         condition: msg => msg.content.match(/^lol refresh(?:$|\s)/),
         act: async msg => {
-            logCmd(msg, "-lol refreshed mastery pts");
+            logCmd(msg, "-lol refreshed");
             if (!lol.getUserData(msg.author.id))
                 msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
 
@@ -270,7 +270,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             // refresh mastery points
             require("./user_mastery").refresh(msg.author.id);
             msg.channel.stopTyping();
-
+            msg.react("👍");
         }
     },
 
