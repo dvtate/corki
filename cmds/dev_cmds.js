@@ -172,7 +172,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
                 console.log(e);
                 return;
             }
-            
+
             msg.react("👍");
 
         }
@@ -285,8 +285,7 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
                 require("child_process")
                     .exec("git log -1 --pretty=format:\"%h(%s)\"",
                         (error, stdout, stderr) => {
-                            if (error) return reject(error);
-                            resolve(stdout);
+                            resolve(error ? "undefined" : stdout);
                         }));
 
             const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}d ${Math.floor(time / 60 / 60) % 24

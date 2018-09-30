@@ -10,9 +10,6 @@ module.exports = [
 
         act: async function (msg) {
 
-            if (msg.author.bot)
-                return;
-
             if (!msg.guild) {
                 msg.channel.send("This command cannot be used in DM's")
                 return;
@@ -41,8 +38,6 @@ you these powers via https://corki.js.org/admin");
         condition: msg => msg.content.match(/^reset-(?:ssignable-roles?|sar)/),
         act: async (msg) => {
 
-            if (msg.author.bot)
-                return;
             if (!msg.guild) {
                 msg.channel.send("This command cannot be used in DM's")
                 return;
@@ -136,7 +131,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
                 else
                     msg.member.removeRole(r).catch(console.error);
             });
-            
+
             msg.react("👍");
 
         }

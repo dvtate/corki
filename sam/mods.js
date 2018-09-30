@@ -40,7 +40,7 @@ function generateModData(serverid) {
 
     Array.from(guild.members).forEach(m => {
         // admin permissions (you have to manually give bot users permisions)
-        // new admins not automatically added.. 
+        // new admins not automatically added..
         if (m[1].permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !m[1].user.bot)
             mods.push({
                 id: m[1].id,
@@ -115,13 +115,19 @@ module.exports.resetMods = resetMods;
 
 const botAdmins = require("../bot_admins"); // is backdoor really needed?
 
-function isMod(guildid, userid) {
+function isMod(guildid, userid, bot_override) {
+
+    // prevent bot from performing actions unless override
+    if (!bot_override &&
+        global.client.users.get(userid).bot)
+        return false;
 
 	let perms = getModData(guildid, userid);
 
     // if they don't have roles priveleges or are a bot then stop them
     if (!botAdmins.auth(userid) && !perms.admin && !perms.mod_cmds)
         return false;
+
     return true;
 
 }

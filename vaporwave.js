@@ -10,7 +10,7 @@ module.exports.toVaporwave = function (txt) {
 
 // returns the full-width version of the character c
 function toFullWidth(c) {
-	switch (c) {
+	switch (c) { // maybe this should be replaced with an object...
 		case '`': return '｀'; case '1': return '１'; case '2': return '２';
 		case '3': return '３'; case '4': return '４'; case '5': return '５';
 		case '6': return '６'; case '7': return '７'; case '8': return '８';

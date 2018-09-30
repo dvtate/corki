@@ -265,10 +265,12 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
 
             msg.channel.startTyping();
+
             // refresh account info
             await lol.refreshUserData(msg.author.id);
             // refresh mastery points
             require("./user_mastery").refresh(msg.author.id);
+
             msg.channel.stopTyping();
             msg.react("👍");
         }
@@ -612,7 +614,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
 
                 if (!foundMatchup && !msg.author.bot)
-                    msg.channel.send(`-lol matchup ${match[1]} ${match[3]} ${match[2]}`);
+                    msg.channel.send(`${global.client.user} lol matchup ${match[1]} ${match[3]} ${match[2]}`);
                 else if (!foundMatchup)
                     msg.channel.send("not enough data for that matchup :/");
 
