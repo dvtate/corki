@@ -26,17 +26,18 @@ global.client.on("ready", () => {
 
 // set up our list of commands
 global.commands = []
-	.concat(require("./cmds/dev_cmds.js"))
-	.concat(require("./cmds/basic_cmds.js"))
-	.concat(require("./cmds/international_cmds.js"))
-	.concat(require("./cmds/text_cmds.js"))
-	.concat(require("./sam/roles_cmds.js"))
-	.concat(require("./sam/welcome.js"))
-	.concat(require("./lol/lol_commands.js"))
-	.concat(require("./rss/rss_cmds.js"))
+	.concat(require("./cmds/dev_cmds"))
+	.concat(require("./cmds/basic_cmds"))
+	.concat(require("./cmds/international_cmds"))
+	.concat(require("./cmds/text_cmds"))
+	.concat(require("./sam/roles_cmds"))
+	.concat(require("./sam/welcome"))
+	.concat(require("./lol/lol_commands"))
+	.concat(require("./lol/champgg_commands"))
+	.concat(require("./rss/rss_cmds"))
 	.concat(require("./sam/prefix_cmds"))
 	.concat(require("./cmds/define"))
-	.concat(require("./cmds/help_cmds.js"));
+	.concat(require("./cmds/help_cmds"));
 
 const interactions = []
 	.concat(require("./reactions"));

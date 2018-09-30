@@ -1,8 +1,6 @@
 const fs = require("fs");
 
-
 const teemo = require("./teemo");
-
 const lol = require("./lol_stuff");
 
 
@@ -67,17 +65,20 @@ async function getUserMasteryData(id) {
     return new Promise(async (resolve, reject) => {
         let masteries;
 
+
+        // attempt to read from cache file
         try {
             masteries = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`));
         } catch (e) {
-            try {
+            // cache file not found
+            try { // get new data
                 masteries = await refreshMasteryData(id);
-            } catch (e) {
+            } catch (e) { // rito potato servers not working
                 return reject(e);
             }
         }
 
-        // if data is > 15mins old
+        // if data is > 15mins old, request new data
         if (!masteries || Date.now() - masteries.timestamp > 900000)
             masteries = await refreshMasteryData(id);
 
@@ -88,13 +89,10 @@ async function getUserMasteryData(id) {
 // total number of mastery points on a specific champ across multiple accts
 function getUserMastery (id, champ) {
     return new Promise(async (resolve, reject) => {
-
         getUserMasteryData(id)
             .then(d => resolve(d[champ] || { pts : 0, lvl : 0 }))
             .catch(reject);
-
     });
-
 }
 
 module.exports.getUserMastery = getUserMastery;

@@ -95,7 +95,7 @@ module.exports = [
 
     // mention a random user
     {
-        condition: msg => msg.content.match(/^(?:roulette|ddg|duck\s?duck\s?goose)(?:$|\s)/),
+        condition: msg => msg.content.match(/^(?:-?\@random|roulette|ddg|duck\s?duck\s?goose)(?:$|\s)/),
         act: async msg => {
             if (!msg.guild)
                 return msg.channel.send("Sorry this command is only available for guilds. \

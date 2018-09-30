@@ -4,50 +4,35 @@ module.exports.toVaporwave = function (txt) {
 	// split into a char array
 	const chars = txt.split('');
 
-	// convert each character into full width version & recombine
+	// convert each character into full width equivalent & recombine
 	return chars.map(toFullWidth).join('');
 }
 
 // returns the full-width version of the character c
+const fw_chars = {
+	'`': '｀', '1': '１', '2': '２', '3': '３', '4': '４', '5': '５',
+	'6': '６', '7': '７', '8': '８', '9': '９', '0': '０', '-': '－',
+	'=': '＝', '~': '～', '!': '！', '@': '＠', '#': '＃', '$': '＄',
+	'%': '％', '^': '＾', '&': '＆', '*': '＊', '(': '（', ')': '）',
+	'_': '＿', '+': '＋',
+
+	'q': 'ｑ', 'w': 'ｗ', 'e': 'ｅ', 'r': 'ｒ', 't': 'ｔ', 'y': 'ｙ',
+	'u': 'ｕ', 'i': 'ｉ', 'o': 'ｏ', 'p': 'ｐ', '[': '［', ']': '］',
+	'\\': '＼', 'Q': 'Ｑ', 'W': 'Ｗ', 'E': 'Ｅ', 'R': 'Ｒ', 'T': 'Ｔ',
+	'Y': 'Ｙ', 'U': 'Ｕ', 'I': 'Ｉ', 'O': 'Ｏ', 'P': 'Ｐ', '{': '｛',
+	'}': '｝', '|': '｜',
+
+	'a': 'ａ', 's': 'ｓ', 'd': 'ｄ', 'f': 'ｆ', 'g': 'ｇ', 'h': 'ｈ',
+	'j': 'ｊ', 'k': 'ｋ', 'l': 'ｌ', ';': '；', '\'': '＇', 'A': 'Ａ',
+	'S': 'Ｓ', 'D': 'Ｄ', 'F': 'Ｆ', 'G': 'Ｇ', 'H': 'Ｈ', 'J': 'Ｊ',
+	'K': 'Ｋ', 'L': 'Ｌ', ':': '：', '\"': '“',
+
+	'z': 'ｚ', 'x': 'ｘ', 'c': 'ｃ', 'v': 'ｖ', 'b': 'ｂ', 'n': 'ｎ',
+	'm': 'ｍ', ',': '，', '.': '．', '/': '／', 'Z': 'Ｚ', 'X': 'Ｘ',
+	'C': 'Ｃ', 'V': 'Ｖ', 'B': 'Ｂ', 'N': 'Ｎ', 'M': 'Ｍ', '<': '＜',
+	'>': '＞', '?': '？', ' ': '　'
+};
+
 function toFullWidth(c) {
-	switch (c) { // maybe this should be replaced with an object...
-		case '`': return '｀'; case '1': return '１'; case '2': return '２';
-		case '3': return '３'; case '4': return '４'; case '5': return '５';
-		case '6': return '６'; case '7': return '７'; case '8': return '８';
-		case '9': return '９'; case '0': return '０'; case '-': return '－';
-		case '=': return '＝'; case '~': return '～'; case '!': return '！';
-		case '@': return '＠'; case '#': return '＃'; case '$': return '＄';
-		case '%': return '％'; case '^': return '＾'; case '&': return '＆';
-		case '*': return '＊'; case '(': return '（'; case ')': return '）';
-		case '_': return '＿'; case '+': return '＋';
-
-		case 'q': return 'ｑ'; case 'w': return 'ｗ'; case 'e': return 'ｅ';
-		case 'r': return 'ｒ'; case 't': return 'ｔ'; case 'y': return 'ｙ';
-		case 'u': return 'ｕ'; case 'i': return 'ｉ'; case 'o': return 'ｏ';
-		case 'p': return 'ｐ'; case '[': return '［'; case ']': return '］';
-		case '\\': return '＼'; case 'Q': return 'Ｑ'; case 'W': return 'Ｗ';
-		case 'E': return 'Ｅ'; case 'R': return 'Ｒ'; case 'T': return 'Ｔ';
-		case 'Y': return 'Ｙ'; case 'U': return 'Ｕ'; case 'I': return 'Ｉ';
-		case 'O': return 'Ｏ'; case 'P': return 'Ｐ'; case '{': return '｛';
-		case '}': return '｝'; case '|': return '｜';
-
-		case 'a': return 'ａ'; case 's': return 'ｓ'; case 'd': return 'ｄ';
-		case 'f': return 'ｆ'; case 'g': return 'ｇ'; case 'h': return 'ｈ';
-		case 'j': return 'ｊ'; case 'k': return 'ｋ'; case 'l': return 'ｌ';
-		case ';': return '；'; case '\'': return '＇'; case 'A': return 'Ａ';
-		case 'S': return 'Ｓ'; case 'D': return 'Ｄ'; case 'F': return 'Ｆ';
-		case 'G': return 'Ｇ'; case 'H': return 'Ｈ'; case 'J': return 'Ｊ';
-		case 'K': return 'Ｋ'; case 'L': return 'Ｌ'; case ':': return '：';
-		case '\"': return '“';
-
-		case 'z': return 'ｚ'; case 'x': return 'ｘ'; case 'c': return 'ｃ';
-		case 'v': return 'ｖ'; case 'b': return 'ｂ'; case 'n': return 'ｎ';
-		case 'm': return 'ｍ'; case ',': return '，'; case '.': return '．';
-		case '/': return '／'; case 'Z': return 'Ｚ'; case 'X': return 'Ｘ';
-		case 'C': return 'Ｃ'; case 'V': return 'Ｖ'; case 'B': return 'Ｂ';
-		case 'N': return 'Ｎ'; case 'M': return 'Ｍ'; case '<': return '＜';
-		case '>': return '＞'; case '?': return '？'; case ' ': return '　';
-
-		default: return c;
-	}
+	return fw_chars[c] || c;
 }
