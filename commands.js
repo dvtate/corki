@@ -10,11 +10,6 @@ const c_general = [
         usage: "<p>Give some general information about Corki bot</p>",
         args: "takes no arguments",
         example: "<kbd>-about</kbd>"
-    }, {
-        name: "-commands",
-        usage: "<p>Show a list of commmands the bot is capable of (very outdated)</p>",
-        args: "takes no arguments",
-        example: "<kbd>-commands</kbd>"
     }
 ];
 
@@ -39,6 +34,11 @@ const c_fun = [
 <kbd>-xkcd 221</kbd><br/>
 <kbd>-xkcd latest</kbd>
         `
+    }, {
+        name: "-roulette<br/><div class=\"mod-box\">Mod</div>",
+        usage: "mentions a random member of the server",
+        args: "takes no arguments",
+        example: "<kbd>-roulette</kbd>"
     }
 ];
 
@@ -157,7 +157,7 @@ const c_lol = [
 <kbd>-lol mastery7 kr hide on bush</kbd>`
     }, {
         name: "-lol refresh",
-        usage: "<p>Purge your cached mastery information</p>",
+        usage: "<p>Refresh cached data associated with your LoL accounts. (champion mastery points, summoner name, etc.)</p>",
         args: "takes no arguments",
         example: "<kbd>-lol refresh</kbd>"
     }
