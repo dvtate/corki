@@ -85,7 +85,6 @@ async function getUserMasteryData(id) {
     });
 }
 
-
 // total number of mastery points on a specific champ across multiple accts
 function getUserMastery (id, champ) {
     return new Promise(async (resolve, reject) => {

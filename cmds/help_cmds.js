@@ -122,6 +122,9 @@ module.exports = [
                         name: "`-lol rank [<@mention> | <region> <summoner name>]`",
                         value: "show rank of you, a @mention'd user, or a specific summmoner"
                     }, {
+                        name: "`-lol refresh`",
+                        value: "Refresh data associated with all of your League of Legends accounts. (ie- username and champion mastery)"
+                    }, {
                         name: "`-lol reset`",
                         value: "make corki unassociate all League of Legends accounts with your discord account"
                     }, {

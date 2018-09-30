@@ -44,7 +44,6 @@ function getRolesData(serverid) {
 module.exports.getRolesData = getRolesData;
 
 
-
 function setRolesData(serverid, data) {
     sam.makeServerDir(serverid);
     fs.writeFileSync(

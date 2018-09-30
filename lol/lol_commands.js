@@ -265,6 +265,9 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
 
             msg.channel.startTyping();
+            // refresh account info
+            await lol.refreshUserData(msg.author.id);
+            // refresh mastery points
             require("./user_mastery").refresh(msg.author.id);
             msg.channel.stopTyping();
 

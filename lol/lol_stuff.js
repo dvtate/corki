@@ -70,8 +70,28 @@ function getUserData (id) {
 }
 module.exports.getUserData = getUserData;
 
+async function refreshUserData(id) {
+    let data = getUserData(id);
+    if (!data || !data.accounts) return;
 
+    // array of promises of account objects
+    let rep_req = data.accounts.map(a =>
+        (new Promise(async (resolve, reject) => {
+            const summ = await teemo.riot.get(a.server, "summoner.getBySummonerId", a.id);
+            resolve(summ ? { // new user obj
+                name: summ.name, server: a.server,
+                id: summ.id, accountId: summ.accountId
+            } : null);
+        })).catch(e => null)
+    });
+    let new_accts = await Promise.all(rep_req);
+    for (let i = 0; i < data.accounts.length; i++)
+        if (new_accts[i])
+            data.accounts[i] = new_accts[i];
+    setUserData(id, data);
 
+}
+module.exports.refreshUserData = refreshUserData;
 
 module.exports.getUserMastery = require("./user_mastery").getUserMastery;
 
