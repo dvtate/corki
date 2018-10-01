@@ -45,7 +45,8 @@ module.exports = [
                 msg.channel.send(`${match[3]} wasn't found on ${match[2]} (run \`-lol mastery help\` for more)`);
             });
 
-        }
+        },
+        tests: [ "-lol mastery corki na ridderhoff" ]
     },
 
     { // mastery of a different user
@@ -71,7 +72,8 @@ module.exports = [
                 msg.channel.stopTyping();
             });
 
-        }
+        },
+        tests: [ "-lol mastery corki <@253784341555970048>" ]
     },
 
 
@@ -96,7 +98,6 @@ module.exports = [
             });
             msg.channel.stopTyping();
         }
-
     },
 
     { // -mastery help
@@ -170,7 +171,8 @@ module.exports = [
                 `${process.env.HOME}/.corki/users/${msg.author.id}/pending.json`,
                 (e) => { if (e) throw e; });
 
-        }
+        },
+        tests: [ "-lol add na imaqtpie" ]
     },
 
     { // -lol add help
@@ -188,7 +190,8 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
             logCmd(msg, "reset lol data (-lol reset)");
             lol.removeDir(msg.author.id);
             msg.channel.send("unlinked your accounts!");
-        }
+        },
+        tests: [ "-lol reset" ]
     },
 
     { // list another user's accts
@@ -210,7 +213,8 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
             str += `main account: ${userObj.main}`;
 
             msg.channel.send(str);
-        }
+        },
+        tests: [ "-lol list", "-lol list <@253784341555970048>" ]
     },
 
     { // main acct
@@ -218,10 +222,14 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
         act: async function (msg) {
             logCmd(msg, "modified their main account");
             let userObj = lol.getUserData(msg.author.id);
+            if (!userObj)
+                return msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
+
             userObj.main = this.condition(msg)[1];
             lol.setUserData(msg.author.id, userObj);
             msg.channel.send("main account updated");
-        }
+        },
+        tests: [ "-lol main" ]
     },
 
     {
@@ -229,7 +237,7 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
         act: async function (msg) {
             logCmd(msg, "checked their main -lol acct");
             let userObj = lol.getUserData(msg.author.id);
-            if (userObj.accounts)
+            if (userObj && userObj.accounts)
                 msg.channel.send(`Your main account is ${userObj.accounts[userObj.main].server} ${userObj.accounts[userObj.main].name}
 to change it use \`-lol main <account-number>\`, (account number can be fonud via \`-lol list\``);
             else
@@ -275,7 +283,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         condition: msg => msg.content.match(/^lol (?:leaderboard|lb) (\S+)/),
         act: async function (msg) {
             let timer = process.hrtime();
-            
+
             logCmd(msg, "generated leaderboard");
 
             const champName = this.condition(msg)[1].replace(/\s/g, '');
@@ -300,7 +308,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             });
 
 
-        }
+        },
+        tests: [ "-lol lb corki" ]
     },
 
     { // mastery leaderboard for all of the bot's users
@@ -331,7 +340,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.stopTyping();
             });
 
-        }
+        },
+        tests: [ "-lol glb corki" ]
 
     },
 
@@ -364,7 +374,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             });
 
 
-        }
+        },
+        tests: [ "-lol rank na ridderhoff" ]
     },
 
     { // other user's rank
@@ -388,7 +399,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             }).catch(err => {
                 console.log(err);
             });
-        }
+        },
+        tests: [ "-lol rank <@253784341555970048>" ]
     },
 
     { // self rank
@@ -402,10 +414,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 removeDir(msg.author.id);
                 userObj = null;
             }
-            if (!userObj) {
-                msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
-                return;
-            }
+            if (!userObj)
+                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
 
             let main = userObj.accounts[userObj.main];
 
@@ -415,7 +425,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             }).catch(err => {
                 console.log(err);
             });
-
         }
     },
 
@@ -425,7 +434,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             logCmd(msg, "asked for -lol servers");
             msg.channel.send("Corki supports LoL accounts on the following servers: "
                 + Object.keys(teemo.serverNames).join(", "));
-        }
+        }, tests: [ "-lol servers" ]
     },
 
     { // summary of user champion mastery levels
@@ -558,16 +567,15 @@ last played: ${Date(data[i].lastPlayTime)}`
 
             logCmd(msg, "checked last game stats");
 
-
             // get their main account
             let userObj = lol.getUserData(msg.author.id);
 
-            if (!userObj) {
-                msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
-                return;
-            }
+            if (!userObj)
+                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
 
-            msg.channel.send("sorry this hasn't been implemented yet. If you want to see this implemented sooner send a `-bug` report");
+            msg.channel.send("sorry this hasn't been implemented yet.\
+*ETA:* Spring 2019*\
+If you want to see this implemented sooner send a `-bug` report.");
         }
     },
 
@@ -576,7 +584,7 @@ last played: ${Date(data[i].lastPlayTime)}`
         condition: msg => msg.content.match(/^lol c (\S+)/),
         act: async function (msg) {
             msg.channel.send(teemo.champs[this.condition(msg)[1].toLowerCase()]);
-        }
+        }, tests: [ "-lol c corki", "-lol c corki" ]
     },
 
     {

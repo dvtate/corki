@@ -34,30 +34,6 @@ you these powers via https://corki.js.org/admin");
             msg.react("👍");
         }
     },
-    { // make roles unassignable again
-        condition: msg => msg.content.match(/^reset-(?:ssignable-roles?|sar)/),
-        act: async (msg) => {
-
-            if (!msg.guild) {
-                msg.channel.send("This command cannot be used in DM's")
-                return;
-            }
-            if (!mods.isMod(msg.guild.id, msg.author.id) && (
-                    !msg.member
-                    || !msg.member.permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES))
-            ) {
-                msg.channel.send("You must be given permission to run server \
-management commands in order to perform this action. Ask an administrator to grant \
-you these powers via https://corki.js.org/admin");
-                return;
-            }
-
-            roles.resetRoles(msg.guild.id);
-
-            msg.react("👍");
-
-        }
-    },
 
     { // self assign role
         condition: msg => msg.content.match(/^iam (.+)/),
@@ -92,7 +68,8 @@ added this role to the server yet. Maybe you should remind them about it");
 
             msg.react("👍");
 
-        }
+        },
+        tests: [ "-iam ff", "-iam gg, test" ]
 
     },
 
@@ -109,14 +86,15 @@ After that point they can be added via \`-iam\``)
             else
                 msg.channel.send(`Self-assignable roles on this server: ${sar.join(", ")}
 To self-assign a role you can use the command \`-iam <role>\``);
-        }
+        },
+        tests: [ "-roles" ]
     },
 
     { // remove role
         condition: msg => msg.content.match(/^iamnot (.+)/),
 
         act: async function (msg) {
-            let roles = this.condition(msg)[1]  // find roles argument
+            let rm_roles = this.condition(msg)[1]  // find roles argument
                     .split(",")                 // take each role (separated by commas)
                         .map(r => r.trim());    // reomve excess whitespace
 
@@ -124,7 +102,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
             // designated self assignable roles for server
             const serverRoles = roles.getRoles(msg.guild.id);
 
-            roles.forEach(role => {
+            rm_roles.forEach(role => {
                 const r = msg.guild.roles.find("name", role);
                 if (!r || !serverRoles.includes(role))
                     msg.channel.send(`invalid role "${role}" ignored`);
@@ -134,8 +112,35 @@ To self-assign a role you can use the command \`-iam <role>\``);
 
             msg.react("👍");
 
-        }
+        },
+        tests: [ "-iamnot ff", "-iamnot gg, ff" ]
     },
+
+    { // make roles unassignable again
+        condition: msg => msg.content.match(/^reset-(?:ssignable-roles?|sar)/),
+        act: async (msg) => {
+
+            if (!msg.guild) {
+                msg.channel.send("This command cannot be used in DM's")
+                return;
+            }
+            if (!mods.isMod(msg.guild.id, msg.author.id) && (
+                    !msg.member
+                    || !msg.member.permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES))
+            ) {
+                msg.channel.send("You must be given permission to run server \
+management commands in order to perform this action. Ask an administrator to grant \
+you these powers via https://corki.js.org/admin");
+                return;
+            }
+
+            roles.resetRoles(msg.guild.id);
+
+            msg.react("👍");
+
+        },
+        tests: [ "-reset-sar" ]
+    }
 
 
 ];

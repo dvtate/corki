@@ -40,7 +40,8 @@ module.exports = [
 
             logCmd(msg, "-deformat'd text");
             msg.channel.send(`\`${this.condition(msg)[1]}\``);
-        }
+        },
+        tests: [ "-deformat <@253784341555970048>"]
     },
 
     { // opposite of deformat
@@ -48,7 +49,8 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "-reformat'd text");
             msg.channel.send(this.condition(msg)[1]);
-        }
+        },
+        tests: [ "-reformat `<@253784341555970048>`" ]
     },
 
     { // log info
@@ -188,6 +190,7 @@ is an open-source project, feel free to contribute. https://github.com/dvtate/co
 
             botAdmins.sendBugReport(msg, this.condition(msg)[1]);
         }
+        //tests: [ "-bug disregard this bug report. This is part of corki bots automated testing system" ]
     },
 
     { // run sh
@@ -264,6 +267,7 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
             if (!botAdmins.auth(msg.author.id))
                 return;
 
+            // 1 command per second hopefully
             let i = 0
             global.commands.forEach(c => {
                 setTimeout(() => {
@@ -329,7 +333,8 @@ The currently running patch is ${version}`
 
 
             }})
-        }
+        },
+        tests: [ "-about" ]
     }
 ];
 

@@ -42,7 +42,8 @@ you these powers via https://corki.js.org/admin");
 
             let prefixes = prefix.getGuildPrefixes(msg.guild.id);
             msg.channel.send(`Configured prefixes:\n${prefixes.join("\n")}`);
-        }
+        },
+        tests: [ "-prefix list" ]
     },
 
     {

@@ -100,7 +100,6 @@ module.exports = [
 
                 });
 
-
                 if (!foundMatchup && !msg.author.bot)
                     msg.channel.send(`${global.client.user} lol matchup ${match[1]} ${match[3]} ${match[2]}`);
                 else if (!foundMatchup)
