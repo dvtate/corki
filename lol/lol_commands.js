@@ -379,7 +379,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // other user's rank
-        condition: msg => msg.content.match(/^lol rank <@!?([0-9]+)>/),
+        condition: msg => msg.content.match(/^lol rank <@!?([0-9]+)>\s?([0-9]+)?/),
         act: async function (msg) {
             logCmd(msg, "checked a user's -lol rank");
 
@@ -404,7 +404,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // self rank
-        condition: msg => msg.content.match(/^lol rank(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol rank\s?([0-9]+)?(?:$|\s)/),
         act: async function (msg) {
             logCmd(msg, "checked their -lol rank");
             let userObj = lol.getUserData(msg.author.id);
@@ -417,14 +417,37 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             if (!userObj)
                 return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
 
-            let main = userObj.accounts[userObj.main];
+            const match = this.condition(msg);
+            let acct = userObj.accounts[match[1] ? match[1].trim() : userObj.main];
 
-            teemo.riot.get(main.server, "league.getAllLeaguePositionsForSummoner", main.id).then(rank => {
-                lol.makeRankSummary(msg.client.users.get(msg.author.id).username, main.name, rank)
+            teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
+                lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
                     .then(summary => msg.channel.send(summary)).catch(console.error)
-            }).catch(err => {
-                console.log(err);
-            });
+            }).catch(console.error);
+        }
+    },
+
+    {
+        condition: msg => msg.content.match(/^lol rank all|^lol ranks/),
+        act: async function (msg) {
+            logCmd(msg, "checked their -lol ranks");
+            let userObj = lol.getUserData(msg.author.id);
+
+            // no accts.
+            if (userObj.accounts.length == 0) {
+                removeDir(msg.author.id);
+                userObj = null;
+            }
+            if (!userObj)
+                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+
+            // generate rank summary for each acct
+            userObj.accounts.forEach(acct =>
+                teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
+                    lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
+                        .then(summary => msg.channel.send(summary)).catch(console.error)
+                }).catch(console.error)
+            );
         }
     },
 
@@ -609,7 +632,6 @@ If you want to see this implemented sooner send a `-bug` report.");
 
             if (!region)
                 return msg.channel.send("invalid region");
-
 
             lol.addUserAcct(userid, region, summoner).then(() =>
                 msg.react("👍")
