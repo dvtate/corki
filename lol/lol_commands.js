@@ -345,6 +345,99 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
     },
 
+    { // list supported server names
+        condition: msg => msg.content.match(/^lol servers(?:$|\s)/),
+        act: async function (msg) {
+            logCmd(msg, "asked for -lol servers");
+            msg.channel.send("Corki supports LoL accounts on the following servers: "
+                + Object.keys(teemo.serverNames).join(", "));
+        }, tests: [ "-lol servers" ]
+    },
+
+
+    {
+        condition: msg => msg.content.match(/^lol rank(?: <@!?([0-9]+)>)? all|^lol ranks(?: <@!?([0-9]+)>)?/),
+        act: async function (msg) {
+            logCmd(msg, "checked a users -lol ranks");
+            let userObj = lol.getUserData(this.condition(msg)[1] || this.condition(msg)[2] || msg.author.id);
+
+            // no accts.
+            if (userObj && userObj.accounts.length == 0) {
+                removeDir(msg.author.id);
+                userObj = null;
+            }
+            if (!userObj)
+                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+
+            // generate rank summary for each acct
+            userObj.accounts.forEach(acct =>
+                teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank =>
+                    lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
+                        .then(summary => msg.channel.send(summary)).catch(console.error)
+                ).catch(console.error)
+            );
+        }
+    },
+
+    { // other user's rank
+        condition: msg => msg.content.match(/^lol rank <@!?([0-9]+)>(?: ([0-9]+))?/),
+        act: async function (msg) {
+            logCmd(msg, "checked a user's -lol rank");
+
+            const match = this.condition(msg);
+            const id = match[1];
+            let userObj = lol.getUserData(id);
+
+            if (userObj && userObj.accounts.length == 0) {
+                removeDir(msg.author.id);
+                userObj = null;
+            }
+            if (!userObj)
+                return msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+
+
+            // pick acct
+            let acct = userObj.accounts[match[2] ? match[2].trim() : userObj.main];
+            if (!acct)
+                return msg.channel.send("Invalid account number. Use `-lol list` to see available accounts");
+
+            // send rank summary for acct
+            teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank =>
+                lol.makeRankSummary(msg.client.users.get(id).username, acct.name, rank)
+                    .then(summary => msg.channel.send(summary)).catch(console.error)
+            ).catch(console.error);
+
+        },
+        tests: [ "-lol rank <@253784341555970048>" ]
+    },
+
+    { // self rank
+        condition: msg => msg.content.match(/^lol rank\s?([0-9]+)?(?:$|\s)/),
+        act: async function (msg) {
+            logCmd(msg, "checked their -lol rank");
+            let userObj = lol.getUserData(msg.author.id);
+
+            // no accts.
+            if (userObj && userObj.accounts.length == 0) {
+                removeDir(msg.author.id);
+                userObj = null;
+            }
+            if (!userObj)
+                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+
+            const match = this.condition(msg);
+            let acct = userObj.accounts[match[1] ? match[1].trim() : userObj.main];
+            if (!acct)
+                return msg.channel.send("Invalid account number. Use `-lol list` to see available accounts");
+
+
+            teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
+                lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
+                    .then(summary => msg.channel.send(summary)).catch(console.error)
+            }).catch(console.error);
+        }
+    },
+
     { // given summoner's rank
         condition: msg => msg.content.match(/^lol rank (\S+) (.+)/),
         act: async function (msg) {
@@ -376,88 +469,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
         },
         tests: [ "-lol rank na ridderhoff" ]
-    },
-
-    { // other user's rank
-        condition: msg => msg.content.match(/^lol rank <@!?([0-9]+)>\s?([0-9]+)?/),
-        act: async function (msg) {
-            logCmd(msg, "checked a user's -lol rank");
-
-            const id = this.condition(msg)[1];
-            let userObj = lol.getUserData(id);
-
-            if (!userObj) {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
-                return;
-            }
-
-            let main = userObj.accounts[userObj.main];
-
-            teemo.riot.get(main.server, "league.getAllLeaguePositionsForSummoner", main.id).then(rank => {
-                lol.makeRankSummary(msg.client.users.get(id).username, main.name, rank)
-                    .then(summary => msg.channel.send(summary)).catch(console.error)
-            }).catch(err => {
-                console.log(err);
-            });
-        },
-        tests: [ "-lol rank <@253784341555970048>" ]
-    },
-
-    { // self rank
-        condition: msg => msg.content.match(/^lol rank\s?([0-9]+)?(?:$|\s)/),
-        act: async function (msg) {
-            logCmd(msg, "checked their -lol rank");
-            let userObj = lol.getUserData(msg.author.id);
-
-            // no accts.
-            if (userObj.accounts.length == 0) {
-                removeDir(msg.author.id);
-                userObj = null;
-            }
-            if (!userObj)
-                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
-
-            const match = this.condition(msg);
-            let acct = userObj.accounts[match[1] ? match[1].trim() : userObj.main];
-
-            teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
-                lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
-                    .then(summary => msg.channel.send(summary)).catch(console.error)
-            }).catch(console.error);
-        }
-    },
-
-    {
-        condition: msg => msg.content.match(/^lol rank all|^lol ranks/),
-        act: async function (msg) {
-            logCmd(msg, "checked their -lol ranks");
-            let userObj = lol.getUserData(msg.author.id);
-
-            // no accts.
-            if (userObj.accounts.length == 0) {
-                removeDir(msg.author.id);
-                userObj = null;
-            }
-            if (!userObj)
-                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
-
-            // generate rank summary for each acct
-            userObj.accounts.forEach(acct =>
-                teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
-                    lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
-                        .then(summary => msg.channel.send(summary)).catch(console.error)
-                }).catch(console.error)
-            );
-        }
-    },
-
-    { // list supported server names
-        condition: msg => msg.content.match(/^lol servers(?:$|\s)/),
-        act: async function (msg) {
-            logCmd(msg, "asked for -lol servers");
-            msg.channel.send("Corki supports LoL accounts on the following servers: "
-                + Object.keys(teemo.serverNames).join(", "));
-        }, tests: [ "-lol servers" ]
     },
 
     { // summary of user champion mastery levels
