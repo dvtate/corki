@@ -119,7 +119,7 @@ module.exports = [
                         name: "`-lol matchup [role] <champ1name> <champ2name>`",
                         value: "show matchup statistics for given champions"
                     }, {
-                        name: "`-lol rank [<@mention> | <region> <summoner name>]`",
+                        name: "`-lol rank [<@mention> | <region> <summoner name> | account number | all ]`",
                         value: "show rank of you, a @mention'd user, or a specific summmoner"
                     }, {
                         name: "`-lol refresh`",
