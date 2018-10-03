@@ -359,7 +359,9 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         condition: msg => msg.content.match(/^lol rank(?: <@!?([0-9]+)>)? all|^lol ranks(?: <@!?([0-9]+)>)?/),
         act: async function (msg) {
             logCmd(msg, "checked a users -lol ranks");
-            let userObj = lol.getUserData(this.condition(msg)[1] || this.condition(msg)[2] || msg.author.id);
+
+            const userid = this.condition(msg)[1] || this.condition(msg)[2] || msg.author.id;
+            let userObj = lol.getUserData(userid);
 
             // no accts.
             if (userObj && userObj.accounts.length == 0) {
@@ -372,7 +374,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             // generate rank summary for each acct
             userObj.accounts.forEach(acct =>
                 teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank =>
-                    lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
+                    lol.makeRankSummary(msg.client.users.get(userid).username, acct.name, rank)
                         .then(summary => msg.channel.send(summary)).catch(console.error)
                 ).catch(console.error)
             );
