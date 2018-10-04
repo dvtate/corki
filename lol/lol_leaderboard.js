@@ -50,7 +50,8 @@ async function getLeaderBoard(members, champ) {
                 // get mastery pts
                 let pts;
                 try {
-                    pts = (await lol.getUserMastery(u, champ)).pts;
+                    const mdata = await lol.getUserMastery(u, champ);
+                    pts = mdata.pts;
                 } catch (e) {
                     pts = 0;
                 }
@@ -146,8 +147,14 @@ async function postLeaderBoard(chanID, champID) {
     // members of server
     const members = global.client.channels.get(chanID).guild.members;
 
-    // mastery leaderboard
-    const data = await getLeaderBoard(members, champID); // 42 = corki-id
+    try {
+        // mastery leaderboard
+        const data = await getLeaderBoard(members, champID); // 42 = corki-id
+
+    } catch (e) {
+        console.log("wat1");
+        console.error(e);
+    }
 
     // changes since last week
     const delta = lb_delta(data);

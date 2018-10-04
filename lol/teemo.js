@@ -96,7 +96,7 @@ module.exports.champIDs = {
     "sona" : 37, "irelia" : 39, "viktor" : 112, "rakan" : 497, "kindred" : 203,
     "cassiopeia" : 69, "cass" : 69,
     "maokai" : 57, "mao" : 57,
-    "ornn" : 516, "thresh" : 412, "kayle" : 10,
+    "ornn" : 516, "orn" : 516, "thresh" : 412, "kayle" : 10,
     "hecarim" : 120, "hec" : 120, "pony" : 120, "horse" : 120,
     "khazix" : 121, "bug" : 121, "zix" : 121, "k6" : 121,
     "olaf" : 2, "ziggs" : 115, "syndra" : 134,
