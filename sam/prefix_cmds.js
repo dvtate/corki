@@ -2,9 +2,7 @@ const logCmd = require("../logging");
 const mods = require("./mods");
 const prefix = require("./prefix");
 
-function escapeRegExp(text) {
-  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-}
+
 
 
 module.exports = [
@@ -28,7 +26,7 @@ you these powers via https://corki.js.org/admin");
 
             let prefixes = prefix.getGuildPrefixes(msg.guild.id);
 
-            prefixes.push(escapeRegExp(this.condition(msg)[1].trim()));
+            prefixes.push(prefix.escapeRegExp(this.condition(msg)[1].trim()));
             prefix.setGuildPrefixes(msg.guild.id, prefixes);
             msg.react("👍");
             msg.channel.send(`Configured prefixes:\n${prefixes.join("\n")}`);
@@ -62,7 +60,7 @@ you these powers via https://corki.js.org/admin");
                 return;
             }
 
-            let prefixes = [ escapeRegExp(this.condition(msg)[1].trim()) ];
+            let prefixes = [ prefix.escapeRegExp(this.condition(msg)[1].trim()) ];
             prefix.setGuildPrefixes(msg.guild.id, prefixes);
             msg.react("👍");
         }

@@ -22,3 +22,5 @@ function resetGuildPrefixes(id) {
     fs.unlinkSync(`${process.env.HOME}/.corki/servers/${id}/prefixes.json`);
 }
 module.exports.resetGuildPrefixes = resetGuildPrefixes;
+
+module.exports.escapeRegExp = text => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');

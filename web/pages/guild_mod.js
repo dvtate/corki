@@ -159,10 +159,21 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
 
     const prefixTable = prefix.getGuildPrefixes(req.params.serverid).map(p =>
-        [`<kbd>${p}</kbd>` ,  `<button type="button" onclick="redirect('/mod/rmprefix/${encodeURIComponent(p)}')">Remove</button>`]);
+        [`<kbd>${p}</kbd>` ,  `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmprefix/${encodeURIComponent(p)}')">Remove</button>`]);
     page.addTable([ "Prefix", "Action" ], prefixTable, "Command Prefixes")
-        .add(``)
-        .endFieldset();
+    if (prefixTable.length == 0)
+        page.add("<center>Corki bot can only be used via direct mentions in this server</center>");
+
+    page.addScript(`
+        function addPrefix() {
+            const prefix = document.getElementById("add-prefix").value;
+            redirect("/mod/${req.params.serverid}/addprefix/" + encodeURIComponent(prefix));
+        }
+    `).add(`<br/>
+        <input id="add-prefix" type="text" placeholder="command prefix" />
+        <button type="button" onclick="addPrefix()">Add Prefix</button>
+    `).endFieldset();
+
 
     // self assignable roles
     page.startFieldset("Self-Assignable Roles")
@@ -245,7 +256,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
 
 
-
+/*
     page.startFieldset("League of Legends Roles [wip]");
     page.add(`<p>Corki can automatically assign roles to users based on how many mastery points they have on a specific champ</p>`);
 
@@ -310,6 +321,11 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     page.startFieldset("More Coming soon").add(`Corki has so many more features
          which are already implemented but not currently accessable here. Come back later for more :D`).endFieldset();
+*/
+
+
+
+    // todo add lb
 
     res.send(page.export());
 
@@ -451,8 +467,47 @@ router.get("/mod/:serverid([0-9]+)/rmwelcome/:rule", bot.catchAsync(async (req, 
             return rule.id != r.id || rule.msg != r.msg;
         });
         welcome.setAnnouncementData(guild.id, rules);
+    }
+    res.redirect(`/mod/${req.params.serverid}`);
+}));
+
+router.get("/mod/:serverid([0-9]+)/addprefix/:prefix", bot.catchAsync( async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
+    if (guild && (perms.admin || perms.mod)) {
+        let prefixes = prefix.getGuildPrefixes(req.params.serverid);
+        prefixes.push(prefix.escapeRegExp(decodeURIComponent(req.params.prefix)).trim());
+        prefix.setGuildPrefixes(req.params.serverid, prefixes);
 
     }
     res.redirect(`/mod/${req.params.serverid}`);
 }));
+
+router.get("/mod/:serverid([0-9]+)/rmprefix/:prefix", bot.catchAsync( async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
+    if (guild && (perms.admin || perms.mod)) {
+        let prefixes = prefix.getGuildPrefixes(req.params.serverid);
+        prefix.setGuildPrefixes(req.params.serverid, prefixes.filter(p =>
+            p != prefix.escapeRegExp(decodeURIComponent(req.params.prefix)).trim()
+            && p != decodeURIComponent(req.params.prefix).trim()
+        ));
+    }
+    res.redirect(`/mod/${req.params.serverid}`);
+}));
+
 module.exports = router;
