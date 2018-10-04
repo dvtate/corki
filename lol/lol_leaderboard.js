@@ -147,9 +147,10 @@ async function postLeaderBoard(chanID, champID) {
     // members of server
     const members = global.client.channels.get(chanID).guild.members;
 
+    let data;
     try {
         // mastery leaderboard
-        const data = await getLeaderBoard(members, champID); // 42 = corki-id
+        data = await getLeaderBoard(members, champID); // 42 = corki-id
 
     } catch (e) {
         console.log("wat1");
@@ -194,7 +195,8 @@ async function postLeaderBoard(chanID, champID) {
 
 // 2 min checkin intervals
 function refresh() {
-    postLeaderBoard("418965788448391168", 42);
+    //postLeaderBoard("418965788448391168", 42);
+    postLeaderBoard("435548322120335360", 42);
     setTimeout(refresh, 120000); // every 2 mins
 }
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking

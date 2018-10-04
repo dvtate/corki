@@ -9,9 +9,10 @@ async function refreshMasteryData(id) {
 
         // get their lol data
         let userObj = lol.getUserData(id);
-        if (!userObj)
-            return reject("no accts");
-
+        if (!userObj || !userObj.accounts.length) {
+            reject("no accts");
+            return;
+        }
         // fill a list with mastery promise requests
         let dreqs = userObj.accounts.map(a =>
             teemo.riot.get(a.server, "championMastery.getAllChampionMasteries", a.id)
@@ -74,7 +75,8 @@ async function getUserMasteryData(id) {
             try { // get new data
                 masteries = await refreshMasteryData(id);
             } catch (e) { // rito potato servers not working
-                return reject(e);
+                reject(e);
+                return;
             }
         }
 
