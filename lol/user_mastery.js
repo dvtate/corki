@@ -76,7 +76,7 @@ async function getUserMasteryData(id) {
             try { // get new data
                 masteries = await refreshMasteryData(id);
             } catch (e) { // rito potato servers not working
-                reject();
+                reject(e);
                 return;
             }
         }
