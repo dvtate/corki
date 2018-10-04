@@ -13,6 +13,7 @@ async function refreshMasteryData(id) {
             reject("no accts");
             return;
         }
+
         // fill a list with mastery promise requests
         let dreqs = userObj.accounts.map(a =>
             teemo.riot.get(a.server, "championMastery.getAllChampionMasteries", a.id)
@@ -75,7 +76,7 @@ async function getUserMasteryData(id) {
             try { // get new data
                 masteries = await refreshMasteryData(id);
             } catch (e) { // rito potato servers not working
-                reject(e);
+                reject();
                 return;
             }
         }
@@ -90,11 +91,16 @@ async function getUserMasteryData(id) {
 
 // total number of mastery points on a specific champ across multiple accts
 function getUserMastery (id, champ) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve, reject) =>
         getUserMasteryData(id)
             .then(d => resolve(d[champ] || { pts : 0, lvl : 0 }))
-            .catch(reject);
-    });
+            .catch(e => {
+                if (e == "no accts")
+                    return { pts : 0, lvl : 0 };
+                else
+                    reject(e);
+            })
+    );
 }
 
 module.exports.getUserMastery = getUserMastery;
