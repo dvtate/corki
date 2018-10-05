@@ -142,7 +142,7 @@ async function postLeaderBoard(chanID, champID) {
     if (!cd())
         return;
 
-    console.log("sent weekly leaderboard to #mastery");
+    console.log("sending weekly leaderboard...");
 
     // members of server
     const members = global.client.channels.get(chanID).guild.members;
@@ -153,7 +153,7 @@ async function postLeaderBoard(chanID, champID) {
         data = await getLeaderBoard(members, champID); // 42 = corki-id
 
     } catch (e) {
-        console.log("wat1");
+        console.log("lb failed ..");
         console.error(e);
     }
 
@@ -190,13 +190,15 @@ async function postLeaderBoard(chanID, champID) {
 
     // don't post again until next weeek
     resetcd();
+
+    console.log("done");
 }
 
 
 // 2 min checkin intervals
 function refresh() {
-    //postLeaderBoard("418965788448391168", 42);
-    postLeaderBoard("435548322120335360", 42);
+    postLeaderBoard("418965788448391168", 42); // corki mains #mastery
+    //postLeaderBoard("435548322120335360", 42); // test server
     setTimeout(refresh, 120000); // every 2 mins
 }
 setTimeout(refresh, 10000); // give 10 seconds for bot to start before checking
