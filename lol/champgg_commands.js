@@ -6,6 +6,83 @@ const teemo = require("./teemo.js");
 
 
 module.exports = [
+    { // champgg matchup
+        condition: msg =>
+            // -lol matchup <champ1> vs. <champ2> [elo]
+            msg.content.match(/^lol matchup (\S+) (?:vs?\.? |and |\& |\+ )?(\S+)$/),
+
+        act: async function (msg) {
+            logCmd(msg, "asked about a matchup");
+            const match = this.condition(msg);
+            console.log(match);
+            console.log("ff");
+            const champ1id = teemo.champIDs[match[1].toLowerCase().trim()];
+            const champ2id = teemo.champIDs[match[2].toLowerCase().trim()];
+
+            console.log(JSON.stringify(match[1].toLowerCase().trim()));
+
+            if (!champ1id) {
+                msg.channel.send(`Unknown champion ${match[1].toLowerCase().trim()}. Make sure spelling is correct and there are no spaces or special characters`);
+                return;
+            } if (!champ2id) {
+                msg.channel.send(`Unknown champion ${match[2]}. Make sure spelling is correct and there are no spaces or special characters`);
+                return;
+            }
+            //const elo = match[3] ? match[3].toUpperCase() : "PLATINUM,DIAMOND,MASTER,CHALLENGER";
+
+
+            teemo.champgg.get("champion.getChampionMatchups", champ1id).then(data => {
+                let foundMatchup = false;
+
+                data.forEach(e => {
+                    if (e.champ2_id == champ2id) {
+                        foundMatchup = true;
+                        msg.channel.send({ embed: {
+                            title: `${teemo.champs[champ1id]} vs ${teemo.champs[champ2id]} as ${e.role.toLowerCase()}`,
+                            description: `According to [champion.gg](https://champion.gg), ${teemo.champs[champ1id]} has a weighed score of ${Math.round(e.champ1.weighedScore)} and ${teemo.champs[champ2id]} has a weighedScore of ${Math.round(e.champ2.weighedScore)}.`,
+                            fields: [
+                                {
+                                    name: "Income",
+                                    value:
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.goldEarned)} g, ${Math.round(e.champ1.minionsKilled)} cs, ${Math.round(e.champ1.neutralMinionsKilledTeamJungle)} jungle camps
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.goldEarned)} g, ${Math.round(e.champ2.minionsKilled)} cs, ${Math.round(e.champ2.neutralMinionsKilledTeamJungle)} jungle camps`
+                                }, {
+                                    name: "KDA",
+                                    // todo add killingSpreees
+                                    value:
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.kills * 1000) / 1000} / ${Math.round(e.champ1.deaths * 1000) / 1000} / ${Math.round(e.champ1.assists * 1000) / 1000}
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.kills * 1000) / 1000} / ${Math.round(e.champ2.deaths * 1000) / 1000} / ${Math.round(e.champ2.assists * 1000) / 1000}`
+                                }, {
+                                    name: "Damage",
+                                    value:
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.totalDamageDealtToChampions)} damage dealt to champions
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.totalDamageDealtToChampions)} damage dealt to champions`
+                                }, {
+                                    name: "Winrates",
+                                    value:
+`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.winrate * 100 * 1000) / 1000}% winrate (${e.champ1.wins} wins)
+**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.winrate * 100 * 1000) / 1000}% winrate (${e.champ2.wins} wins)`
+                                }
+                            ]
+                        }});
+                    }
+                });
+
+                if (!foundMatchup && !msg.author.bot)
+                    msg.channel.send(`${global.client.user} lol matchup ${match[2]} ${match[1]}`);
+                else if (!foundMatchup)
+                    msg.channel.send("not enough data in plat+ for that matchup :/");
+
+            }).catch(e => {
+                msg.channel.send("champion.gg api appears to be having issues.");
+                console.error(e);
+                throw e;
+            });
+
+
+        },
+        tests: ["-lol matchup brand anivia", "-lol matchup janna + twitch", "-lol matchup nasus vs. riven "]
+    },
 
     { // champgg matchup
         condition: msg =>
@@ -114,83 +191,6 @@ module.exports = [
         }, tests: [ "-lol matchup mid yasuo anivia", "-lol matchup synergy ashe + janna",
             "-lol matchup mid zed vs. yasuo" ]
     },
-
-
-    { // champgg matchup
-        condition: msg =>
-            // -lol matchup <champ1> vs. <champ2> [elo]
-            msg.content.match(/^lol matchup (\S+) (?:vs?\.? |and |\& |\+ )?(\S+)/),
-
-        act: async function (msg) {
-            logCmd(msg, "asked about a matchup");
-            const match = this.condition(msg);
-
-            const champ1id = teemo.champIDs[match[1].toLowerCase()];
-            const champ2id = teemo.champIDs[match[2].toLowerCase()];
-
-            if (!champ1id) {
-                msg.channel.send(`Unknown champion ${match[1]}. Make sure spelling is correct and there are no spaces or special characters`);
-                return;
-            } if (!champ2id) {
-                msg.channel.send(`Unknown champion ${match[2]}. Make sure spelling is correct and there are no spaces or special characters`);
-                return;
-            }
-            //const elo = match[3] ? match[3].toUpperCase() : "PLATINUM,DIAMOND,MASTER,CHALLENGER";
-
-
-            teemo.champgg.get("champion.getChampionMatchups", champ1id).then(data => {
-                let foundMatchup = false;
-
-                data.forEach(e => {
-                    if (e.champ2_id == champ2id) {
-                        foundMatchup = true;
-                        msg.channel.send({ embed: {
-                            title: `${teemo.champs[champ1id]} vs ${teemo.champs[champ2id]} as ${e.role.toLowerCase()}`,
-                            description: `According to [champion.gg](https://champion.gg), ${teemo.champs[champ1id]} has a weighed score of ${Math.round(e.champ1.weighedScore)} and ${teemo.champs[champ2id]} has a weighedScore of ${Math.round(e.champ2.weighedScore)}.`,
-                            fields: [
-                                {
-                                    name: "Income",
-                                    value:
-`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.goldEarned)} g, ${Math.round(e.champ1.minionsKilled)} cs, ${Math.round(e.champ1.neutralMinionsKilledTeamJungle)} jungle camps
-**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.goldEarned)} g, ${Math.round(e.champ2.minionsKilled)} cs, ${Math.round(e.champ2.neutralMinionsKilledTeamJungle)} jungle camps`
-                                }, {
-                                    name: "KDA",
-                                    // todo add killingSpreees
-                                    value:
-`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.kills * 1000) / 1000} / ${Math.round(e.champ1.deaths * 1000) / 1000} / ${Math.round(e.champ1.assists * 1000) / 1000}
-**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.kills * 1000) / 1000} / ${Math.round(e.champ2.deaths * 1000) / 1000} / ${Math.round(e.champ2.assists * 1000) / 1000}`
-                                }, {
-                                    name: "Damage",
-                                    value:
-`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.totalDamageDealtToChampions)} damage dealt to champions
-**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.totalDamageDealtToChampions)} damage dealt to champions`
-                                }, {
-                                    name: "Winrates",
-                                    value:
-`**${teemo.champs[champ1id]}:** ${Math.round(e.champ1.winrate * 100 * 1000) / 1000}% winrate (${e.champ1.wins} wins)
-**${teemo.champs[champ2id]}:** ${Math.round(e.champ2.winrate * 100 * 1000) / 1000}% winrate (${e.champ2.wins} wins)`
-                                }
-                            ]
-                        }});
-                    }
-                });
-
-                if (!foundMatchup && !msg.author.bot)
-                    msg.channel.send(`${global.client.user} lol matchup ${match[2]} ${match[1]}`);
-                else if (!foundMatchup)
-                    msg.channel.send("not enough data in plat+ for that matchup :/");
-
-            }).catch(e => {
-                msg.channel.send("champion.gg api appears to be having issues.");
-                console.error(e);
-                throw e;
-            });
-
-
-        },
-        tests: ["-lol matchup brand anivia", "-lol matchup janna + twitch", "-lol matchup nasus vs. riven "]
-    },
-
 
     { // champgg winrate
         condition: msg => msg.content.match(/^lol wr (\S+)/),
