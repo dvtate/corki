@@ -14,12 +14,9 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "asked about a matchup");
             const match = this.condition(msg);
-            console.log(match);
-            console.log("ff");
+
             const champ1id = teemo.champIDs[match[1].toLowerCase().trim()];
             const champ2id = teemo.champIDs[match[2].toLowerCase().trim()];
-
-            console.log(JSON.stringify(match[1].toLowerCase().trim()));
 
             if (!champ1id) {
                 msg.channel.send(`Unknown champion ${match[1].toLowerCase().trim()}. Make sure spelling is correct and there are no spaces or special characters`);
