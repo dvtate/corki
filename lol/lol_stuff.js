@@ -95,6 +95,9 @@ module.exports.refreshUserData = refreshUserData;
 
 module.exports.getUserMastery = require("./user_mastery").getUserMastery;
 
+module.exports.hasAccts  = id => fs.existsSync(`${process.env.HOME}/.corki/users/${id}/lol.json`);
+module.exports.usersList = () => fs.readdirSync(`${process.env.HOME}/.corki/users`).filter(module.exports.hasAccts);
+
 
 // associate a new acct with user
 async function addUserAcct(id, server, username) {

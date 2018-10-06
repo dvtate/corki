@@ -235,7 +235,7 @@ function getRules(serverid) {
     try {
         return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${serverid}/lol_lb.json`));
     } catch (e) {
-        console.error(e);
+        //console.error(e);
         return [];
     }
 }
@@ -266,10 +266,13 @@ async function getLeaderBoard(members, champ) {
     return new Promise( async (resolve, reject) => {
 
         // get list of users with linked LoL accts
-        let users = fs.readdirSync(`${process.env.HOME}/.corki/users`);
+        let users = lol.usersList();
 
         // filter list to only include members of current server
         users = users.filter(u => members.exists("id", u));
+
+
+
 
         // generates an object containing user name, id and mastery points asynchroniously
         const getDataPoint = async u =>
