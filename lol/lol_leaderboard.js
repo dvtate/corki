@@ -257,9 +257,6 @@ function resetcd(rule) {
     return rule;
 }
 
-function getPrevData(serverid) {
-    return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${serverid}/cd.json`));
-}
 
 
 async function getLeaderBoard(members, champ) {
