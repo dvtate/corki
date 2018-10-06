@@ -34,6 +34,7 @@ global.commands = []
 	.concat(require("./sam/welcome"))
 	.concat(require("./lol/lol_commands"))
 	.concat(require("./lol/champgg_commands"))
+	.concat(require("./lol/lb_cmds"))
 	.concat(require("./rss/rss_cmds"))
 	.concat(require("./sam/prefix_cmds"))
 	.concat(require("./cmds/define"))

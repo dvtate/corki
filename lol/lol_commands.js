@@ -6,7 +6,6 @@ const teemo = require("./teemo.js");
 const lol = require("./lol_stuff.js");
 
 const lol_lb = require("./lol_leaderboard.js");
-lol_lb.configure();
 
 
 module.exports = [

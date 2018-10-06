@@ -9,10 +9,10 @@ async function refreshMasteryData(id) {
 
         // get their lol data
         let userObj = lol.getUserData(id);
-        /*if (!userObj || !userObj.accounts.length) {
+        if (!userObj || !userObj.accounts.length) {
             reject("no accts");
             return;
-        }*/
+        }
 
         // fill a list with mastery promise requests
         let dreqs = userObj.accounts.map(a =>

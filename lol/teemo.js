@@ -75,7 +75,7 @@ module.exports.champIDs = {
     "corki" : 42, "braum" : 201,
     "darius" : 122, "dunk" : 122,
     "tryndamere" : 23, "trynd" : 23,
-    "missfortune" : 21, "mf" : 21,
+    "missfortune" : 21, "mf" : 21, "miss" : 21,
     "yorick" : 83, "xerath" : 101, "sivir" : 15, "riven" : 92,
     "orianna" : 61, "ori" : 61,
     "gangplank" : 41, "pirate" : 41, "gp" : 41,
@@ -83,7 +83,8 @@ module.exports.champIDs = {
     "poppy" : 78,
     "lissandra" : 127, "liss" : 127,
     "jayce" : 126,
-    "nunu" : 20, "yeti" : 20,
+    "nunu" : 20, "yeti" : 20, "nunu&willump" : 20, "nunuandwillump" : 20,
+    "willump" : 20, "nunuwillump" : 20,
     "trundle" : 48, "troll" : 48,
     "karthus" : 30, "karth" : 30,
     "graves" : 104, "cigar" : 104,
@@ -163,7 +164,7 @@ module.exports.champNames = {
     33 : "Rammus", 420 : "Illaoi", 42 : "Corki", 201 : "Braum", 122 : "Darius",
     23 : "Tryndamere", 21 : "Miss Fortune", 83 : "Yorick", 101 : "Xerath",
     15 : "Sivir", 92 : "Riven", 61 : "Orianna", 41 : "Gangplank", 54 : "Malphite",
-    78 : "Poppy", 127 : "Lissandra", 126 : "Jayce", 20 : "Nunu", 48 : "Trundle",
+    78 : "Poppy", 127 : "Lissandra", 126 : "Jayce", 20 : "Nunu & Willump", 48 : "Trundle",
     30 : "Karthus", 104 : "Graves", 142 : "Zoe", 150 : "Gnar", 99 : "Lux",
     102 : "Shyvana", 58 : "Renekton", 114 : "Fiora", 222 : "Jinx", 429 : "Kalista",
     105 : "Fizz", 38 : "Kassadin", 37 : "Sona", 39 : "Irelia", 112 : "Viktor",
@@ -176,7 +177,7 @@ module.exports.champNames = {
     31 : "Cho'Gath", 77 : "Udyr", 236 : "Lucian", 427 : "Ivern", 89 : "Leona",
     51 : "Caitlyn", 113 : "Sejuani", 56 : "Nocturne", 26 : "Zilean", 268 : "Azir",
     68 : "Rumble", 25 : "Morgana", 163 : "Taliyah", 17 : "Teemo", 6 : "Urgot",
-    32 : "Amumu", 3 : "Galio", 74 : "HeimerDinger", 34 : "Anivia", 22 : "Ashe",
+    32 : "Amumu", 3 : "Galio", 74 : "Heimerdinger", 34 : "Anivia", 22 : "Ashe",
     161 : "Vel'Koz", 27 : "Singed", 72 : "Skarner", 110 : "Varus", 29 : "Twitch",
     86 : "Garen", 53 : "Blitzcrank", 11 : "Master Yi", 60 : "Elise", 12 : "Alistar",
     55 : "Katarina", 245 : "Ekko", 82 : "Mordekaiser", 117 : "Lulu", 164 : "Camille",
@@ -188,6 +189,7 @@ module.exports.champNames = {
     96 : "Kog'Maw", 103 : "Ahri", 133 : "Quinn", 7 : "LeBlanc", 81 : "Ezreal",
     555 : "Pyke"
 };
+
 /*
 module.exports.champNames = {};
 for (key in module.exports.champIDs)

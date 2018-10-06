@@ -35,6 +35,5 @@ function populateServerDir(serverid) {
 module.exports.populateServerDir = populateServerDir;
 
 
-module.exports.serverDirsList = () => {
-    return fs.readdirSync(`${process.env.HOME}/.corki/servers`);
-}
+module.exports.serverDirsList = () =>
+    fs.readdirSync(`${process.env.HOME}/.corki/servers`);
