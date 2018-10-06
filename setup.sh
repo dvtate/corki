@@ -10,14 +10,8 @@ chmod +x *.sh
 
 echo "setting up configuration directory..."
 mkdir "$HOME/.corki"				# bot config directory
-
-mkdir "$HOME/.corki/reddit"			# reddit stuff
-touch "$HOME/.corki/reddit/clist"	# reddit channel forwarding
-
 mkdir "$HOME/.corki/users"			# user directories
 mkdir "$HOME/.corki/servers"		# server directories
-mkdir "$HOME/.corki/rss"			# rss feed configs
-mkdir "$HOME/.corki/lb"				# leaderboard
 
 
 # discord key
