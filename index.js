@@ -14,7 +14,7 @@ global.client = new global.Discord.Client();
 global.client.on("ready", () => {
 	console.log("Ready to fly!");
 	// in case of wanting to broadcast more: "corki.js.org | @Corki help \n                          \nPortal - corki.js.org/portal"
-	global.client.user.setActivity("corki.js.org | @Corki help", {
+	global.client.user.setActivity("corki.js.org | @ me for help", {
 		game: {
 			url: "https://corki.js.org",
 			type: 0
@@ -88,7 +88,7 @@ global.client.on("message", async msg => {
 
 // something broke
 global.client.on("error", async e => {
-	require("./bot_admins.js").sendBugReport(null, `Client Error:\n\`\`\`\n${e.stack || e}\n\`\`\``);
+	require("./bot_admins.js").sendBugReport(null, `Client Error:\n\`\`\`\n${e.stack || e.message || e}\n\`\`\``);
 	console.error("Client Error:", e);
 });
 
@@ -115,7 +115,7 @@ pointers on any ideas on how to improve the bot that would be amazing!`))
 
 	// server's config directory will get removed
 	sam.pruneServerDirs();
-	
+
 });
 
 const welcome = require("./sam/welcome");
@@ -130,11 +130,6 @@ global.client.on("guildMemberAdd", member => {
 
 
 });
-
-
-
-
-
 
 
 

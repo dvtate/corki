@@ -150,6 +150,23 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     Dictionary
     */
 
+    page.add(`
+        <!-- league of legends champion names -->
+        <datalist id="champs">
+            <option value="${Object.keys(teemo.champIDs).join("\">\n<option value=\"")}">
+        </datalist>
+
+        <!-- text channels in current guild -->
+        <datalist id="chans">
+            <option value="${
+                Array.from(global.client.guilds.get(req.params.serverid).channels)
+                    .filter(c => c[1].type == "text").map(c => c[1].name)
+                    .join("\">\n<option value=\"")
+            }">
+        </datalist>
+    `);
+
+
     page.startFieldset("Command Prefixes")
         .add(`
             <p>In case another, more important bot also uses <kbd>-</kbd> to prefix its commands,
@@ -247,7 +264,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         </ul>
         Alternatively you can send this same content using the command <kbd>-announce-new-members &lt;message template></kbd>.
         <br/><br/>
-        #<input type="text" id="welcome-channel" placeholder="new-members" /> :
+        # <input list="chans" id="cmlb-chan" onchange="chkin()" placeholder="channel-name" /> :
         <input type="text" id="welcome-msg-template" value="Welcome to {{server}}, {{mention}}!" />
         <button type="button" onclick="addNewMemberAnnouncement()">Add New Member Announcement Rule</button>
     `)
@@ -286,18 +303,8 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     page.add(`<br/>
         Send a
         <input list="champs" id="cmlb-champ" onchange="chkin()" placeholder="champ" />
-        <datalist id="champs">
-            <option value="${Object.keys(teemo.champIDs).join("\">\n<option value=\"")}">
-        </datalist>
         leaderboard to #
         <input list="chans" id="cmlb-chan" onchange="chkin()" placeholder="channel-name" />
-        <datalist id="chans">
-            <option value="${
-                Array.from(global.client.guilds.get(req.params.serverid).channels)
-                    .filter(c => c[1].type == "text").map(c => c[1].name)
-                    .join("\">\n<option value=\"")
-            }">
-        </datalist>
         every <input type="number" id="cmlb-period" placeholder="7" /> days <button type="button" onclick="addCMLB()">Confirm</button>
     `)
 
