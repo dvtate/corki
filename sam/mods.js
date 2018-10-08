@@ -134,6 +134,16 @@ function isMod(guildid, userid, bot_override) {
 
 module.exports.isMod = isMod;
 
+function auth(msg, bot_override) {
+    if (!isMod(msg.guild.id, msg.author.id)) {
+        msg.channel.send("You are not authorized to perform this action. \
+Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
+        return false;
+    }
+    return true;
+}
+module.exports.auth = auth;
+
 
 function pruneMods(guildid) {
     let mods = getMods(guildid);

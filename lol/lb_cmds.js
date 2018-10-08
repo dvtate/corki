@@ -10,9 +10,8 @@ module.exports = [
 
             if (!msg.guild)
                 return msg.channel.send("This is only available for servers");
-
-            if (!mods.isMod(msg.guild.id, msg.author.id))
-                return msg.channel.send("Unauthorized: Ask an admin to add you to the moderators list for this server. ");
+            if (!mods.auth(msg))
+                return;
 
             const match = this.condition(msg);
             const champ = teemo.champIDs[match[1]];

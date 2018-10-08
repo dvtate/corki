@@ -14,15 +14,8 @@ module.exports = [
                 msg.channel.send("This command cannot be used in DM's")
                 return;
             }
-            if (!mods.isMod(msg.guild.id, msg.author.id) && (
-                    !msg.member
-                    || !msg.member.permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES))
-            ) {
-                msg.channel.send("You must be given permission to run server \
-management commands in order to perform this action. Ask an administrator to grant \
-you these powers via https://corki.js.org/admin");
+            if (!mods.auth(msg))
                 return;
-            }
 
 
             logCmd(msg, "added a self-assignable role");
@@ -36,7 +29,7 @@ you these powers via https://corki.js.org/admin");
     },
 
     { // self assign role
-        condition: msg => msg.content.match(/^iam (.+)/),
+        condition: msg => msg.content.match(/^(?:iam|sar) (.+)/),
 
         act: async function (msg) {
 
@@ -74,7 +67,7 @@ added this role to the server yet. Maybe you should remind them about it");
     },
 
     { // list roles
-        condition: msg => msg.content.match(/^(?:roles|iam)(?:$|\s)/),
+        condition: msg => msg.content.match(/^(?:roles|iam|lsar|sar)(?:$|\s)/),
 
         act: async function (msg) {
             logCmd(msg, "checked available -roles");
@@ -130,7 +123,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
             ) {
                 msg.channel.send("You must be given permission to run server \
 management commands in order to perform this action. Ask an administrator to grant \
-you these powers via https://corki.js.org/admin");
+you these powers via https://corki.js.org/admin or give you the MANAGE_ROLES privelege.");
                 return;
             }
 

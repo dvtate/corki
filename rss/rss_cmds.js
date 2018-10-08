@@ -12,12 +12,8 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "added a -rss sub (-rss add)");
 
-            if (!mods.isMod(msg.guild.id, msg.author.id)) {
-                msg.channel.send("You must be given permission to run server \
-management commands in order to perform this action. Ask an administrator to grant \
-you these powers via https://corki.js.org/admin");
+            if (!mods.auth(msg))
                 return;
-            }
 
             const url = this.condition(msg)[1];
 
@@ -41,12 +37,8 @@ you these powers via https://corki.js.org/admin");
         act: async function (msg) {
             logCmd(msg, "unsubscribed to -rss feeds");
 
-            if (!mods.isMod(msg.guild.id, msg.author.id)) {
-                msg.channel.send("You must be given permission to run server \
-management commands in order to perform this action. Ask an administrator to grant \
-you these powers via https://corki.js.org/admin");
+            if (!mods.auth(msg))
                 return;
-            }
 
             msg.channel.send(`Removed ${rss.removeChannel(msg.channel.id)} rss subscriptions from this channel`);
         }

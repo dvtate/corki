@@ -80,10 +80,8 @@ module.exports = [
 
             if (!msg.guild)
                 return msg.channel.send(`This command is only available for servers.`);
-
-            if (!mods.isMod(msg.guild.id, msg.author.id))
-                return msg.channel.send("You are not authorized to use this command here. \
-Ask the server Administrator to give you permissions via the web portal ( https://corki.js.org/portal )");
+            if (!mods.auth(msg))
+                return;
 
             const term = this.condition(msg)[1].trim();
             const def = this.condition(msg)[2].trim();

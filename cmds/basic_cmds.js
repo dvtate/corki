@@ -101,9 +101,8 @@ module.exports = [
                 return msg.channel.send("Sorry this command is only available for guilds. \
 Go to corki.js.org to add corki to yours.");
 
-            if (!mods.isMod(msg.guild.id, msg.author.id))
-                return msg.channel.send("This command is only available for server mods, \
-Ask a server administrator to add you to the mods list via the web portal (corki.js.org).");
+            if (!mods.auth(msg))
+                return;
 
             const flock = Array.from(msg.guild.members);
             const goose = flock[Math.floor(Math.random() * flock.length)][1];
