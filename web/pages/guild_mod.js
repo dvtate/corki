@@ -255,7 +255,9 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
 
 
-    page.startFieldset("LoL Champion Mastery Leaderboard");
+    page.startFieldset("LoL Champion Mastery Leaderboard").add(`
+        <p>Corki can periodically send a leaderboard for the members of a server with the most mastery points on a given champion.</p>
+    `);
 
     const lol_lb_table = lol_lb.getRules(req.params.serverid).map(r => {
         let chan = global.client.guilds.get(req.params.serverid).channels.find("name", r.chan.name)

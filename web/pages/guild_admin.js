@@ -143,7 +143,7 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     // user-select
     page.startFieldset("Select Server Member")
         .add(`
-                <input list="guild-members" id="member-select" onchange="chkin()" placeholder="champ"/>
+                <input list="guild-members" id="member-select" onchange="chkin()" placeholder="Guild Member"/>
                 <datalist id="guild-members">
                     <option value="${
                         Array.from(guild.members).map(m =>
