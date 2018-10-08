@@ -143,7 +143,7 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     // user-select
     page.startFieldset("Select Server Member")
         .add(`
-                <input list="guild-members" id="member-select" onchange="chkin()" />
+                <input list="guild-members" id="member-select" onchange="chkin()" placeholder="champ"/>
                 <datalist id="guild-members">
                     <option value="${
                         Array.from(guild.members).map(m =>
@@ -151,8 +151,7 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
                         ).join("\">\n<option value=\"")
                     }">
                 </datalist>`
-            , "Select Server Member", "user-select")
-
+        )
         .endFieldset();
 
     // edit permissions

@@ -37,3 +37,13 @@ module.exports.populateServerDir = populateServerDir;
 
 module.exports.serverDirsList = () =>
     fs.readdirSync(`${process.env.HOME}/.corki/servers`);
+
+module.exports.pruneServerDirs = () => {
+    let dirs = module.exports.serverDirsList();
+    dirs.forEach(g => {
+        if (!global.client.guilds.get(g)) {
+            fs.unlinkSync(`${process.env.HOME}/.corki/servers/${g}`);
+            console.log("pruned server dir: " + g);
+        }
+    });
+}

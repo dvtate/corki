@@ -10,7 +10,7 @@ const roles = require("../../sam/roles");
 const welcome = require("../../sam/welcome");
 const masteryRoles = require("../../lol/mastery_roles");
 const prefix = require("../../sam/prefix.js");
-
+const lol_lb = require("../../lol/lol_leaderboard");
 const router = express.Router();
 
 
@@ -75,9 +75,7 @@ router.get("/mod", bot.catchAsync(async (req, res) => {
             border-bottom-left-radius: 8px;
             border-top-left-radius: 8px;
             background-size: contain;
-            height: 128px;
-            width: 128px;
-
+            height: 128px; width: 128px;
         }
 
         div.guild-icon-container img {
@@ -85,6 +83,7 @@ router.get("/mod", bot.catchAsync(async (req, res) => {
             padding: 0;
         }
     `);
+
     page.startFieldset("Select Server to Manage")
         .add(`<p>The following is a list of servers you have moderator priviliges in.</p>`);
 
@@ -255,6 +254,52 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     page.endFieldset();
 
 
+
+    page.startFieldset("LoL Champion Mastery Leaderboard");
+
+    const lol_lb_table = lol_lb.getRules(req.params.serverid).map(r => {
+        let chan = global.client.guilds.get(req.params.serverid).channels.find("name", r.chan.name)
+                    || global.client.guilds.get(req.params.serverid).channels.get(r.chan.id);
+
+        return [
+            teemo.champNames[r.champ],
+            '#' + chan.name,
+            (r.cd.period / 86400000) + " days",
+            `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmcmlb/${
+                encodeURIComponent(JSON.stringify({ champ: r.champ, chan: r.chan.id, per: r.cd.period }))
+            }')">Remove</button>`
+        ];
+    });
+
+    page.addTable(["Champion", "Channel", "Period", "Actions"],
+        lol_lb_table, "Leaderboards");
+    if (lol_lb_table.length == 0)
+        page.add("<center><h4>None (yet) </h4></center>");
+
+    page.addScript(`
+        function addCMLB() {
+            alert("Sorry, this feature hasn't been implement yet. for now please use \`-lol add-lb <champ> <period>\` in the desired channel");
+        }
+    `)
+    page.add(`<br/>
+        Send a
+        <input list="champs" id="cmlb-champ" onchange="chkin()" placeholder="champ" />
+        <datalist id="champs">
+            <option value="${Object.keys(teemo.champIDs).join("\">\n<option value=\"")}">
+        </datalist>
+        leaderboard to #
+        <input list="chans" id="cmlb-chan" onchange="chkin()" placeholder="channel-name" />
+        <datalist id="chans">
+            <option value="${
+                Array.from(global.client.guilds.get(req.params.serverid).channels)
+                    .filter(c => c[1].type == "text").map(c => c[1].name)
+                    .join("\">\n<option value=\"")
+            }">
+        </datalist>
+        every <input type="number" id="cmlb-period" placeholder="7" /> days <button type="button" onclick="addCMLB()">Confirm</button>
+    `)
+
+    page.endFieldset();
 
 /*
     page.startFieldset("League of Legends Roles [wip]");

@@ -88,21 +88,35 @@ global.client.on("message", async msg => {
 
 // something broke
 global.client.on("error", async e => {
-	require("./bot_admins.js").sendBugReport(null, `Client Error:\n\`\`\`\n${e.stack}\n\`\`\``);
-	console.error(`Client Error: ${e}`);
+	require("./bot_admins.js").sendBugReport(null, `Client Error:\n\`\`\`\n${e.stack || e}\n\`\`\``);
+	console.error("Client Error:", e);
 });
-
 
 // when corki is added to a server
 global.client.on("guildCreate", async g => {
-	guild.owner.createDM.then(dm => dm.send(`Hey, you just added me to ${g.name}. :D
-- To set up your server, add features, change behavior, etc. goto corki.js.org/portal?rdr=mod
-- To allow mods to do it for you goto corki.js.org/portal?rdr=admin
-- For some general info on the bot go to corki.js.org`));
+	g.owner.createDM().then(dm => dm.send(`Hey, you just added me to ${g.name}. :D
+- To set up your server, add features, change behavior, etc. goto https://corki.js.org/portal?rdr=mod
+- To allow admins/mods to do it for you goto https://corki.js.org/portal?rdr=admin
+- For some general info on the bot go to https://corki.js.org`));
 
-	console.log("Bot added to " + g.name);
+	console.log("Guild Joined: " + g.name);
 });
 
+const sam = require("./sam/sam");
+global.client.on("guildDelete", g => {
+	console.log("Guild deleted/left: " + g.name);
+
+	g.owner.createDM().then(dm => dm.send(`
+I'm not sure what happened to ${g.name}. If the server was deleted you can \
+disregard this message. If you no longer need corki bot in your server \
+that's fine too. If you could please send a \`-bug\` report giving some \
+pointers on any ideas on how to improve the bot that would be amazing!`))
+		.catch(console.error);
+
+	// server's config directory will get removed
+	sam.pruneServerDirs();
+	
+});
 
 const welcome = require("./sam/welcome");
 
@@ -114,9 +128,8 @@ global.client.on("guildMemberAdd", member => {
 
     // TODO: ask new user to `-lol add` accts or sth
 
+
 });
-
-
 
 
 
