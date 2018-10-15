@@ -430,7 +430,13 @@ router.get("/mod/:serverid([0-9]+)/addrole/:role", bot.catchAsync(async (req, re
         const role = decodeURIComponent(req.params.role);
 
         // TODO: FIXME: check if role is valid and if it isn't redirect them to a page to fix tht
-
+        if (!guild.roles.find("name", role)) {
+            return res.send(bot.genErrorPage(userid, "Role Not Found", `
+It appears that ${guild.name} doesn't have a role called ${role} you should make
+sure you've added it in discord settings. <br/>
+<button type="button" onclick="redirect('/mod/${req.params.serverid}')">Continue</button>
+            `).export());
+        }
         roles.addRole(req.params.serverid, role);
     }
     res.redirect(`/mod/${req.params.serverid}`);

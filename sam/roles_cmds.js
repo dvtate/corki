@@ -20,10 +20,17 @@ module.exports = [
 
             logCmd(msg, "added a self-assignable role");
 
-            this.condition(msg)[1] // find roles argument
-                    .split(",")                         // take each role (separated by commas)
-                        .map(r => r.trim())             // trim whitespace
-                            .forEach(r => roles.addRole(msg.guild.id, r)); // add the roles
+            let rs = this.condition(msg)[1] // find roles argument
+                        .split(",")                         // take each role (separated by commas)
+                            .map(r => r.trim())             // trim whitespace
+
+            rs.forEach(r => {
+                if (!msg.guild.roles.find("name", r))
+                    msg.channel.send(`Don't forget to add the role ${r} in Discord settings. (It currently doesn't exist)`);
+
+            })
+            rs.forEach(r => roles.addRole(msg.guild.id, r)); // add the roles
+
             msg.react("👍");
         }
     },
@@ -50,16 +57,29 @@ module.exports = [
                     return;
                 }
 
+            let err = false;
+
             // map each role to its coresponding id
             desiredRoles.map(r => msg.guild.roles.find("name", r))
                 // give user each of the roles they asked for
                 .forEach(r => msg.member.addRole(r).catch(e => {
+                    err = true;
                     if (e.name == "TypeError")
                         msg.channel.send("It appears the server administrator hasn't \
-added this role to the server yet. Maybe you should remind them about it");
+added this role to the server yet. Maybe you should remind them about it.");
+                    else if (e.message == "Missing Permissions")
+                        msg.channel.send("It appears that Corki doesn't have the permissions \
+required to assign this role. Does corki have a role higher than the one you are trying to assign?");
+                    else if (e.name && e.message)
+                        msg.channel.send(`That failed: ${e.name}: ${e.message}`);
+                    else {
+                        msg.channel.send(`That failed... not sure why`);
+                        console.log("Couldn't assign role:", e);
+                    }
                 }));
 
-            msg.react("👍");
+            if (!err)
+                msg.react("👍");
 
         },
         tests: [ "-iam ff", "-iam gg, test" ]
