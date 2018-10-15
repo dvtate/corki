@@ -21,7 +21,8 @@
     "request": "^2.87.0",
     "rss-parser": "^3.4.2",
     "teemojs": "^1.2.0",
-    "time": "^0.12.0"
+    "time": "^0.12.0",
+    "fs-extra": "^7.0.0"
   },
   "devDependencies": {},
   "scripts": {

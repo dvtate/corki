@@ -151,7 +151,6 @@ function pruneMods(guildid) {
     if (!guild)
         return;
 
-
     mods.filter(m => guilds.members.has(m.id));
 
 }

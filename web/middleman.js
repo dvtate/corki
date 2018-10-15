@@ -1,5 +1,5 @@
 const fetch = require("node-fetch");
-
+const Page = require("./page");
 
 async function getUserID(token, res) {
     return new Promise((resolve, reject) => {
@@ -57,3 +57,13 @@ function modServers(userid) {
     });
 }
 module.exports.modServers = modServers;
+
+
+function genErrorPage(userid, title, body, ptitle) {
+        let page = new Page(ptitle || "Error", userid);
+        page.startFieldset(title)
+            .addRaw(body)
+            .endFieldset();
+        return page;
+}
+module.exports.genErrorPage = genErrorPage;

@@ -62,14 +62,11 @@ module.exports = [
                 return;
             }
 
-            msg.channel.startTyping();
-            lol.getUserMastery(id, champID).then(data => {
-                msg.channel.send(`<@!${id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`);
-                msg.channel.stopTyping();
-            }).catch(err => {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
-                msg.channel.stopTyping();
-            });
+            lol.getUserMastery(id, champID).then(data =>
+                msg.channel.send(`<@!${id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`)
+            ).catch(err =>
+                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)")
+            );
 
         },
         tests: [ "-lol mastery corki <@253784341555970048>" ]
@@ -88,12 +85,11 @@ module.exports = [
                 return;
             }
 
-            msg.channel.startTyping();
-            lol.getUserMastery(msg.author.id, champID).then(data => {
-                msg.channel.send(`<@!${msg.author.id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`);
-            }).catch(err => {
+            lol.getUserMastery(msg.author.id, champID).then(data =>
+                msg.channel.send(`<@!${msg.author.id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`)
+            ).catch(err => {
                 console.log(err);
-                msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
+                msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)")
             });
             msg.channel.stopTyping();
         }

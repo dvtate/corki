@@ -174,14 +174,10 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
         return;
     }
 
-    const badacct = () => {
-        page = new Page("Error", userid);
-        page.startFieldset("That didn't work :/")
-            .addRaw(`<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
-                        <button type="button" onclick="redirect('/user')">Try Again</button>`)
-            .endFieldset();
-        res.send(page.export());
-    };
+    const badacct = () =>
+        res.send(bot.genErrorPage(userid, "That didn't work",
+        `<h2>That summoner could not be found</h2><hr/>Make sure there aren't any mistakes and try again.
+                    <button type="button" onclick="redirect('/user')">Try Again</button>`).export());
 
     let summoner, page;
     try {

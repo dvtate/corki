@@ -264,7 +264,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         </ul>
         Alternatively you can send this same content using the command <kbd>-announce-new-members &lt;message template></kbd>.
         <br/><br/>
-        # <input list="chans" id="cmlb-chan" onchange="chkin()" placeholder="channel-name" /> :
+        # <input list="chans" id="welcome-channel" placeholder="channel-name" /> :
         <input type="text" id="welcome-msg-template" value="Welcome to {{server}}, {{mention}}!" />
         <button type="button" onclick="addNewMemberAnnouncement()">Add New Member Announcement Rule</button>
     `)
@@ -297,18 +297,21 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     page.addScript(`
         function addCMLB() {
-            alert("Sorry, this feature hasn't been implement yet. for now please use \`-lol add-lb <champ> <period>\` in the desired channel");
+            //alert("Sorry, this feature hasn't been implement yet. for now please use \`-lol add-lb <champ> <period>\` in the desired channel");
+            const champ = document.getElementById("cmlb-champ").value;
+            const chan = document.getElementById("cmlb-chan").value;
+            const per = document.getElementById("cmlb-period").value;
+            const uri = encodeURIComponent(JSON.stringify(
+                { champ : champ, chan: chan, per: per }));
+            redirect("/mod/${req.params.serverid}/addcmlb/" + uri);
         }
-    `)
-    page.add(`<br/>
-        Send a
-        <input list="champs" id="cmlb-champ" onchange="chkin()" placeholder="champ" />
-        leaderboard to #
-        <input list="chans" id="cmlb-chan" onchange="chkin()" placeholder="channel-name" />
-        every <input type="number" id="cmlb-period" placeholder="7" /> days <button type="button" onclick="addCMLB()">Confirm</button>
-    `)
-
-    page.endFieldset();
+        console.log(addCMLB);
+    `).add(`<br/>
+        Send a <input list="champs" id="cmlb-champ" placeholder="champ" />
+        leaderboard to #<input list="chans" id="cmlb-chan" placeholder="channel-name" />
+        every <input type="number" id="cmlb-period" placeholder="period of time" /> days.
+        <button type="button" onclick="addCMLB()">Confirm</button>
+    `).endFieldset();
 
 /*
     page.startFieldset("League of Legends Roles [wip]");
@@ -378,8 +381,6 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 */
 
 
-
-    // todo add lb
 
     res.send(page.export());
 
@@ -563,5 +564,92 @@ router.get("/mod/:serverid([0-9]+)/rmprefix/:prefix", bot.catchAsync( async (req
     }
     res.redirect(`/mod/${req.params.serverid}`);
 }));
+
+router.get("/mod/:serverid([0-9]+)/rmcmlb/:lb", bot.catchAsync( async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
+    if (guild && (perms.admin || perms.mod)) {
+
+        let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
+        let lb_rules = lol_lb.getRules(req.params.serverid);
+        lol_lb.setRules(req.params.serverid, lb_rules.filter(r =>
+            r.champ != lb.champ || r.chan.id != lb.chan.id || r.cd.period != lb.per));
+    }
+    res.redirect(`/mod/${req.params.serverid}`);
+}));
+
+
+router.get("/mod/:serverid([0-9]+)/addcmlb/:lb", bot.catchAsync( async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
+    if (guild && (perms.admin || perms.mod)) {
+
+        let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
+        let chan = guild.channels.find("name", lb.chan);
+        if (!chan)
+            return res.send(bot.genErrorPage(userid, "Channel not found", `
+The channel ${lb.chan} wasn't found in ${guild.name} the suggested options should
+include all available channels. <br/>
+<button type="button" onclick="redirect('/mod/${req.params.serverid}')">Continue</button>
+            `).export());
+
+        let champ = teemo.champIDs[lb.champ];
+        if (!champ)
+            return res.send(bot.genErrorPage(userid, "Invalid champion", `
+The champion ${lb.champ} isn't in our database yet. if you believe this is a mistake
+or if the champion you entered has been released recently please submit a -bug report
+and you should be notified when the champion is added to the system.
+<button type="button" onclick="redirect('/mod/${req.params.serverid}')">Continue</button>
+            `).export());
+
+        // if they enter period of zero then we post twice a day...
+        const period = (Number(lb.per) ? lb.per : 0.5) * 86400000; // days -> milliseconds
+        
+        let lb_rules = lol_lb.getRules(req.params.serverid);
+
+        // see /lol/lol_leaderboard.js for documentation on rules & stuff
+        // add new rule to list of rules
+        lb_rules.push({
+            champ: champ,
+            chan: { name: chan.name, id: chan.id },
+            cd: { ts: 0, period: period },
+            prev: []
+        });
+
+        lol_lb.setRules(req.params.serverid, lb_rules);
+
+
+    }
+    res.redirect(`/mod/${req.params.serverid}`);
+}));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;

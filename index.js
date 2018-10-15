@@ -109,7 +109,7 @@ global.client.on("guildDelete", g => {
 	g.owner.createDM().then(dm => dm.send(`
 I'm not sure what happened to ${g.name}. If the server was deleted you can \
 disregard this message. If you no longer need corki bot in your server \
-that's fine too. If you could please send a \`-bug\` report giving some \
+that's fine too. If you could please send a \`-bug\` report (or contact @ridderhoff#6333) giving some \
 pointers on any ideas on how to improve the bot that would be amazing!`))
 		.catch(console.error);
 
@@ -133,7 +133,7 @@ global.client.on("guildMemberAdd", member => {
 
 
 
-const token = `${require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key`)}`.trim();
+const token = require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key`).toString().trim();
 
 // Log bot in using token
 global.client.login(token);
