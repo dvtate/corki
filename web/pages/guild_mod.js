@@ -1,5 +1,6 @@
 const express = require("express");
 
+const logCmd = require("../../logging");
 
 const bot = require("../middleman.js");
 const Page = require("../page.js");
@@ -395,12 +396,15 @@ router.get("/mod/:serverid([0-9]+)/rmrole/:role", bot.catchAsync(async (req, res
         return;
     }
 
+
     const userid = await bot.getUserID(req.cookies.token, res);
     let perms = mods.getModData(req.params.serverid, userid);
     let guild = global.client.guilds.get(req.params.serverid);
 
 
     if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} removed a SAR`);
+
         // remove all instances of given role from roles file
         const role = decodeURIComponent(req.params.role);
         roles.setRoles(req.params.serverid,
@@ -422,7 +426,11 @@ router.get("/mod/:serverid([0-9]+)/addrole/:role", bot.catchAsync(async (req, re
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} added a SAR`);
         const role = decodeURIComponent(req.params.role);
+
+        // TODO: FIXME: check if role is valid and if it isn't redirect them to a page to fix tht
+
         roles.addRole(req.params.serverid, role);
     }
     res.redirect(`/mod/${req.params.serverid}`);
@@ -441,9 +449,10 @@ router.get("/mod/:serverid([0-9]+)/resetroles", bot.catchAsync(async (req, res) 
     let perms = mods.getModData(req.params.serverid, userid);
     let guild = global.client.guilds.get(req.params.serverid);
 
-    if (guild && (perms.admin || perms.mod))
+    if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} cleared all SARs`);
         roles.resetRoles(req.params.serverid);
-
+    }
     res.redirect(`/mod/${req.params.serverid}`);
 
 }));
@@ -462,11 +471,13 @@ router.get("/mod/:serverid([0-9]+)/addwelcome/:chan/:msg", bot.catchAsync(async 
 
     // unauthorized
     if (!guild || (!perms.admin && !perms.mod)) {
-            res.redirect(`/mod/${req.params.serverid}`);
-            return;
+        res.redirect(`/mod/${req.params.serverid}`);
+        return;
     }
 
     if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} added a welcome msg`);
+
         const channame = decodeURIComponent(req.params.chan)
         const chan = guild.channels.find("name", channame);
 
@@ -514,6 +525,7 @@ router.get("/mod/:serverid([0-9]+)/rmwelcome/:rule", bot.catchAsync(async (req, 
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} removed a welcome msg`);
 
         welcome.pruneRules(guild.id);
         let rules = welcome.getAnnouncementData(guild.id);
@@ -537,6 +549,8 @@ router.get("/mod/:serverid([0-9]+)/addprefix/:prefix", bot.catchAsync( async (re
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} added a cmd prefx`);
+
         let prefixes = prefix.getGuildPrefixes(req.params.serverid);
         prefixes.push(prefix.escapeRegExp(decodeURIComponent(req.params.prefix)).trim());
         prefix.setGuildPrefixes(req.params.serverid, prefixes);
@@ -556,6 +570,8 @@ router.get("/mod/:serverid([0-9]+)/rmprefix/:prefix", bot.catchAsync( async (req
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} removed a prefix`);
+
         let prefixes = prefix.getGuildPrefixes(req.params.serverid);
         prefix.setGuildPrefixes(req.params.serverid, prefixes.filter(p =>
             p != prefix.escapeRegExp(decodeURIComponent(req.params.prefix)).trim()
@@ -576,6 +592,7 @@ router.get("/mod/:serverid([0-9]+)/rmcmlb/:lb", bot.catchAsync( async (req, res)
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} removed a cm lb`);
 
         let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
         let lb_rules = lol_lb.getRules(req.params.serverid);
@@ -597,6 +614,7 @@ router.get("/mod/:serverid([0-9]+)/addcmlb/:lb", bot.catchAsync( async (req, res
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web@${global.client.users.get(userid).username} added a cm lb`);
 
         let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
         let chan = guild.channels.find("name", lb.chan);
@@ -618,7 +636,7 @@ and you should be notified when the champion is added to the system.
 
         // if they enter period of zero then we post twice a day...
         const period = (Number(lb.per) ? lb.per : 0.5) * 86400000; // days -> milliseconds
-        
+
         let lb_rules = lol_lb.getRules(req.params.serverid);
 
         // see /lol/lol_leaderboard.js for documentation on rules & stuff
@@ -636,18 +654,6 @@ and you should be notified when the champion is added to the system.
     }
     res.redirect(`/mod/${req.params.serverid}`);
 }));
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

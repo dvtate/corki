@@ -46,7 +46,7 @@ module.exports = [
             // verify the roles are valid
             for (let i = 0; i < desiredRoles.length; i++)
                 if (!serverRoles.includes(desiredRoles[i])) {
-                    msg.channel.send(`Invalid role "${roles[i]}"`);
+                    msg.channel.send(`Invalid role "${desiredRoles[i]}"`);
                     return;
                 }
 
