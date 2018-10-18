@@ -211,14 +211,13 @@ Go to corki.js.org to add corki to yours.");
 
 function formatUrbanDef(json) {
     return { embed: {
-        title: `[${json.word}](${json.permalink})`,
+        title: json.word,
         description: json.definition,
-        fields: [
-            {
+        url: json.permalink,
+        fields: [ {
                 name: "Example",
                 value: json.example
-            }
-        ],
+        } ],
         timestamp: json.written_on,
         footer: {
             text: "Submitted by: " + json.author
