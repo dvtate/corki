@@ -314,6 +314,11 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         <button type="button" onclick="addCMLB()">Confirm</button>
     `).endFieldset();
 
+
+    /* TODO: add RSS subs
+    * maybe rewrite RSS first
+    */
+
 /*
     page.startFieldset("League of Legends Roles [wip]");
     page.add(`<p>Corki can automatically assign roles to users based on how many mastery points they have on a specific champ</p>`);
@@ -429,7 +434,6 @@ router.get("/mod/:serverid([0-9]+)/addrole/:role", bot.catchAsync(async (req, re
         logCmd(null, `web@${global.client.users.get(userid).username} added a SAR`);
         const role = decodeURIComponent(req.params.role);
 
-        // TODO: FIXME: check if role is valid and if it isn't redirect them to a page to fix tht
         if (!guild.roles.find("name", role)) {
             return res.send(bot.genErrorPage(userid, "Role Not Found", `
 It appears that ${guild.name} doesn't have a role called ${role} you should make

@@ -3,6 +3,9 @@ const logCmd = require("../logging.js");
 const request = require("request");
 
 const mods = require("../sam/mods.js");
+
+const urban = require("urban");
+
 module.exports = [
 
     { // 8ball
@@ -186,8 +189,42 @@ Go to corki.js.org to add corki to yours.");
     },
 
 
+    {
+        condition: msg => msg.content.match(/^urban (.+)/),
+        act: async function (msg) {
+            logCmd(msg, "-urban (word)");
+            const def = urban(this.condition(msg)[1]);
+            def.first(json => msg.channel.send(formatUrbanDef(json)));
+        }
+    },
+
+    {
+        condition: msg => msg.content.match(/^urban(?:$|\s)/),
+        act: async msg => {
+            logCmd(msg, "-urban (random)");
+            urban.random().first(json => msg.channel.send(formatUrbanDef(json)));
+        }
+    }
+
 ];
 
+
+function formatUrbanDef(json) {
+    return { embed: {
+        title: `[${json.word}](${json.permalink})`,
+        description: json.definition,
+        fields: [
+            {
+                name: "Example",
+                value: json.example
+            }
+        ],
+        timestamp: json.written_on,
+        footer: {
+            text: "Submitted by: " + json.author
+        }
+    }};
+}
 
 
 const randomHelpInfo = { embed: {

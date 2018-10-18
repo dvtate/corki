@@ -13,7 +13,7 @@ const logCmd = require("../logging.js");
 rss-data: [
     // all data associated with rss rule
     rule: {
-        channel: channel-id,
+        channels: [ channel-ids,,,],
         url: RSS feed URL,
         latest: date most recent post,
     }
@@ -58,21 +58,42 @@ module.exports.testFeedUrl = testFeedUrl;
 
 function addRule(channelID, url) {
     let rules = getRules();
-    rules.push({
-        channel : channelID,
-        url : url,
-        latest : Date.now() // replace with zero if you want spam every time you add a sub
-    });
+    const rule = rules.findIndex(r => r.url == url);
+
+    // no other channels are using this rule
+    if (rule < 0) {
+        rules.push({
+            channels : [ channelID ],
+            url : url,
+            latest : Date.now() // replace with zero if you want spam every time you add a sub
+        });
+    } else {
+        rules[rule].channels.push(channelID);
+    }
+
+
+
     setRules(rules);
 }
 
 module.exports.addRule = addRule;
 
+
 function removeChannel(channelID) {
     let rules = getRules();
     let l = rules.length;
-    rules = rules.filter(r => r.channel != channelID);
+
+    // remove channelID from all rules
+    rules.forEach(r =>
+        r.channels = r.channels.filter(c =>
+            c != channelID))
+
+    // remove rules which dont have any channels
+    rules = rules.filter(r => !!r.channels.length);
+
+    // write to RSS.conf
     setRules(rules);
+
     return l - rules.length;
 }
 
@@ -81,11 +102,8 @@ module.exports.removeChannel = removeChannel;
 
 
 async function sendItems(items, channel) {
-    // nothing to send
-    if (items.length == 0)
-        return;
 
-    console.log("forwarding rss update(s)");
+    //console.log("forwarding rss update(s)");
 
     try {
         const chan = global.client.channels.get(channel);
@@ -155,8 +173,11 @@ function checkFeeds() {
             // update date on rule
             rules[i].latest = results[i].rule.latest;
 
-             // forward items
-            sendItems(results[i].items, results[i].rule.channel);
+            // if there are items, send them
+            if (results[i].items.length)
+                results[i].rule.channels.forEach(channel =>
+                    sendItems(results[i].items, channel)
+                );
         }
 
         // if someone added a new rule while we were posting
@@ -166,6 +187,7 @@ function checkFeeds() {
         // someone removed a rule while we were posting
         else if (rules.length < getRules().length)
             ; // not sure how to implement yet
+        // errors resulting from this bad implementation would appear as commands
 
 
         setRules(rules);
@@ -174,9 +196,9 @@ function checkFeeds() {
 }
 
 
-// checks for posts every 30s
+// checks for posts
 function refresh() {
     checkFeeds();               // check feeds and forward new ones
-    setTimeout(refresh, 30000); // every 30 seconds
+    setTimeout(refresh, 60000); // every min
 }
 setTimeout(refresh, 20000); // give 20 seconds for bot to start before checking
