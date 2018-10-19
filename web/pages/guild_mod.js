@@ -204,7 +204,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     page.addTable([ "Role", "Action" ], roleTableValues, "Self-Assignable Roles");
 
     if (roleTableValues.length == 0)
-        page.add("<center><h4>There are no self-assignable roles</h4></center>");
+        page.add("<center><h4>None (yet)</h4></center>");
 
     page.addScript(`
             function addSAR() {
@@ -606,8 +606,14 @@ router.get("/mod/:serverid([0-9]+)/rmcmlb/:lb", bot.catchAsync( async (req, res)
 
         let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
         let lb_rules = lol_lb.getRules(req.params.serverid);
+
+
+        `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmcmlb/${
+            encodeURIComponent(JSON.stringify({ champ: r.champ, chan: r.chan.id, per: r.cd.period }))
+        }')">Remove</button>`
+
         lol_lb.setRules(req.params.serverid, lb_rules.filter(r =>
-            r.champ != lb.champ || r.chan.id != lb.chan.id || r.cd.period != lb.per));
+            r.champ != lb.champ || r.chan.id != lb.chan || r.cd.period != lb.per));
     }
     res.redirect(`/mod/${req.params.serverid}`);
 }));
