@@ -47,7 +47,7 @@ const interactions = []
 global.client.on("message", async msg => {
 
 	// check for prefix
-	const prefixes = [ `<@${global.client.user.id>}`, `<!@${global.client.user.id>}` ]
+	const prefixes = [ `<@${global.client.user.id}>`, `<@!${global.client.user.id}>` ] // mention
 		.concat(msg.guild ? require("./sam/prefix").getGuildPrefixes(msg.guild.id) : [ '-' ]);
 
 	let hascmd = false;
