@@ -633,11 +633,6 @@ router.get("/mod/:serverid([0-9]+)/rmcmlb/:lb", bot.catchAsync( async (req, res)
         let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
         let lb_rules = lol_lb.getRules(req.params.serverid);
 
-
-        `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmcmlb/${
-            encodeURIComponent(JSON.stringify({ champ: r.champ, chan: r.chan.id, per: r.cd.period }))
-        }')">Remove</button>`
-
         lol_lb.setRules(req.params.serverid, lb_rules.filter(r =>
             r.champ != lb.champ || r.chan.id != lb.chan || r.cd.period != lb.per));
     }

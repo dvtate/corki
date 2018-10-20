@@ -12,7 +12,7 @@ module.exports = [
         condition: msg => msg.content.match(/^(?:8ball|7rockets)(?:$|\s)/),
 
         act: async function (msg) {
-            logCmd(msg, "shook -8ball");
+            logCmd(msg, "-8ball");
 
             // send random response from [yes,no, maybe]
             msg.channel.send(["yes", "no", "maybe"] [Math.floor(Math.random() * 3)]);
@@ -38,7 +38,7 @@ module.exports = [
         condition: msg => msg.content.match(/^echo (.+)/),
 
         act: async function (msg) {
-            logCmd(msg, "caused an -echo");
+            logCmd(msg, "-echo");
 
             const content = this.condition(msg)[1];
             msg.channel.send(content);
@@ -49,7 +49,7 @@ module.exports = [
     { // echo help
         condition: msg => msg.content.match(/^echo(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "-echo'd for help"),
+            logCmd(msg, "-echo help"),
             msg.channel.send("`-echo` expected a message");
         },
         tests: [ "-echo" ]
@@ -59,7 +59,7 @@ module.exports = [
         condition: msg => msg.content.match(/^coinflip(?:$|\s)/),
 
         act: async function (msg) {
-            logCmd(msg, "flipped a coin");
+            logCmd(msg, "-coinflip");
             msg.channel.send(Math.random() < 0.5 ? "tails" : "heads");
         },
         tests: [ "-coinflip" ]
@@ -69,7 +69,7 @@ module.exports = [
         condition: msg => msg.content.match(/^rand(?:om)? (.+)/),
 
         act: async function (msg) {
-            logCmd(msg, "used RNG");
+            logCmd(msg, "-rand ()");
 
             const args = this.condition(msg)[1];
         	let lims = args.split(/ |,|\n|, /);
@@ -100,6 +100,7 @@ module.exports = [
     {
         condition: msg => msg.content.match(/^(?:-?\@random|roulette|ddg|duck\s?duck\s?goose)(?:$|\s)/),
         act: async msg => {
+            logCmd(msg, "-@random");
             if (!msg.guild)
                 return msg.channel.send("Sorry this command is only available for guilds. \
 Go to corki.js.org to add corki to yours.");
@@ -118,7 +119,6 @@ Go to corki.js.org to add corki to yours.");
         condition: msg => msg.content.match(/^random(?:$|\s)|^-help random(?:$|\s)/),
         act: async msg => msg.channel.send(randomHelpInfo),
         tests: [ "-random" ]
-
     },
 
     { // xkcd with options
@@ -126,7 +126,7 @@ Go to corki.js.org to add corki to yours.");
 
         act: async function (msg) {
 
-            logCmd(msg, "read -xkcd");
+            logCmd(msg, "-xkcd ()");
 
             const num = this.condition(msg)[1];
             const url = `https://xkcd.com/${num == "latest" ? "" : num}`;
@@ -162,7 +162,7 @@ Go to corki.js.org to add corki to yours.");
         condition: msg => msg.content.match(/^xkcd(?:$|\s)/),
 
         act: async function (msg) {
-            logCmd(msg, "read -xkcd");
+            logCmd(msg, "-xkcd");
             request("https://c.xkcd.com/random/comic/", (error, response, body) => {
 
                 if (error) {
@@ -192,7 +192,7 @@ Go to corki.js.org to add corki to yours.");
     {
         condition: msg => msg.content.match(/^urban (.+)/),
         act: async function (msg) {
-            logCmd(msg, "-urban (word)");
+            logCmd(msg, "-urban ()");
             const def = urban(this.condition(msg)[1]);
             def.first(json => msg.channel.send(formatUrbanDef(json)));
         }
@@ -201,30 +201,32 @@ Go to corki.js.org to add corki to yours.");
     {
         condition: msg => msg.content.match(/^urban(?:$|\s)/),
         act: async msg => {
-            logCmd(msg, "-urban (random)");
+            logCmd(msg, "-urban");
             urban.random().first(json => msg.channel.send(formatUrbanDef(json)));
         }
     }
 
 ];
 
-
 function formatUrbanDef(json) {
+    // from urban dictionary definition json
+    // create an embedded message object
     return { embed: {
         title: json.word,
         description: json.definition,
         url: json.permalink,
-        fields: [ {
+
+        fields: json.example ? [ {
                 name: "Example",
                 value: json.example
-        } ],
+        } ] : [],
+
         timestamp: json.written_on,
         footer: {
             text: "Submitted by: " + json.author
         }
     }};
 }
-
 
 const randomHelpInfo = { embed: {
     title: "-Random help",
