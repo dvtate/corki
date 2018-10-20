@@ -12,6 +12,9 @@ const welcome = require("../../sam/welcome");
 const masteryRoles = require("../../lol/mastery_roles");
 const prefix = require("../../sam/prefix.js");
 const lol_lb = require("../../lol/lol_leaderboard");
+const rss = require("../../rss/rss_stuff");
+
+
 const router = express.Router();
 
 
@@ -313,6 +316,29 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         every <input type="number" id="cmlb-period" placeholder="period of time" /> days.
         <button type="button" onclick="addCMLB()">Confirm</button>
     `).endFieldset();
+
+
+    page.startFieldset("RSS Feeds").add(`
+        <p>Corki can automatically forward RSS feeds to a channel.</p>
+    `);
+
+
+    const rss_table = rss.serverRules(req.params.serverid).map(r => {
+        return [ '#' + global.client.channels.get(r.chan).name,
+            r.url,
+            `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrss/${encodeURIComponent(JSON.stringify(r))}')">Remove</button>`
+        ];
+    });
+    page.addTable([ "Channel", "URL", "Actions" ], rss_table, "Feed Subscriptions");
+    if (rss_table.length == 0)
+        page.add("<center><h4>None (yet)</h4></center>");
+
+    page.add("This interface is not yet complete. Please use bot commands. Sorry");
+
+    page.addScript(``)
+        .add(`<br/>
+            <!-- TODO: add new subscription interface -->
+            `);
 
 
     /* TODO: add RSS subs

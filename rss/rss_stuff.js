@@ -202,3 +202,42 @@ function refresh() {
     setTimeout(refresh, 60000); // every min
 }
 setTimeout(refresh, 20000); // give 20 seconds for bot to start before checking
+
+
+
+function serverRules(guildid) {
+    // array text channel ids for server
+    const chans = Array.from(global.client.guilds.get(guildid).channels)
+            .filter(c => c[1].type == "text").map(c => c[1].id);
+
+    const rules = getRules();
+    let ret = [];
+
+    // if rule has one of the chans in it add it to ret
+    chans.forEach(c =>
+        rules.forEach(r => {
+            if (r.channels.includes(c))
+                ret.push({ url: r.url, chan: c });
+        })
+    );
+
+    return ret;
+}
+module.exports.serverRules = serverRules;
+
+function rmRule(url, chan) {
+    let rules = getRules();
+    for (let i = 0; i < rules.length; r++)
+        if (rules[i].url == url) {
+            rules[i].channels
+                = rules[i].channels.filter(r => r != chan);
+            break;
+        }
+
+
+    // remove rules which dont have any channels
+    rules = rules.filter(r => !!r.channels.length);
+
+    setRules(rules);
+}
+module.exports.rmRule = rmRule;
