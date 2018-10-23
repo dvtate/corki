@@ -13,7 +13,8 @@ function removeRoles(server, member, roles) {
     const guildRoles = guild.roles;
 
     roles.forEach(role => {
-        r = guildRoles.find("name", role)
+        console.log(`@${member}: removing ${role}`);
+        let r = guildRoles.find("name", role);
         if (!!r)
             guild.members.get(member).removeRole(r);
     });
