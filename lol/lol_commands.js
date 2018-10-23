@@ -243,6 +243,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
     { // refresh mastery info, if its needed
         condition: msg => msg.content.match(/^lol refresh(?:$|\s)/),
+        // TODO: (?: <@!?([0-9]+)>)?
         act: async msg => {
             logCmd(msg, "-lol refreshed");
             if (!lol.getUserData(msg.author.id))
@@ -408,33 +409,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         tests: [ "-lol rank <@253784341555970048>" ]
     },
 
-    { // self rank
-        condition: msg => msg.content.match(/^lol rank\s?([0-9]+)?(?:$|\s)/),
-        act: async function (msg) {
-            logCmd(msg, "checked their -lol rank");
-            let userObj = lol.getUserData(msg.author.id);
-
-            // no accts.
-            if (userObj && userObj.accounts.length == 0) {
-                removeDir(msg.author.id);
-                userObj = null;
-            }
-            if (!userObj)
-                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
-
-            const match = this.condition(msg);
-            let acct = userObj.accounts[match[1] ? match[1].trim() : userObj.main];
-            if (!acct)
-                return msg.channel.send("Invalid account number. Use `-lol list` to see available accounts");
-
-
-            teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
-                lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
-                    .then(summary => msg.channel.send(summary)).catch(console.error)
-            }).catch(console.error);
-        }
-    },
-
     { // given summoner's rank
         condition: msg => msg.content.match(/^lol rank (\S+) (.+)/),
         act: async function (msg) {
@@ -466,6 +440,33 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
         },
         tests: [ "-lol rank na ridderhoff" ]
+    },
+
+    { // self rank
+        condition: msg => msg.content.match(/^lol rank\s?([0-9]+)?(?:$|\s)/),
+        act: async function (msg) {
+            logCmd(msg, "checked their -lol rank");
+            let userObj = lol.getUserData(msg.author.id);
+
+            // no accts.
+            if (userObj && userObj.accounts.length == 0) {
+                removeDir(msg.author.id);
+                userObj = null;
+            }
+            if (!userObj)
+                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+
+            const match = this.condition(msg);
+            let acct = userObj.accounts[match[1] ? match[1].trim() : userObj.main];
+            if (!acct)
+                return msg.channel.send("Invalid account number. Use `-lol list` to see available accounts");
+
+
+            teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
+                lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
+                    .then(summary => msg.channel.send(summary)).catch(console.error)
+            }).catch(console.error);
+        }
     },
 
     { // summary of user champion mastery levels
