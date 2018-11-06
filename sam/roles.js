@@ -17,7 +17,11 @@ const sam = require("./sam");
 
 function getRoles(serverID) {
     sam.populateServerDir(serverID); // be safe
-    return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`));
+    try {
+        return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${serverID}/roles.json`));
+    } catch (e) {
+        return { roles: [], ignore_case: false };
+    }
 }
 module.exports.getRoles = getRoles;
 
