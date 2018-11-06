@@ -21,15 +21,6 @@ function populateServerDir(serverid) {
     if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/mods.json`))
         mods.setModData(serverid, mods.generateModData(serverid));
 
-    // self assignable roles
-    if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`))
-        fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`, "[]");
-
-    // LoL mastery roles
-    if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`))
-        fs.writeFileSync(`${process.env.HOME}/.corki/servers/${serverid}/roles.json`, "[]");
-
-
 }
 
 module.exports.populateServerDir = populateServerDir;
