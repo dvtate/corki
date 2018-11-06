@@ -7,7 +7,7 @@ module.exports = [
     { // -help general
         condition: msg => msg.content.match(/^help general(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "asked for -help(general)");
+            logCmd(msg, "-help general");
 
             msg.channel.send({ embed: {
                 color: 0x3498db,
@@ -46,7 +46,7 @@ module.exports = [
     { // -help fun
         condition: msg => msg.content.match(/^help fun(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "asked for -help(fun)");
+            logCmd(msg, "-help fun");
 
             msg.channel.send({ embed: {
                 color: 0x3498db,
@@ -83,7 +83,7 @@ module.exports = [
     { // -help LoL
         condition: msg => msg.content.match(/^(?:help lol|lol help)(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "asked for -help(lol))");
+            logCmd(msg, "-help lol");
 
             msg.channel.send({ embed: {
                 color: 0x3498db,
@@ -147,7 +147,7 @@ module.exports = [
     { // -help international
         condition: msg => msg.content.match(/^help international(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "asked for -help(international)");
+            logCmd(msg, "-help international");
 
             msg.channel.send({ embed: {
                 color: 0x3498db,
@@ -177,7 +177,7 @@ module.exports = [
     { // -help server automation and management
         condition: msg => msg.content.match(/^help sam(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "asked for -help(sam)");
+            logCmd(msg, "-help sam");
 
             msg.channel.send({ embed: {
                 color: 0x3498db,
@@ -238,7 +238,7 @@ The template string can be used to set the announcement text. (note keywords `{{
     { // -help text
         condition: msg => msg.content.match(/^help text(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "asked for -help(text)");
+            logCmd(msg, "-help text");
 
             msg.channel.send({ embed: {
                 color: 0x3498db,
@@ -280,7 +280,7 @@ The template string can be used to set the announcement text. (note keywords `{{
     { // -help devtools
         condition: msg => msg.content.match(/^help devtools(?:$|\s)/),
         act: async function (msg) {
-            logCmd(msg, "asked for -help(devtools)");
+            logCmd(msg, "-help devtools");
 
             msg.channel.send({ embed: {
                 color: 0x3498db,
@@ -309,7 +309,7 @@ The template string can be used to set the announcement text. (note keywords `{{
     { // help overview (table of contents)
         condition: msg => msg.content.match(/^(?:h(?:elp)?|commands)(?:$|\s)|^$/),
         act: async function (msg) {
-            logCmd(msg, "asked for -help");
+            logCmd(msg, "-help");
 
             msg.channel.send({ embed : {
                 color: 0x3498db,
@@ -348,6 +348,8 @@ The template string can be used to set the announcement text. (note keywords `{{
                     text: "Corki - corki.js.org"
                 }
             }});
+            if (msg.contents.trim() == "")
+                msg.channel.send(global.client.user.toString() + "prefix list");
         }
 
     }

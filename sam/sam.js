@@ -50,9 +50,3 @@ module.exports.pruneServerDirs = () => {
         }
     });
 }
-
-
-function getGuildChans(guildid) {
-    return Array.from(global.client.guilds.get(guildid).channels)
-        .filter(c => c[1].type == "text").map(c => c[1].id);
-}

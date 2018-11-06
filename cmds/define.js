@@ -24,7 +24,7 @@ module.exports = [
     {
         condition: msg => msg.content.match(/^define (.+)$/),
         act: async function (msg) {
-            logCmd(msg, "used dictionary");
+            logCmd(msg, "-define ()");
 
             if (!msg.guild)
                 return msg.channel.send(`This command is only available for servers.`);
@@ -76,7 +76,7 @@ module.exports = [
         condition: msg => msg.content.match(/^define (.+)([\s\S]+)/),
         act: async function (msg) {
 
-            logCmd(msg, "added definition");
+            logCmd(msg, "-define () ()");
 
             if (!msg.guild)
                 return msg.channel.send(`This command is only available for servers.`);
@@ -97,7 +97,8 @@ module.exports = [
     {
         condition: msg => msg.content.match(/^dictionary (?:terms|words|entries|definitions|defs)(?:$|\s)/),
         act: async msg => {
-            logCmd(msg, "read dictionary");
+            logCmd(msg, "-dictionary (|)");
+
 
             if (!msg.guild)
                 return msg.channel.send(`This command is only available for servers.`);

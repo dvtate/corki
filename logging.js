@@ -13,11 +13,11 @@ const fs = require("fs");
 // Function to simplify logging
 module.exports = async function (msg, logMessage) {
 
-    // current date
-    const timestamp = new Date(Date.now());
+    // current date + time
+    const timestamp = (new Date(Date.now())).toUTCString();
 
     // full log entry
-	const entry = `${timestamp}: ${msg ? `@${msg.author.username}` : "" } ${logMessage}`;
+	const entry = `${timestamp}: ${msg ? `${msg.author}` : "" } ${logMessage}`;
 
     // add to logfile
     fs.appendFile(`${process.env.HOME}/.corki/useage.log`, entry + '\n', (err) => {

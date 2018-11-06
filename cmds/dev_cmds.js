@@ -19,7 +19,7 @@ module.exports = [
 
         // run to perform command
         act: async msg => {
-            logCmd(msg, "-ping'd");
+            logCmd(msg, "-ping");
             msg.channel.send(`pong (lag: ${global.client.ping}ms)`);
         },
         tests: [ "-ping" ]
@@ -29,7 +29,7 @@ module.exports = [
         condition: msg => msg.content.match(/^err (.+)/),
 
         act: async function (msg) {
-            logCmd(msg, "-err'd");
+            logCmd(msg, "-err ()");
             throw new Error(this.condition(msg)[1]);
         }
     },
@@ -38,7 +38,7 @@ module.exports = [
         condition: msg => msg.content.match(/^deformat (.+)/),
         act: async function (msg) {
 
-            logCmd(msg, "-deformat'd text");
+            logCmd(msg, "-deformat ()");
             msg.channel.send(`\`${this.condition(msg)[1]}\``);
         },
         tests: [ "-deformat <@253784341555970048>"]
@@ -47,7 +47,7 @@ module.exports = [
     { // opposite of deformat
         condition: msg => msg.content.match(/^reformat `(.+)`/),
         act: async function (msg) {
-            logCmd(msg, "-reformat'd text");
+            logCmd(msg, "-reformat ()");
             msg.channel.send(this.condition(msg)[1]);
         },
         tests: [ "-reformat `<@253784341555970048>`" ]
@@ -59,7 +59,7 @@ module.exports = [
         condition: msg => msg.content.match(/^log (.+)/),
 
         act: async function (msg) {
-            logCmd(msg, "asked for a -log");
+            logCmd(msg, "-log");
 
             const req = this.condition(msg)[1].split(' ');
             if (req.length == 1)
@@ -142,7 +142,7 @@ module.exports = [
                 return;
 
 
-            logCmd(msg, "sent a -msg");
+            logCmd(msg, "-msg () ()");
 
             const match = this.condition(msg);
             const channel = match[1];
@@ -220,6 +220,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
       // instead of making a new command just use -eval :S
         condition: msg => msg.content.match(/^eval ([\s\S]+)/),
         act: async function (msg) {
+            logCmd(msg, "-eval ()");
 
             // make sure they're authorized
             if (!botAdmins.auth(msg.author.id)) {
@@ -247,7 +248,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
         condition: msg => msg.content.match(/^uptime(?:$|\s)/),
 
         act: async function (msg) {
-            logCmd(msg, "checked -uptime");
+            logCmd(msg, "-uptime");
 
             let time = process.hrtime(this.start_time);
             const ns_per_s = 1e9;
@@ -267,6 +268,8 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
             if (!botAdmins.auth(msg.author.id))
                 return;
 
+            logCmd(msg, "-full-test");
+
             // 1 command per second hopefully
             let i = 0
             global.commands.forEach(c => {
@@ -283,21 +286,31 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
     {
         condition: msg => msg.content.match(/^about/),
         act: async msg => {
+            logCmd(msg, "-about");
 
             let version = await new Promise((resolve, reject) =>
                 // run command and send output
                 require("child_process")
-                    .exec("git log -1 --pretty=format:\"%h(%s)\"",
+                    .exec("git log -1 --pretty=format:\"%h (%s)\"",
                         (error, stdout, stderr) => {
                             resolve(error ? "undefined" : stdout);
                         }));
-
+            let node_version = await new Promise((resolve, reject) =>
+                // run command and send output
+                require("child_process")
+                    .exec("git log -1 --pretty=format:\"%h (%s)\"",
+                        (error, stdout, stderr) => {
+                            resolve(error ? "undefined" : stdout);
+                        }));
             const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}d ${Math.floor(time / 60 / 60) % 24
     }h, ${Math.floor(time / 60) % 60}m, and ${Math.round(time % 60)}s`;
 
             msg.channel.send({ embed: {
                 title: "About Corki",
-                description: `${global.client.user.toString()} is an [open source](https://github.com/dvtate/corki) Discord bot designed with a wide variety of use cases in mind.`,
+                description: `${global.client.user.toString()
+} is an [free](https://github.com/dvtate/corki/blob/master/LICENCE) Discord bot designed with a wide variety of use cases in mind.\
+ The bot is community driven and [feature requests](https://feathub.com/dvtate/corki) are openly welcomed.`,
+
                 fields: [
                     {
                         name: "Version",
@@ -329,8 +342,6 @@ The currently running patch is ${version}`
                         inline: true
                     }
                 ]
-
-
 
             }})
         },

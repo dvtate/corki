@@ -201,13 +201,19 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             <p>The following is a list of roles you have designated as self-assignable.
  Roles will appear here even if the server doesn't have the given roles created so
  make sure you spelled and capitalized everything correctly</p>`);
+    const sarCaseSensitive = !roles.getRoles(req.params.serverid).ignore_case;
+    page.add(`
+         <button onclick="redirect('/mod/${req.params.serverid}/sarcasesensitivity/${!!sarCaseSensitive}')"
+          type="button" >Make roles case ${sarCaseSensitive ? "in" : "" }sensitive</button>`);
 
-    const roleTableValues = roles.getRoles(req.params.serverid).map(r =>
+    const roleTableValues = roles.getRoles(req.params.serverid).roles.map(r =>
         [r, `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrole/${encodeURIComponent(r)}')">Remove From List</button>`])
     page.addTable([ "Role", "Action" ], roleTableValues, "Self-Assignable Roles");
 
     if (roleTableValues.length == 0)
         page.add("<center><h4>None (yet)</h4></center>");
+
+
 
     page.addScript(`
             function addSAR() {
@@ -420,6 +426,29 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
 }));
 
+
+// make self assignable roles case [in]sensitive
+router.get("/mod/:serverid([0-9]+)/sarcasesensitivity/:value", bot.catchAsync( async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
+    if (guild && (perms.admin || perms.mod) && (req.params.value == "true" || req.params.value == "false")) {
+        logCmd(null, `web: ${global.client.users.get(userid)} changed sar case sensitivity`);
+
+        let rData = roles.getRoles(req.params.serverid);
+        rData.ignore_case = req.params.value == "true" ? true : false;
+        roles.setRoles(req.params.serverid, rData);
+    }
+    res.redirect(`/mod/${req.params.serverid}`);
+}));
+
+
 // delete given role
 router.get("/mod/:serverid([0-9]+)/rmrole/:role", bot.catchAsync(async (req, res) => {
     if (!req.cookies.token) {
@@ -439,7 +468,7 @@ router.get("/mod/:serverid([0-9]+)/rmrole/:role", bot.catchAsync(async (req, res
         // remove all instances of given role from roles file
         const role = decodeURIComponent(req.params.role);
         roles.setRoles(req.params.serverid,
-            roles.getRoles(req.params.serverid).filter(r => r != role));
+            roles.getRoles(req.params.serverid).roles.filter(r => r != role));
     }
     res.redirect(`/mod/${req.params.serverid}`);
 

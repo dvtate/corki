@@ -18,7 +18,7 @@ module.exports = [
                 return;
 
 
-            logCmd(msg, "added a self-assignable role");
+            logCmd(msg, "");
 
             let rs = this.condition(msg)[1] // find roles argument
                         .split(",")                         // take each role (separated by commas)
@@ -27,8 +27,7 @@ module.exports = [
             rs.forEach(r => {
                 if (!msg.guild.roles.find("name", r))
                     msg.channel.send(`Don't forget to add the role ${r} in Discord settings. (It currently doesn't exist)`);
-
-            })
+            });
             rs.forEach(r => roles.addRole(msg.guild.id, r)); // add the roles
 
             msg.react("👍");
@@ -40,46 +39,43 @@ module.exports = [
 
         act: async function (msg) {
 
-            logCmd(msg, "added a role via -iam");
+            logCmd(msg, "-iam ()");
 
             // designated self assignable roles for server
-            const serverRoles = roles.getRoles(msg.guild.id);
+            const { roles: serverRoles, ignore_case } = roles.getRoles(msg.guild.id);
 
             let desiredRoles =
                 this.condition(msg)[1]          // find roles argument
                     .split(',')                 // take each role (separated by commas)
                         .map(r => r.trim());    // trim whitespace
 
-            // verify the roles are valid
-            for (let i = 0; i < desiredRoles.length; i++)
-                if (!serverRoles.includes(desiredRoles[i])) {
-                    msg.channel.send(`Invalid role "${desiredRoles[i]}"`);
-                    return;
-                }
 
-            let err = false;
+            // attempt to give user each of the roles they asked for
+            desiredRoles.forEach(r => {
+                    // role name from sar config file
+                    let sRole = serverRoles.find(sr => ignore_case ? sr.toLowerCase() == r.toLowerCase() : sr == r);
+                    // corresponding disocrd guild role object
+                    let gRole = msg.guild.roles.find(gr => ignore_case ? gr.name.toLowerCase() == r.toLowerCase() : gr.name == r);
 
-            // map each role to its coresponding id
-            desiredRoles.map(r => msg.guild.roles.find("name", r))
-                // give user each of the roles they asked for
-                .forEach(r => msg.member.addRole(r).catch(e => {
-                    err = true;
-                    if (e.name == "TypeError")
-                        msg.channel.send("It appears the server administrator hasn't \
-added this role to the server yet. Maybe you should remind them about it.");
-                    else if (e.message == "Missing Permissions")
-                        msg.channel.send("It appears that Corki doesn't have the permissions \
-required to assign this role. Does corki have a role higher than the one you are trying to assign?");
-                    else if (e.name && e.message)
-                        msg.channel.send(`That failed: ${e.name}: ${e.message}`);
-                    else {
-                        msg.channel.send(`That failed... not sure why`);
-                        console.log("Couldn't assign role:", e);
-                    }
-                }));
+                    if (!sRole)
+                        return msg.channel.send(`invalid role \`${r}\` ignored.${ignore_case ? "" : " (note: this server's roles are case-sensitive)"}`);
+                    if (!gRole)
+                        return msg.channel.send(`it appears the server administrator hasn't added (or maybe has removed) the \`${r}\` role to the server`);
 
-            if (!err)
-                msg.react("👍");
+                    msg.member.addRole(gRole).catch(e => {
+                        if (e.message == "Missing Permissions")
+                            msg.channel.send(`It appears that Corki doesn't have the permissions\
+required to assign the \`${r}\` role. Does Corki have a role higher than the one you are trying to assign?`);
+                        else if (e.name && e.message)
+                            msg.channel.send(`That failed: ${e.name}: ${e.message}`);
+                        else {
+                            msg.channel.send(`Assigning role \`${r}\` failed... not sure why`);
+                            console.log("Couldn't assign role:", e);
+                        }
+                    })
+                });
+
+            msg.react("👍");
 
         },
         tests: [ "-iam ff", "-iam gg, test" ]
@@ -90,21 +86,21 @@ required to assign this role. Does corki have a role higher than the one you are
         condition: msg => msg.content.match(/^(?:roles|iam|lsar|sar)(?:$|\s)/),
 
         act: async function (msg) {
-            logCmd(msg, "checked available -roles");
+            logCmd(msg, "-roles");
             let sar = roles.getRoles(msg.guild.id);
             if (roles.length == 0)
                 msg.channel.send(`This server doesn't have any self-assignable roles.
 A moderator can configure them using \`-add-sar\`.
 After that point they can be added via \`-iam\``)
             else
-                msg.channel.send(`Self-assignable roles on this server: ${sar.join(", ")}
+                msg.channel.send(`Self-assignable roles on this server: ${sar.roles.join(", ")}
 To self-assign a role you can use the command \`-iam <role>\``);
         },
         tests: [ "-roles" ]
     },
 
     { // remove role
-        condition: msg => msg.content.match(/^iamnot (.+)/),
+        condition: msg => msg.content.match(/^(?:iamnot|sar remove) (.+)/),
 
         act: async function (msg) {
             let rm_roles = this.condition(msg)[1]  // find roles argument
@@ -113,14 +109,26 @@ To self-assign a role you can use the command \`-iam <role>\``);
 
 
             // designated self assignable roles for server
-            const serverRoles = roles.getRoles(msg.guild.id);
+            const { roles: serverRoles, ignore_case } = roles.getRoles(msg.guild.id);
 
             rm_roles.forEach(role => {
-                const r = msg.guild.roles.find("name", role);
-                if (!r || !serverRoles.includes(role))
-                    msg.channel.send(`invalid role "${role}" ignored`);
-                else
-                    msg.member.removeRole(r).catch(console.error);
+                const sRole = serverRoles.find(r => ignore_case ? r.toLowerCase() == role.toLowerCase() : r == role);
+                const gRole = msg.guild.roles.find(gr => ignore_case ? gr.name.toLowerCase() == role.toLowerCase() : gr.name == role);
+                if (!sRole || !gRole)
+                    return msg.channel.send(`Invalid role \`${role}\` ignored`)
+
+                msg.member.removeRole(gRole).catch(e => {
+                    if (e.message == "Missing Permissions")
+                        msg.channel.send(`It appears that Corki doesn't have the permissions\
+                    required to manage the \`${role}\` role. Does Corki have a role higher than the one you are trying to remove?`);
+                    else if (e.name && e.message)
+                        msg.channel.send(`Removing role \`${role}\` failed: ${e.name}: ${e.message}`);
+                    else {
+                        msg.channel.send(`Removing role \`${role}\` failed... not sure why`);
+                        console.log("Couldn't rm role:", e);
+                    }
+                });
+
             });
 
             msg.react("👍");
