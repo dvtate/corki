@@ -206,6 +206,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
          <button onclick="redirect('/mod/${req.params.serverid}/sarcasesensitivity/${!!sarCaseSensitive}')"
           type="button" >Make roles case ${sarCaseSensitive ? "in" : "" }sensitive</button>`);
 
+    console.log(roles.getRoles(req.params.serverid));
     const roleTableValues = roles.getRoles(req.params.serverid).roles.map(r =>
         [r, `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrole/${encodeURIComponent(r)}')">Remove From List</button>`])
     page.addTable([ "Role", "Action" ], roleTableValues, "Self-Assignable Roles");
@@ -464,11 +465,12 @@ router.get("/mod/:serverid([0-9]+)/rmrole/:role", bot.catchAsync(async (req, res
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web@${global.client.users.get(userid).username} removed a SAR`);
-
         // remove all instances of given role from roles file
         const role = decodeURIComponent(req.params.role);
-        roles.setRoles(req.params.serverid,
-            roles.getRoles(req.params.serverid).roles.filter(r => r != role));
+
+        let rData = roles.getRoles(req.params.serverid);
+        rData.roles = rData.roles.filter(r => r != role);
+        roles.setRoles(req.params.serverid, rData);
     }
     res.redirect(`/mod/${req.params.serverid}`);
 
