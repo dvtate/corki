@@ -1,4 +1,4 @@
-const fs = require("fs");
+    const fs = require("fs");
 const mods = require("./mods");
 
 // make server directory if not already there

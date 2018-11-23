@@ -298,10 +298,11 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
             let node_version = await new Promise((resolve, reject) =>
                 // run command and send output
                 require("child_process")
-                    .exec("git log -1 --pretty=format:\"%h (%s)\"",
+                    .exec("node --version",
                         (error, stdout, stderr) => {
                             resolve(error ? "undefined" : stdout);
                         }));
+
             const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}d ${Math.floor(time / 60 / 60) % 24
     }h, ${Math.floor(time / 60) % 60}m, and ${Math.round(time % 60)}s`;
 

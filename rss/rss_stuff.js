@@ -227,7 +227,7 @@ module.exports.serverRules = serverRules;
 
 function rmRule(url, chan) {
     let rules = getRules();
-    for (let i = 0; i < rules.length; r++)
+    for (let i = 0; i < rules.length; i++)
         if (rules[i].url == url) {
             rules[i].channels
                 = rules[i].channels.filter(r => r != chan);
@@ -240,4 +240,5 @@ function rmRule(url, chan) {
 
     setRules(rules);
 }
+
 module.exports.rmRule = rmRule;

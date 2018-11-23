@@ -206,7 +206,6 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
          <button onclick="redirect('/mod/${req.params.serverid}/sarcasesensitivity/${!!sarCaseSensitive}')"
           type="button" >Make roles case ${sarCaseSensitive ? "in" : "" }sensitive</button>`);
 
-    console.log(roles.getRoles(req.params.serverid));
     const roleTableValues = roles.getRoles(req.params.serverid).roles.map(r =>
         [r, `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrole/${encodeURIComponent(r)}')">Remove From List</button>`])
     page.addTable([ "Role", "Action" ], roleTableValues, "Self-Assignable Roles");
@@ -333,7 +332,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     const rss_table = rss.serverRules(req.params.serverid).map(r => {
         return [ '#' + global.client.channels.get(r.chan).name,
             r.url,
-            `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrss/${encodeURIComponent(JSON.stringify(r))}')">Remove</button>`
+            `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrss/${encodeURIComponent(r.chan)}/${encodeURIComponent(r.url)}')">Remove</button>`
         ];
     });
     page.addTable([ "Channel", "URL", "Actions" ], rss_table, "Feed Subscriptions");
@@ -342,9 +341,17 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     page.add("This interface is not yet complete. Please use bot commands. Sorry");
 
-    page.addScript(``)
+    page.addScript(`
+        function addRSSChan(){
+            const chan = encodeURIComponent(document.getElementById("rss-chan").value);
+            const url = encodeURIComponent(document.getElementById("rss-url").value.trim());
+            redirect('/mod/${req.params.serverid}/addrss/' + chan + '/' + url);
+        }
+        `)
         .add(`<br/>
-            <!-- TODO: add new subscription interface -->
+            # <input list="chans" id="rss-chan" placeholder="destination channel" /> :
+            <input type="text" id="rss-url" placeholder="https://reddit.com/r/leagueoflegends/new/.rss" title="feed url">
+            <button type="button" onclick="addRSSChan()">Add RSS Feed</button>
             `);
 
 
@@ -440,7 +447,7 @@ router.get("/mod/:serverid([0-9]+)/sarcasesensitivity/:value", bot.catchAsync( a
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod) && (req.params.value == "true" || req.params.value == "false")) {
-        logCmd(null, `web: ${global.client.users.get(userid)} changed sar case sensitivity`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} changed sar case sensitivity`);
 
         let rData = roles.getRoles(req.params.serverid);
         rData.ignore_case = req.params.value == "true" ? true : false;
@@ -464,7 +471,7 @@ router.get("/mod/:serverid([0-9]+)/rmrole/:role", bot.catchAsync(async (req, res
 
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} removed a SAR`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} removed a SAR`);
         // remove all instances of given role from roles file
         const role = decodeURIComponent(req.params.role);
 
@@ -488,7 +495,7 @@ router.get("/mod/:serverid([0-9]+)/addrole/:role", bot.catchAsync(async (req, re
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} added a SAR`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} added a SAR`);
         const role = decodeURIComponent(req.params.role);
 
         if (!guild.roles.find("name", role)) {
@@ -517,7 +524,7 @@ router.get("/mod/:serverid([0-9]+)/resetroles", bot.catchAsync(async (req, res) 
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} cleared all SARs`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} cleared all SARs`);
         roles.resetRoles(req.params.serverid);
     }
     res.redirect(`/mod/${req.params.serverid}`);
@@ -543,7 +550,7 @@ router.get("/mod/:serverid([0-9]+)/addwelcome/:chan/:msg", bot.catchAsync(async 
     }
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} added a welcome msg`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} added a welcome msg`);
 
         const channame = decodeURIComponent(req.params.chan)
         const chan = guild.channels.find("name", channame);
@@ -592,7 +599,7 @@ router.get("/mod/:serverid([0-9]+)/rmwelcome/:rule", bot.catchAsync(async (req, 
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} removed a welcome msg`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} removed a welcome msg`);
 
         welcome.pruneRules(guild.id);
         let rules = welcome.getAnnouncementData(guild.id);
@@ -616,7 +623,7 @@ router.get("/mod/:serverid([0-9]+)/addprefix/:prefix", bot.catchAsync( async (re
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} added a cmd prefx`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} added a cmd prefx`);
 
         let prefixes = prefix.getGuildPrefixes(req.params.serverid);
         prefixes.push(prefix.escapeRegExp(decodeURIComponent(req.params.prefix)).trim());
@@ -637,7 +644,7 @@ router.get("/mod/:serverid([0-9]+)/rmprefix/:prefix", bot.catchAsync( async (req
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} removed a prefix`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} removed a prefix`);
 
         let prefixes = prefix.getGuildPrefixes(req.params.serverid);
         prefix.setGuildPrefixes(req.params.serverid, prefixes.filter(p =>
@@ -659,7 +666,7 @@ router.get("/mod/:serverid([0-9]+)/rmcmlb/:lb", bot.catchAsync( async (req, res)
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} removed a cm lb`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} removed a cm lb`);
 
         let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
         let lb_rules = lol_lb.getRules(req.params.serverid);
@@ -682,7 +689,7 @@ router.get("/mod/:serverid([0-9]+)/addcmlb/:lb", bot.catchAsync( async (req, res
     let guild = global.client.guilds.get(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
-        logCmd(null, `web@${global.client.users.get(userid).username} added a cm lb`);
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} added a cm lb`);
 
         let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
         let chan = guild.channels.find("name", lb.chan);
@@ -721,6 +728,58 @@ and you should be notified when the champion is added to the system.
 
     }
     res.redirect(`/mod/${req.params.serverid}`);
+}));
+
+
+router.get("/mod/:serverid([0-9]+)/rmrss/:chan/:url", bot.catchAsync( async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
+    if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} removed an rss feed`);
+        rss.rmRule(decodeURIComponent(req.params.url, req.params.chan));
+    }
+    res.redirect(`/mod/${req.params.serverid}`);
+}));
+
+router.get("/mod/:serverid([0-9]+)/addrss/:chan/:url", bot.catchAsync( async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/mod");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    let perms = mods.getModData(req.params.serverid, userid);
+    let guild = global.client.guilds.get(req.params.serverid);
+
+    if (guild && (perms.admin || perms.mod)) {
+        logCmd(null, `web/mod:${req.params.serverid}@${userid} added an rss feed`);
+
+        const chan = guild.channels.find("name", decodeURIComponent(req.params.chan));
+        if (!chan)
+            return res.send(bot.genErrorPage(userid, "Invalid Channel", `
+The channel with id ${req.params.chan} (should be only numbers) doesn't appear to exist in the given server.
+Try again normally and if the problem persists, reach out to @ridderhoff#6333.
+<button type="button" onclick="redirect('/mod/${req.params.serverid}')">Continue</button>
+            `).export());
+
+        const url = decodeURIComponent(req.params.url);
+        rss.testFeedUrl(url).then(() => {
+            rss.addRule(chan.id, url);
+            res.redirect(`/mod/${req.params.serverid}`);
+        }).catch(e => {
+            res.send(bot.genErrorPage(userid, "Inalid Feed URL", `
+An RSS feed wasn't found at the url provided (${req.params.url}). Make sure you spelled everything correctly and the website is online.
+            `).export());
+        });
+    }
+
 }));
 
 

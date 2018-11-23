@@ -348,7 +348,7 @@ The template string can be used to set the announcement text. (note keywords `{{
                     text: "Corki - corki.js.org"
                 }
             }});
-            if (msg.contents.trim() == "")
+            if (!msg.contents || msg.contents.trim() == "")
                 msg.channel.send(global.client.user.toString() + "prefix list");
         }
 

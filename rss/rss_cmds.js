@@ -26,7 +26,7 @@ module.exports = [
                 msg.channel.send("Added an rss subscription to this channel, to stop rss subscriptions in this channel use `-rss reset`");
             }).catch(e => {
                 msg.channel.send("That feed couldn't be accessed, make sure the url you gave is correct and contains a valid rss feed\n`" + e + "`");
-            })
+            });
         }
     },
 
