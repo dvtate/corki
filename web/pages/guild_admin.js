@@ -268,12 +268,9 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
         function submit() {
 
-            modData.filter(m => {
-                    // remove members who don't have permissions
-                return m.admin != undefined
-                    // don't need mod entry for unpriveleged users
-                || (m.admin || m.mod || m.mod_cmds);
-            });
+            // don't need mod entry for unpriveleged users
+            modData = modData.filter(m =>
+                (m.admin || m.mod || m.mod_cmds));
 
 
             redirect("/admin/${req.params.serverid}/apply/"
@@ -287,12 +284,10 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
 
 
-
-
     // searchable droopdown box (user select) (mod selsct)
     // javascript
-    // checkboxes for permissions tree
-    // submit button idek
+    // checkboxes for permissions
+    // submit button
 
     // recombine data into an object then use encodeURIComponent() to send it to
     //    /admin/server/apply/json
@@ -318,10 +313,10 @@ router.get("/admin/:serverid([0-9]+)/apply/:modsjson", bot.catchAsync(async (req
     if (guild && perms.admin) {
 
         try {
-            const modData = JSON.parse(decodeURIComponent(req.params.modsjson));
+            let modData = JSON.parse(decodeURIComponent(req.params.modsjson));
 
             // prevent them from trolling server with extra properties
-            modData.map(mod => {
+            modData = modData.map(mod => {
                 return {
                     id: mod.id,
                     admin: mod.admin,

@@ -238,7 +238,7 @@ async function chkin(serverid, rules) {
 
             // guild deleted :(
             if (!guild) {
-                console.log("lb: server removed :/");
+                console.log("lb: server removed");
                 sam.pruneServerDirs();
                 return;
             }
