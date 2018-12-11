@@ -416,6 +416,7 @@ commands = {
 function addMulti(cmd_obj, categories) {
     categories.forEach(cat => commands[cat].push(cmd_obj));
 }
+
 /*
 addMulti({
 
