@@ -133,6 +133,7 @@ module.exports.champIDs = {
     "nasus" : 75, "susan" : 75,
     "nami" : 267,
     "nautilus" : 111, "naut" : 111,
+    "neeko" : 518, "neko" : 518,
     "nidalee" : 76, "nid" : 76,
     "nunu" : 20, "yeti" : 20, "nunu&willump" : 20, "nunuandwillump" : 20,
     "willump" : 20, "nunuwillump" : 20,
@@ -225,7 +226,7 @@ module.exports.champNames = {
     267 : "Nami", 202 : "Jhin", 16 : "Soraka", 45 : "Veigar", 40 : "Janna",
     111 : "Nautilus", 28 : "Evelynn", 79 : "Gragas", 238 : "Zed", 254 : "Vi",
     96 : "Kog'Maw", 103 : "Ahri", 133 : "Quinn", 7 : "LeBlanc", 81 : "Ezreal",
-    555 : "Pyke"
+    555 : "Pyke", 518 : "Neeko"
 };
 
 /*

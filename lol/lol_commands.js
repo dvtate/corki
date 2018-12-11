@@ -654,7 +654,7 @@ If you want to see this implemented sooner send a `-bug` report.");
 
 
 const masteryHelpInfo = { embed: {
-    title: "-mastery information",
+    title: "-lol mastery information",
     description: "There are a variety of tools for checking your mastery points on a champion. Note champion names and usernames should omit spaces",
     fields: [
         {
