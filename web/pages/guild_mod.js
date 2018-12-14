@@ -186,8 +186,9 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     page.addScript(`
         function addPrefix() {
-            const prefix = document.getElementById("add-prefix").value;
-            redirect("/mod/${req.params.serverid}/addprefix/" + encodeURIComponent(prefix));
+            const prefix = document.getElementById("add-prefix").value.toString().trim();
+            if (!!prefix)
+                redirect("/mod/${req.params.serverid}/addprefix/" + encodeURIComponent(prefix));
         }
     `).add(`<br/>
         <input id="add-prefix" type="text" placeholder="command prefix" />
@@ -743,7 +744,7 @@ router.get("/mod/:serverid([0-9]+)/rmrss/:chan/:url", bot.catchAsync( async (req
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} removed an rss feed`);
-        rss.rmRule(decodeURIComponent(req.params.url, req.params.chan));
+        rss.rmRule(decodeURIComponent(req.params.url), decodeURIComponent(req.params.chan));
     }
     res.redirect(`/mod/${req.params.serverid}`);
 }));
