@@ -142,7 +142,7 @@ router.get("/user/lol/rm/:id([0-9]+)", bot.catchAsync(async (req, res) => {
 }));
 
 // set an account to main account
-router.get("/user/lol/main/:id([0-9]+)", bot.catchAsync(async (req, res) => {
+router.get("/user/lol/main/:id", bot.catchAsync(async (req, res) => {
     if (!req.cookies.token) {
         res.redirect("/login/user");
         return;
