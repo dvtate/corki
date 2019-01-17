@@ -242,17 +242,24 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // refresh mastery info, if its needed
-        condition: msg => msg.content.match(/^lol refresh(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol refresh(?: <@!?([0-9]+)>)?/),
         // TODO: (?: <@!?([0-9]+)>)?
         act: async msg => {
             logCmd(msg, "-lol refreshed");
-            if (!lol.getUserData(msg.author.id))
-                msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
+
+
+            const id = this.condition(msg)[1] || msg.author.id;
+
+            if (!lol.getUserData(id))
+                msg.channel.send(
+                    (id == msg.author.id ? "You" : "they")
+                    + " don't have any linked accounts. you should use `-lol add` to link your account(s)");
 
             msg.channel.startTyping();
 
             // refresh account info
             await lol.refreshUserData(msg.author.id);
+            
             // refresh mastery points
             require("./user_mastery").refresh(msg.author.id);
 

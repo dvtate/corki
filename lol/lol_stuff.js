@@ -80,7 +80,8 @@ async function refreshUserData(id) {
             const summ = await teemo.riot.get(a.server, "summoner.getBySummonerId", a.id);
             resolve(summ ? { // new user obj
                 name: summ.name, server: a.server,
-                id: summ.id, accountId: summ.accountId
+                id: summ.id, accountId: summ.accountId,
+                puuid: summ.puuid
             } : null);
         })).catch(e => null)
     );
@@ -88,6 +89,7 @@ async function refreshUserData(id) {
     for (let i = 0; i < data.accounts.length; i++)
         if (new_accts[i])
             data.accounts[i] = new_accts[i];
+
     setUserData(id, data);
 
 }
@@ -117,7 +119,8 @@ async function addUserAcct(id, server, username) {
                     name: summoner.name,
                     server: server,
                     id: summoner.id,
-                    accountId: summoner.accountId
+                    accountId: summoner.accountId,
+                    puuid: summoner.puuid
                 });
 
                 // write account info
