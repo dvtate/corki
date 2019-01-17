@@ -244,7 +244,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     { // refresh mastery info, if its needed
         condition: msg => msg.content.match(/^lol refresh(?: <@!?([0-9]+)>)?/),
         // TODO: (?: <@!?([0-9]+)>)?
-        act: async msg => {
+        act: async function (msg) {
             logCmd(msg, "-lol refreshed");
 
 
@@ -259,7 +259,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             // refresh account info
             await lol.refreshUserData(msg.author.id);
-            
+
             // refresh mastery points
             require("./user_mastery").refresh(msg.author.id);
 
