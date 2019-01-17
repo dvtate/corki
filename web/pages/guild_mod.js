@@ -288,7 +288,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     `);
 
     const lol_lb_table = lol_lb.getRules(req.params.serverid).map(r => {
-        let chan = global.client.guilds.get(req.params.serverid).channels.find("name", r.chan.name)
+        let chan = global.client.guilds.get(req.params.serverid).channels.find(ch => ch.name == r.chan.name)
                     || global.client.guilds.get(req.params.serverid).channels.get(r.chan.id);
 
         return [
@@ -499,7 +499,7 @@ router.get("/mod/:serverid([0-9]+)/addrole/:role", bot.catchAsync(async (req, re
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added a SAR`);
         const role = decodeURIComponent(req.params.role);
 
-        if (!guild.roles.find("name", role)) {
+        if (!guild.roles.find(r => r.name == role)) {
             return res.send(bot.genErrorPage(userid, "Role Not Found", `
 It appears that ${guild.name} doesn't have a role called ${role} you should make
 sure you've added it in discord settings. <br/>
@@ -554,7 +554,7 @@ router.get("/mod/:serverid([0-9]+)/addwelcome/:chan/:msg", bot.catchAsync(async 
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added a welcome msg`);
 
         const channame = decodeURIComponent(req.params.chan)
-        const chan = guild.channels.find("name", channame);
+        const chan = guild.channels.find(ch => ch.name == channame);
 
         // TODO: also check if chan is a category and doesn't allow sending
         if (!chan) {
@@ -693,7 +693,7 @@ router.get("/mod/:serverid([0-9]+)/addcmlb/:lb", bot.catchAsync( async (req, res
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added a cm lb`);
 
         let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
-        let chan = guild.channels.find("name", lb.chan);
+        let chan = guild.channels.find(ch => ch.name == lb.chan);
         if (!chan)
             return res.send(bot.genErrorPage(userid, "Channel not found", `
 The channel ${lb.chan} wasn't found in ${guild.name} the suggested options should
@@ -762,7 +762,7 @@ router.get("/mod/:serverid([0-9]+)/addrss/:chan/:url", bot.catchAsync( async (re
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added an rss feed`);
 
-        const chan = guild.channels.find("name", decodeURIComponent(req.params.chan));
+        const chan = guild.channels.find(ch => ch.name == decodeURIComponent(req.params.chan));
         if (!chan)
             return res.send(bot.genErrorPage(userid, "Invalid Channel", `
 The channel with id ${req.params.chan} (should be only numbers) doesn't appear to exist in the given server.

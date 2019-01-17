@@ -25,7 +25,7 @@ module.exports = [
                             .map(r => r.trim())             // trim whitespace
 
             rs.forEach(r => {
-                if (!msg.guild.roles.find("name", r))
+                if (!msg.guild.roles.find(gr => gr.name = r))
                     msg.channel.send(`Don't forget to add the role ${r} in Discord settings. (It currently doesn't exist)`);
             });
             rs.forEach(r => roles.addRole(msg.guild.id, r)); // add the roles

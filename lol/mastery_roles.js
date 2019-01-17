@@ -14,7 +14,7 @@ function removeRoles(server, member, roles) {
 
     roles.forEach(role => {
         console.log(`@${member}: removing ${role}`);
-        let r = guildRoles.find("name", role);
+        let r = guildRoles.find(gr => gr.name == role);
         if (!!r)
             guild.members.get(member).removeRole(r);
     });
@@ -113,7 +113,7 @@ function checkin(server) {
                 // find qualifying role
                 if (mastery.pts > roles[i].required) {
 
-                    let role = guild.roles.find("name", roles[i].role);
+                    let role = guild.roles.find(gr => gr.name == roles[i].role);
 
                     // if they dont already have this role
                     if (!member[1]._roles.includes(role.id)) {
@@ -126,7 +126,7 @@ function checkin(server) {
 
                         // announce achievement
                         if (rule.announce && roles[i].announce)
-                            guild.channels.find("name", rule.announce).send({ embed : {
+                            guild.channels.find(ch => ch.name == rule.announce).send({ embed : {
                                 title: `${member[1].user.username} got promoted to ${roles[i].role}!`,
                                 description: `They currently have ${mastery.pts} points`
                             }});

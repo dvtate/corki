@@ -41,7 +41,7 @@ module.exports.setRules = setRules;
 function pruneRules(serverid) {
     let rules = getRules(serverid);
     setRules(serverid, rules.filter(r =>
-        global.client.guilds.get(req.params.server).channels.find("name", r.chan.name)
+        global.client.guilds.get(req.params.server).channels.find(c => c.name == r.chan.name)
         || global.client.guilds.get(req.params.server).channels.get(r.chan.id)));
 }
 module.exports.pruneRules;
@@ -244,7 +244,7 @@ async function chkin(serverid, rules) {
             }
 
             // try and find the destination channel
-            let chan = guild.channels.find("name", r.chan.name).id;
+            let chan = guild.channels.find(ch => ch.name == r.chan.name).id;
             if (!chan)
                 chan = guild.channels.get(r.chan.id).id;
 
