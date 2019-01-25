@@ -15,7 +15,6 @@ const riot = teemo.riot;
 const champgg = teemo.champgg;
 
 
-
 // configures a user directory
 function setupDir(id) {
     // see if they already have a user file
@@ -178,7 +177,7 @@ async function makeRankSummary(name, acctName, rank, ) {
 
 
                 summary.embed.fields = summary.embed.fields.concat({
-                    name: `${queues[q.queueType]} - ${captitalizeFirstLetter(q.tier.toLowerCase())} ${q.rank} ${q.leaguePoints}LP`,
+                    name: `${queues[q.queueType]}${ q.position ? ` [${q.position}] `: " "}- ${captitalizeFirstLetter(q.tier.toLowerCase())} ${q.rank} ${q.leaguePoints}LP`,
                     value: `${q.wins}W ${q.losses}L ${Math.round(q.wins / (q.wins + q.losses) * 1000)/10}%` +
                         ( !!q.miniSeries ? `\nSeries: (${q.miniSeries.progress.split("").join(") (")})` : "" )
 
