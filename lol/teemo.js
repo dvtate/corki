@@ -10,40 +10,40 @@ module.exports.riot = new Teemo(riotAPIToken);
 // champgg api
 const champGGToken = `${fs.readFileSync(`${process.env.HOME}/.corki/champgg_key`)}`.trim();
 module.exports.champgg = new Teemo(champGGToken, {
-  "prefix" : "http://api.champion.gg",
-  "retries" : 3,
-  "maxConcurrent" : 2000,
-  "distFactor" : 1,
-  "defaultBuckets" : [{
-    "timespan" : 600000,
-    "limit" : 3000
-  }, {
-    "timespan" : 10000,
-    "limit" : 50
-  }],
-  "rateLimitTypeApplication" : {
-    "name" : "application",
-    "headerLimit" : null,
-    "headerCount" : "x-rate-limit"
-  },
-  "rateLimitTypeMethod" : null,
-  "defaultRetryAfter" : 10,
-  "headerRetryAfter" : "retry-after",
-  "headerLimitType" : null,
-  "defaultLimitType" : "application",
-  "keyHeader" : null,
-  "keyQueryParam" : "api_key",
-  "collapseQueryArrays" : true,
-  "endpoints" : {
-    "champion" : {
-      "getAllChampions" : "/v2/champions",
-      "getChampionMatchupsByRole" : "/v2/champions/%s/%s/matchups?limit=800",
-      "getChampionMatchups" : "/v2/champions/%s/matchups?limit=800",
-      "getChampion" : "/v2/champions/%s"
+    "prefix" : "http://api.champion.gg",
+    "retries" : 3,
+    "maxConcurrent" : 2000,
+    "distFactor" : 1,
+    "defaultBuckets" : [{
+            "timespan" : 600000,
+            "limit" : 3000
+        }, {
+            "timespan" : 10000,
+            "limit" : 50
+    }],
+    "rateLimitTypeApplication" : {
+        "name" : "application",
+        "headerLimit" : null,
+        "headerCount" : "x-rate-limit"
     },
-    "general" : "/v2/general",
-    "overall" : "/v2/overall"
-  }
+    "rateLimitTypeMethod" : null,
+    "defaultRetryAfter" : 10,
+    "headerRetryAfter" : "retry-after",
+    "headerLimitType" : null,
+    "defaultLimitType" : "application",
+    "keyHeader" : null,
+    "keyQueryParam" : "api_key",
+    "collapseQueryArrays" : true,
+    "endpoints" : {
+        "champion" : {
+            "getAllChampions" : "/v2/champions",
+            "getChampionMatchupsByRole" : "/v2/champions/%s/%s/matchups?limit=800",
+            "getChampionMatchups" : "/v2/champions/%s/matchups?limit=800",
+            "getChampion" : "/v2/champions/%s"
+        },
+        "general" : "/v2/general",
+        "overall" : "/v2/overall"
+    }
 });
 
 
@@ -65,16 +65,20 @@ for (key in module.exports.serverNames)
 // edit when new champs come out
 module.exports.champIDs = {
 
+    "aatrox" : 266, "azir" : 268, "akali" : 84,
+    "annie" : 1, "tibbers" : 1,
     "anivia" : 34, "egg" : 34, "aniv" : 34,
     "alistar" : 12, "ali" : 12, "cow" : 12,
-    "aatrox" : 266,"azir" : 268, "annie" : 1, "akali" : 84, "amumu" : 32,
+    "amumu" : 32, "mumu" : 32,
     "ahri" : 103, "ashe" : 22,
     "aurelionsol" : 136, "asol" : 136,
 
-    "brand" : 63, "bard" : 432, "braum" : 201,
-    "blitzcrank" : 53, "blitz" : 53,
+    "brand" : 63,
+    "bard" : 432, "meep" : 432,
+    "braum" : 201,
+    "blitzcrank" : 53, "blitz" : 53, "bc" : 52,
 
-    "corki" : 42,
+    "corki" : 42, "*" : 42,
     "cassiopeia" : 69, "cass" : 69,
     "chogath" : 31, "cho" : 31, "cho'gath" : 31,
     "caitlyn" : 51, "cait" : 51,
@@ -144,7 +148,7 @@ module.exports.champIDs = {
 
     "pantheon" : 80, "panth" : 80,
     "poppy" : 78,
-    "pyke" : 555,
+    "pyke" : 555, "ks" : 555,
 
     "quinn" : 133,
 
@@ -158,11 +162,11 @@ module.exports.champIDs = {
     "sivir" : 15, "singed" : 27, "skarner" : 72,
     "sejuani" : 113, "sej" : 113,
     "soraka" : 16, "raka" : 16,
-
+    "sylas" : 517,
 
     "talon" : 91, "taliyah" : 163,
     "tahmkench" : 223, "taric" : 44,
-    "teemo" : 17, "satan" : 17, "beemo" : 17,
+    "teemo" : 17, "satan" : 17, "beemo" : 17, "tenmo" : 17,
     "tristana" : 18, "trist" : 18,
     "trundle" : 48, "troll" : 48,
     "tryndamere" : 23, "trynd" : 23,
@@ -179,20 +183,20 @@ module.exports.champIDs = {
     "vladimir" : 8, "vlad" : 8,
     "velkoz" : 161, "varus" : 110,
 
-    "wukong" : 62, "monkey" : 62, "wk" : 62,
+    "wukong" : 62, "monkey" : 62, "wk" : 62, "monkeyking" : 62, "mk" : 62,
     "warwick" : 19, "ww" : 19,
 
     "xinzhao" : 5, "xin" : 5,
     "xayah" : 498, "xerath" : 101,
 
     "yorick" : 83,
-    "yasuo" : 157, "yas" : 157,
+    "yasuo" : 157, "yas" : 157, "trashuo" : 157,
 
-    "zyra" : 143,
+    "zyra" : 143, "plants" : 143,
     "zac" : 154,
     "zed" : 238, "ripadc" : 238,
     "zoe" : 142,
-    "zilean" : 26,
+    "zilean" : 26, "zil" : 26,
 
 };
 
@@ -226,7 +230,7 @@ module.exports.champNames = {
     267 : "Nami", 202 : "Jhin", 16 : "Soraka", 45 : "Veigar", 40 : "Janna",
     111 : "Nautilus", 28 : "Evelynn", 79 : "Gragas", 238 : "Zed", 254 : "Vi",
     96 : "Kog'Maw", 103 : "Ahri", 133 : "Quinn", 7 : "LeBlanc", 81 : "Ezreal",
-    555 : "Pyke", 518 : "Neeko"
+    555 : "Pyke", 518 : "Neeko", 517 : "Sylas"
 };
 
 /*

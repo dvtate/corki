@@ -7,9 +7,7 @@ const lol = require("./lol_stuff.js");
 
 const lol_lb = require("./lol_leaderboard.js");
 
-
 module.exports = [
-
 
     { // a specific summoner's mastery of a specific champ
         condition: msg => msg.content.match(/^lol mastery (\S+) (\S+) (.+)/),
@@ -27,7 +25,6 @@ module.exports = [
                 msg.channel.send("invalid server (run `-lol mastery help` for more)");
                 return;
             }
-
 
             // get summoner id
             teemo.riot.get(server, "summoner.getBySummonerName", match[3]).then(summoner => {
@@ -285,6 +282,9 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     { // mastery leaderboard for server members
         condition: msg => msg.content.match(/^lol (?:leaderboard|lb) (\S+)/),
         act: async function (msg) {
+            if (!msg.guild)
+                return msg.channel.send("This is only available for servers");
+
             let timer = process.hrtime();
 
             logCmd(msg, "generated leaderboard");
