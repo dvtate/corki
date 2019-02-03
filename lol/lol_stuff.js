@@ -159,7 +159,7 @@ function captitalizeFirstLetter(string){
 }
 
 // there is no reason for this to exist here..
-async function makeRankSummary(name, acctName, rank, ) {
+async function makeRankSummary(name, acctName, rank) {
     return new Promise((resolve, reject) => {
 
         if (rank.length == 0) {
@@ -172,24 +172,21 @@ async function makeRankSummary(name, acctName, rank, ) {
                 fields: []
             }};
 
-            let wins = 0, losses = 0;
+            let games = 0;
 
             rank.forEach(q => {
-                wins += q.wins;
-                losses += q.losses;
-
+                games += q.wins + q.losses;
 
                 summary.embed.fields = summary.embed.fields.concat({
                     name: `${queues[q.queueType]}${
-                         q.position && p.position != "NONE" ? ` [${captitalizeFirstLetter(q.position.toLowerCase())}] `: " "
+                         q.position && q.position != "NONE" ? ` [${captitalizeFirstLetter(q.position.toLowerCase())}] `: " "
                         }- ${captitalizeFirstLetter(q.tier.toLowerCase())} ${q.rank} ${q.leaguePoints}LP`,
-                    value: `${q.wins}W ${q.losses}L ${Math.round(q.wins / (q.wins + q.losses) * 1000)/10}%` +
-                        ( !!q.miniSeries ? `\nSeries: (${q.miniSeries.progress.split("").join(") (")})` : "" )
-
+                    value: `${q.wins}W ${q.losses}L (${Math.round(q.wins / (q.wins + q.losses) * 1000) / 10}%)` +
+                        ( q.miniSeries ? `\nSeries: (${q.miniSeries.progress.split("").join(") (")})` : "" )
                 });
             });
 
-            summary.embed.description += `${wins + losses} games this season ${name != acctName ? "on their account " + acctName : ""}`;
+            summary.embed.description += `${games} games this season on their account ${acctName}`;
 
             if (name != acctName)
                 summary.embed.footer = { text: "to change your main account use \`-lol main\`" };

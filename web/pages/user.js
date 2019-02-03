@@ -16,6 +16,7 @@ const Page = require("../page.js");
 const lol = require("../../lol/lol_stuff");
 const teemo = require("../../lol/teemo");
 
+// reddit api
 const reddit_id = "fcn1qC1IsC7JQw";
 const reddit_secret = `${fs.readFileSync(`${process.env.HOME}/.corki/reddit_secret`)}`.trim();
 

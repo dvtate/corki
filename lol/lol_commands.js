@@ -677,7 +677,5 @@ const masteryHelpInfo = { embed: {
 \`-lol mastery drmundo @testuser\`: show [@testuser]()'s points on Dr. Mundo
 \`-lol mastery zed kr hideonbush\`: show faker's points on zed`
         }
-
     ]
-
 }}

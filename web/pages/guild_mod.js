@@ -40,6 +40,7 @@ tree:
 
 // server select
 router.get("/mod", bot.catchAsync(async (req, res) => {
+
     if (!req.cookies.token) {
         res.redirect("/login/mod");
         return;
@@ -317,7 +318,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             redirect("/mod/${req.params.serverid}/addcmlb/" + uri);
         }
         console.log(addCMLB);
-    `).add(`<br/>
+    `).add(`<br/><br/>
         Send a <input list="champs" id="cmlb-champ" placeholder="champ" />
         leaderboard to #<input list="chans" id="cmlb-chan" placeholder="channel-name" />
         every <input type="number" id="cmlb-period" placeholder="period of time" /> days.
@@ -340,7 +341,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     if (rss_table.length == 0)
         page.add("<center><h4>None (yet)</h4></center>");
 
-    page.add("This interface is not yet complete. Please use bot commands. Sorry");
+    //page.add("This interface is not yet complete. Please use bot commands. Sorry");
 
     page.addScript(`
         function addRSSChan(){
@@ -348,8 +349,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             const url = encodeURIComponent(document.getElementById("rss-url").value.trim());
             redirect('/mod/${req.params.serverid}/addrss/' + chan + '/' + url);
         }
-        `)
-        .add(`<br/>
+        `).add(`<br/><br/>
             # <input list="chans" id="rss-chan" placeholder="destination channel" /> :
             <input type="text" id="rss-url" placeholder="https://reddit.com/r/leagueoflegends/new/.rss" title="feed url">
             <button type="button" onclick="addRSSChan()">Add RSS Feed</button>
