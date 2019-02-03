@@ -358,7 +358,7 @@ const c_tools = [
         name: "-define",
         usage: "<p>Gives definition of the given term</p><p>Sets definition for given term</p> <p>run <kbd>-help dictionary</kbd> for more on setting definitions",
         args: `
-<kbd>-define &lt;term></kbd>: define given term
+<kbd>-define &lt;term></kbd>: define given term <br/>
 <kbd>-define &lt;term>
 &lt;definition></kbd>: set definition for given term (note definition on new line)`,
         example: "<kbd>-define mods</kbd><br/>"
