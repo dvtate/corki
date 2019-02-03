@@ -36,9 +36,14 @@ const c_fun = [
         `
     }, {
         name: "-roulette<br/><div class=\"mod-box\">Mod</div>",
-        usage: "mentions a random member of the server",
+        usage: "<p>mentions a random member of the server</p>",
         args: "takes no arguments",
         example: "<kbd>-roulette</kbd>"
+    }, {
+        name: "-urban",
+        usage: "<p>look something up on urban dictionary</p>",
+        args: "expects term to find<br/><kbd>-urban &lt;term></kbd>",
+        example: "<kbd>-urban wat</kbd>"
     }
 ];
 
@@ -90,6 +95,7 @@ const c_lol = [
         usage: "<p>Show ranked progress</p>",
         args: `
 <kbd>-lol rank</kbd>: ranked info for your main account<br/>
+<kbd>-lol rank [acct # | all]</kbd>: ranked info for given acct number or all of your accts
 <kbd>-lol rank @mention</kbd>: ranked info for @mention'd user<br/>
 <kbd>-lol rank &lt;server-name> &lt;summoner-name></kbd>: ranked info for a specific summoner
 <ul><li>for a list of server names use <code>lol -servers</code></li></ul>
@@ -107,7 +113,7 @@ const c_lol = [
         name: "-lol leaderboard",
         usage: "<p>Ranks server members by mastery points on given champion and shows top ten</p>",
         args: "champion name<br/><kbd>-lol leaderboard &lt;championname></kbd>",
-        example: "<kbd>-lol leaderboard corki</kbd>"
+        example: "<kbd>-lol leaderboard corki</kbd><br/><kbd>-lol lb draven</kbd>"
     }, {
         name: "-lol global leaderboard",
         usage: "<p>Shows leaderboard for masterypoints on a champion including all of corki users with accounts</p>",
@@ -343,7 +349,21 @@ const c_tools = [
 <kbd>-random 0 100</kbd>: random test grade<br/>
 <kbd>-random 0,100</kbd>: same as above but commas
         `
-    }
+    }, {
+        name: "-dictionary terms",
+        usage: "<p>sends list of defined terms</p>",
+        args: "takes no arguments",
+        example: "<kbd>-dictionary terms</kbd>"
+    }, {
+        name: "-define",
+        usage: "<p>Gives definition of the given term</p><p>Sets definition for given term</p> <p>run <kbd>-help dictionary</kbd> for more on setting definitions",
+        args: `
+<kbd>-define &lt;term></kbd>: define given term
+<kbd>-define &lt;term>
+&lt;definition></kbd>: set definition for given term (note definition on new line)`,
+        example: "<kbd>-define mods</kbd><br/>"
+    },
+
 ];
 
 const c_devtools = [
