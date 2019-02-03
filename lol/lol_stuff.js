@@ -152,11 +152,13 @@ const queues = {
     "RANKED_FLEX_TT" : "Flex 3:3"
 };
 
+
+
 function captitalizeFirstLetter(string){
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-
+// there is no reason for this to exist here..
 async function makeRankSummary(name, acctName, rank, ) {
     return new Promise((resolve, reject) => {
 
@@ -169,7 +171,7 @@ async function makeRankSummary(name, acctName, rank, ) {
                 description: `${name} has played `,
                 fields: []
             }};
-            
+
             let wins = 0, losses = 0;
 
             rank.forEach(q => {
@@ -178,7 +180,9 @@ async function makeRankSummary(name, acctName, rank, ) {
 
 
                 summary.embed.fields = summary.embed.fields.concat({
-                    name: `${queues[q.queueType]}${ q.position ? ` [${q.position}] `: " "}- ${captitalizeFirstLetter(q.tier.toLowerCase())} ${q.rank} ${q.leaguePoints}LP`,
+                    name: `${queues[q.queueType]}${
+                         q.position && p.position != "NONE" ? ` [${captitalizeFirstLetter(q.position.toLowerCase())}] `: " "
+                        }- ${captitalizeFirstLetter(q.tier.toLowerCase())} ${q.rank} ${q.leaguePoints}LP`,
                     value: `${q.wins}W ${q.losses}L ${Math.round(q.wins / (q.wins + q.losses) * 1000)/10}%` +
                         ( !!q.miniSeries ? `\nSeries: (${q.miniSeries.progress.split("").join(") (")})` : "" )
 

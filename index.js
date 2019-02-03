@@ -104,13 +104,13 @@ global.client.on("guildCreate", async g => {
 
 const sam = require("./sam/sam");
 global.client.on("guildDelete", g => {
-	console.log("Guild deleted/left: " + g.name);
+	console.log(`Guild deleted/left: ${g.name}#${g.id}`);
 
 	g.owner.createDM().then(dm => dm.send(`
 I'm not sure what happened to ${g.name}. If the server was deleted you can \
 disregard this message. If you no longer need corki bot in your server \
 that's fine too. If you could please send a \`-bug\` report (or contact @ridderhoff#6333) giving some \
-pointers on any ideas on how to improve the bot that would be amazing!`))
+pointers on any ideas on how to improve the bot, that would be amazing!`))
 		.catch(console.error);
 
 	// server's config directory will get removed
@@ -120,16 +120,20 @@ pointers on any ideas on how to improve the bot that would be amazing!`))
 
 const welcome = require("./sam/welcome");
 
-// welcome new members to the server
+
+
+// welcome new members to a server
 global.client.on("guildMemberAdd", member => {
 
     // User-defined welcome messages
     welcome.welcomeNewMember(member);
 
-    // TODO: ask new user to `-lol add` accts or sth
-
+    // TODO: ask new user to `-lol add` accts or sth (if desired by mods)
 
 });
+
+
+
 
 
 

@@ -209,6 +209,9 @@ Go to corki.js.org to add corki to yours.");
 ];
 
 function formatUrbanDef(json) {
+
+    if (!json)
+        return "Term Not found on urbandictionary.com";
     // from urban dictionary definition json
     // create an embedded message object
     return { embed: {

@@ -316,7 +316,8 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
                     {
                         name: "Version",
                         value: `Corki is on a roling release system.
-The currently running patch is ${version}`
+- The currently running patch is ${version}
+- Corki is running on Node ${node_version}`
                     }, {
                         name: "Severs",
                         value: global.client.guilds.array().length,

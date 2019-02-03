@@ -13,10 +13,7 @@ function removeRoles(server, member, roles) {
     const guildRoles = guild.roles;
 
     roles.forEach(role => {
-        console.log(`@${member}: removing role`);
-        console.log(role);
         let r = guildRoles.find(gr => gr.name == role);
-        console.log(r);
         if (!!r) {
             guild.members.get(member).removeRole(role);
             guild.members.get(member).removeRole(r);
@@ -122,8 +119,10 @@ function checkin(server) {
                     // if they dont already have this role
                     if (!member[1]._roles.includes(role.id)) {
 
-                        console.log(`${guild.name}: promoting ${member[1].user.username} to ${roles[i].role}`);
 
+                        console.log(`${guild.name}: promoting ${member[1].user.username} to ${roles[i].role}`);
+                        console.log(`previously had: ${Array.from(member[1].roles).map(r => r[1].name).join()}`);
+                        
                         // reset and replace associate roles
                         removeRoles(server, member[0], roles);
                         member[1].addRole(role);
