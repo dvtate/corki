@@ -144,20 +144,6 @@ module.exports.setUserData = setUserData;
 
 
 
-
-
-const queues = {
-    "RANKED_FLEX_SR" : "Flex 5:5",
-    "RANKED_SOLO_5x5" : "Solo Queue",
-    "RANKED_FLEX_TT" : "Flex 3:3"
-};
-
-
-
-function captitalizeFirstLetter(string){
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 // there is no reason for this to exist here..
 async function makeRankSummary(name, acctName, rank) {
 

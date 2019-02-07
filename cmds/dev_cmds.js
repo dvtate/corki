@@ -129,7 +129,7 @@ module.exports = [
                                 name: "Verification Level",
                                 value: msg.guild.verificationLevel,
                                 inline: true
-                            }
+                            },
                         ],
                         thumbnail: {
                             url: msg.guild.iconURL
@@ -142,34 +142,45 @@ module.exports = [
                         return;
                     }
                     // just in case 250+ members
-                    let members = Array.from(await msg.guild.fetchMembers());
-                    const members_ct = members.length;
-                    const bot_members = members.filter(m => m[1].user.bot).length;
-                    const humans = members_ct - bot_members;
-                    const online = members.filter(m => m[1].user.presence.status == "online").length;
+                    msg.guild.fetchMembers().then(guild => {
 
-                    msg.channel.send({ embed: {
-                        fields: [
-                            {
-                                name: "Total",
-                                value: msg.guild.memberCount,
-                                inline: true
-                            }, {
-                                name: "Human",
-                                value: humans,
-                                inline: true
-                            }, {
-                                name: "Bots",
-                                value: bot_members,
-                                inline: true
-                            }, {
-                                name: "Online",
-                                value: online,
-                                inline: true
-                            }
-                        ]
-                    }});
+                        const members = Array.from(guild.members);
+                        const members_ct = members.length;
+                        const bot_members = members.filter(m => m[1].user.bot).length;
+                        const humans = members_ct - bot_members;
+                        const online = Array.from(guild.presences).length;
 
+                        const available = members.filter(m =>
+                            m[1].user.presence.status == "online" || m[1].user.presence.status == "idle")
+                                .length;
+
+                        msg.channel.send({ embed: {
+                            fields: [
+                                {
+                                    name: "Total",
+                                    value: guild.memberCount,
+                                    inline: true
+                                }, {
+                                    name: "Human",
+                                    value: humans,
+                                    inline: true
+                                }, {
+                                    name: "Bots",
+                                    value: bot_members,
+                                    inline: true
+                                }, {
+                                    name: "Online",
+                                    value: online,
+                                    inline: true
+                                }, {
+                                    name: "Available",
+                                    value: available,
+                                    inline: true
+                                }
+                            ]
+                        }});
+
+                    });
 
                 } else {
                     msg.channel.send("error: malformated -log command");
