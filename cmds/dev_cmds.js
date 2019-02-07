@@ -53,6 +53,7 @@ module.exports = [
         tests: [ "-reformat `<@253784341555970048>`" ]
     },
 
+    // this should be split into multiple commands
     { // log info
       // useful for getting technical info on things
 
@@ -103,15 +104,72 @@ module.exports = [
                         msg.channel.send("command not sent from a guild, try `-log channel` or `-log author`");
                         return;
                     }
-                    msg.channel.send(`**Guild Info:**
-**id:** ${msg.guild.id}
-**name:** ${msg.guild.name}
-**members:** ${msg.guild.memberCount}
-**created:** ${msg.guild.createdAt}
-**joined:** ${msg.guild.joinedAt}
-**region:** ${msg.guild.region}
-**verification-level:** ${msg.guild.verificationLevel}
-**icon:** ${msg.guild.iconURL}`);
+
+                    msg.channel.send({ embed: {
+                        title: msg.guild.name,
+                        description: `${global.client.user} has been in this server since ${msg.guild.joinedAt}.`,
+                        fields: [
+                            {
+                                name: "ID",
+                                value:  msg.guild.id,
+                                inline: true
+                            }, {
+                                name: "Members",
+                                value: `${msg.guild.memberCount} total`,
+                                inline: true
+                            }, {
+                                name: "Created",
+                                value: msg.guild.createdAt,
+                                inline: true
+                            }, {
+                                name: "Region",
+                                value: msg.guild.region,
+                                inline: true
+                            }, {
+                                name: "Verification Level",
+                                value: msg.guild.verificationLevel,
+                                inline: true
+                            }
+                        ],
+                        thumbnail: {
+                            url: msg.guild.iconURL
+                        }
+                    }});
+
+                } else if (req[0] == "members") {
+                    if (!msg.guild) {
+                        msg.channel.send("`-log members` is only available for guilds");
+                        return;
+                    }
+                    // just in case 250+ members
+                    let members = Array.from(await msg.guild.fetchMembers());
+                    const members_ct = members.length;
+                    const bot_members = members.filter(m => m[1].user.bot).length;
+                    const humans = members_ct - bot_members;
+                    const online = members.filter(m => m[1].user.presence.status == "online").length;
+
+                    msg.channel.send({ embed: {
+                        fields: [
+                            {
+                                name: "Total",
+                                value: msg.guild.memberCount,
+                                inline: true
+                            }, {
+                                name: "Human",
+                                value: humans,
+                                inline: true
+                            }, {
+                                name: "Bots",
+                                value: bot_members,
+                                inline: true
+                            }, {
+                                name: "Online",
+                                value: online,
+                                inline: true
+                            }
+                        ]
+                    }});
+
 
                 } else {
                     msg.channel.send("error: malformated -log command");

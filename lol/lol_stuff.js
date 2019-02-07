@@ -160,6 +160,16 @@ function captitalizeFirstLetter(string){
 
 // there is no reason for this to exist here..
 async function makeRankSummary(name, acctName, rank) {
+
+    const queues = {
+        "RANKED_FLEX_SR" : "Flex 5:5",
+        "RANKED_SOLO_5x5" : "Solo Queue",
+        "RANKED_FLEX_TT" : "Flex 3:3"
+    };
+    const captitalizeFirstLetter = (string) =>
+        string.charAt(0).toUpperCase() + string.slice(1);
+
+
     return new Promise((resolve, reject) => {
 
         if (rank.length == 0) {
@@ -178,7 +188,7 @@ async function makeRankSummary(name, acctName, rank) {
                 games += q.wins + q.losses;
 
                 summary.embed.fields = summary.embed.fields.concat({
-                    name: `${queues[q.queueType]}${
+                    name: `${queues[q.queueType] || q.queueType}${
                          q.position && q.position != "NONE" ? ` [${captitalizeFirstLetter(q.position.toLowerCase())}] `: " "
                         }- ${captitalizeFirstLetter(q.tier.toLowerCase())} ${q.rank} ${q.leaguePoints}LP`,
                     value: `${q.wins}W ${q.losses}L (${Math.round(q.wins / (q.wins + q.losses) * 1000) / 10}%)` +

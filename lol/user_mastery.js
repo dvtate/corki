@@ -3,7 +3,10 @@ const fs = require("fs");
 const teemo = require("./teemo");
 const lol = require("./lol_stuff");
 
+/// this file is focused on the caching of user mastery points to reduce riot api calls
 
+
+//
 async function refreshMasteryData(id) {
     return new Promise(async (resolve, reject) => {
 
@@ -62,7 +65,7 @@ async function refreshMasteryData(id) {
 
 module.exports.refresh = refreshMasteryData;
 
-
+//
 async function getUserMasteryData(id) {
     return new Promise(async (resolve, reject) => {
         let masteries;
@@ -96,7 +99,7 @@ function getUserMastery (id, champ) {
             .then(d => resolve(d[champ] || { pts : 0, lvl : 0 }))
             .catch(e => {
                 if (e == "no accts")
-                    resolve({ pts : 0, lvl : 0 });
+                    resolve({ pts : 0, lvl : 0, e: "no_accts" });
                 else
                     reject(e);
             })
