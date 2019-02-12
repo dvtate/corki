@@ -141,6 +141,7 @@ module.exports = [
                         msg.channel.send("`-log members` is only available for guilds");
                         return;
                     }
+
                     // just in case 250+ members
                     msg.guild.fetchMembers().then(guild => {
 
@@ -430,10 +431,11 @@ const logHelpInfo = { embed: {
             name: "Possble arguments",
             value: `You must specify what information you want.
     \`-log help\`: send this help entry.
-    \`-log msg\`: writes a message to the terminal (of little use).
+    \`-log guild\`: send information about the current server
+    \`-log members\`: send membership information for current server
     \`-log channel\`: describe current channel.
     \`-log author\`: describe whoever sends this command.
-    \`-log msgid\`: send id of command message.`
+
         }
     ]
 }};

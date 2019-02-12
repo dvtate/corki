@@ -38,247 +38,309 @@
 
         <div class="row">
             <div class="col-sm col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-                <form action="/">
-                    <fieldset><legend>Select a user</legend>
-                            <input list="users" name="userselect">
-                            <datalist id="users">
-                                <option value="ridderhoff#6333">
-                                <option value="robot#2323">
-                                <option value="steve#1214">
-                                <option value="nerd64#5852">
-                                <option value="stan#4449">
-                            </datalist>
 
-                    </fieldset>
+                <fieldset><legend>Select a user</legend>
+                        <input list="users" name="userselect">
+                        <datalist id="users">
+                            <option value="ridderhoff#6333">
+                            <option value="robot#2323">
+                            <option value="steve#1214">
+                            <option value="nerd64#5852">
+                            <option value="stan#4449">
+                        </datalist>
+
+                </fieldset>
 
 
 
+                <style>
+
+                    /* */
+                    div.div-table {
+                        color: white;
+                    }
+
+                    div.div-table > div {
+                        background-color: #555;
+                        border-radius: 2px;
+                    }
+
+                    div.div-table div {
+                        padding: 5px;
+                        padding-left: 10px;
+                        padding-bottom: 0;
+                    }
+
+                    div.div-table-headers {
+                        background-color: #1a1a1a !important;
+                        padding: 10px;
+                    }
+
+                    div.div-table div.input-group {
+                        padding-top: 0 !important;
+                    }
+                </style>
+
+                <fieldset><legend>League of Legends Accounts</legend>
+                    <button>Import from Reddit</button>
+                    <button>Delete all</button>
+
+                    <div class="div-table">
+                        <div class="row div-table-headers">
+                            <div class="col-md-4">
+                                Region
+                            </div>
+
+                            <div class="col-md-4">
+                                Summoner
+                            </div>
+
+                            <div class="col-md-4">
+                                Actions
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                NA
+                            </div>
+
+                            <div class="col-md-4">
+                                ridderhoff
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input type="checkbox" id="del-0" class="lol-acct-del-cb" value="">
+                                    <label for="del-0">Delete</label>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Permissions</legend>
+                    Showing permissions for ${selected} moderator.
+                    <div class="permissions-tree" >
+                        <div class="input-group">
+                            <input type="checkbox" id="prem-admin portal" class="perm">
+                            <label for="del-na-ridderhoff">Access Admin Portal (this page)</label>
+                        </div><br/>
+                        <div class="input-group">
+                            <input type="checkbox" id="perm" class="perm" value="">
+                            <label for="del-na-ridderhoff">Access <a href="/mod">Server Moderation Portal</a></label>
+                        </div><br/>
+                        <div class="input-group">
+                            <input type="checkbox" id="del-na-ridderhoff" class="perm" value="">
+                            <label for="del-na-ridderhoff">Use Server Moderation Commands</label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>What brings you to the portal?</legend>
+                    <a href="user"><button>User Settings</button></a>
+                    <a href="mod"><button>Server Moderation Panel</button></a>
+                    <a href="admin"><button>Server Admin Panel</button></a>
+                </fieldset>
+
+                <fieldset>
                     <style>
-
-                        /* */
-                        div.div-table {
-                            color: white;
+                        table.data-table {
+                            width: 100%;
                         }
-
-                        div.div-table > div {
+                        table.data-table thead tr th {
+                            background-color: #1a1a1a;
+                        }
+                        table.data-table td {
                             background-color: #555;
-                            border-radius: 2px;
                         }
 
-                        div.div-table div {
-                            padding: 5px;
-                            padding-left: 10px;
-                            padding-bottom: 0;
-                        }
-
-                        div.div-table-headers {
-                            background-color: #1a1a1a !important;
-                            padding: 10px;
-                        }
-
-                        div.div-table div.input-group {
-                            padding-top: 0 !important;
-                        }
                     </style>
+                    <legend>Table experiment</legend>
+                    <table class="data-table">
+                        <caption>Accounts</caption>
+                        <thead>
+                            <tr>
+                                <th>Region</th>
+                                <th>Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-label="Region">NA</td>
+                                <td data-label="Name">ridderhoff</td>
+                                <td data-label="Action"><button name="del0">Delete</button></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Region">NA</td>
+                                <td data-label="Name">ridderhoff</td>
+                                <td data-label="Action"><button name="del1">Delete</button></td>
+                            </tr>
+                            <tr>
+                                <td data-label="Region">NA</td>
+                                <td data-label="Name">ridderhoff</td>
+                                <td data-label="Action"><button name="del2">Delete</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
 
-                    <fieldset><legend>League of Legends Accounts</legend>
-                        <button>Import from Reddit</button>
-                        <button>Delete all</button>
 
-                        <div class="div-table">
-                            <div class="row div-table-headers">
-                                <div class="col-md-4">
-                                    Region
-                                </div>
+                <style>
+                    div.guild-entry {
+                        border-radius: 8px;
+                        border: 1px solid grey;
+                        background-color: rgb(60, 60, 70);
+                        transition: background-color 0.5s;
+                        cursor: pointer;
+                        margin: 2px;
+                    }
+                    div.guild-entry:hover {
+                        background-color: rgb(50, 50, 60);
+                    }
 
-                                <div class="col-md-4">
-                                    Summoner
-                                </div>
+                    div.guild-icon-container {
+                        border-bottom-left-radius: 8px;
+                        border-top-left-radius: 8px;
+                        background-image: url(https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg);
+                        background-size: contain;
+                        height: 128px;
+                        width: 128px;
 
-                                <div class="col-md-4">
-                                    Actions
-                                </div>
+                    }
 
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    NA
-                                </div>
+                    div.guild-icon-container img {
+                        width: 100%;
+                        padding: 0;
+                    }
+                </style>
 
-                                <div class="col-md-4">
-                                    ridderhoff
-                                </div>
+                <fieldset>
+                    <legend>Select a Server to Administrate</legend>
 
-                                <div class="col-md-4">
-                                    <div class="input-group">
-                                        <input type="checkbox" id="del-0" class="lol-acct-del-cb" value="">
-                                        <label for="del-0">Delete</label>
-                                    </div>
-                                </div>
-
-                            </div>
+                    <div class="guild-entry row" onclick="alert('testing')">
+                        <div class="guild-icon-container">
+                            <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
                         </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>Permissions</legend>
-                        Showing permissions for ${selected} moderator.
-                        <div class="permissions-tree" >
-                            <div class="input-group">
-                                <input type="checkbox" id="prem-admin portal" class="perm">
-                                <label for="del-na-ridderhoff">Access Admin Portal (this page)</label>
-                            </div><br/>
-                            <div class="input-group">
-                                <input type="checkbox" id="perm" class="perm" value="">
-                                <label for="del-na-ridderhoff">Access <a href="/mod">Server Moderation Portal</a></label>
-                            </div><br/>
-                            <div class="input-group">
-                                <input type="checkbox" id="del-na-ridderhoff" class="perm" value="">
-                                <label for="del-na-ridderhoff">Use Server Moderation Commands</label>
-                            </div>
+                        <div>
+                            <h3>aTest Server</h3><hr/>
                         </div>
-                    </fieldset>
+                    </div>
+                    <div class="guild-entry row" onclick="alert('testing')">
+                        <div class="guild-icon-container">
+                            <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
+                        </div>
+                        <div>
+                            <h3>aTest Server</h3><hr/>
+                        </div>
+                    </div>
+                    <div class="guild-entry row" onclick="alert('testing')">
+                        <div class="guild-icon-container">
+                            <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
+                        </div>
+                        <div>
+                            <h3>aTest Server</h3><hr/>
+                        </div>
+                    </div>
+                </fieldset>
 
-                    <fieldset>
-                        <legend>What brings you to the portal?</legend>
-                        <a href="user"><button>User Settings</button></a>
-                        <a href="mod"><button>Server Moderation Panel</button></a>
-                        <a href="admin"><button>Server Admin Panel</button></a>
-                    </fieldset>
+                <fieldset>
+                    <legend>Corki mains server</legend>
 
-                    <fieldset>
-                        <style>
-                            table.data-table {
-                                width: 100%;
-                            }
-                            table.data-table thead tr th {
-                                background-color: #1a1a1a;
-                            }
-                            table.data-table td {
-                                background-color: #555;
-                            }
+                    <div class="container">
+                        Select the channel and fill in the <a onclick="toggleHelp()">message template</a>.
+                        <input id="modal-toggle" type="checkbox" class="modal" hidden/>
+                        <div class="modal">
+                          <div class="card">
+                            <label for="modal-toggle" class="close"></label>
+                            <h3 class="section">Modal</h3>
+                            <p class="section">This is a modal window!</p>
+                          </div>
+                        </div>
 
-                        </style>
-                        <legend>Table experiment</legend>
+                        <button type="button" onclick="togglemodal()">modal</button>
+                        <script>
+                            function toggleHelp() {
+                                document.getElementById("modal-toggle").checked = !document.getElementById("modal-toggle").checked;
+                            }
+                        </script>
+                    </div>
+                </fieldset>
+                <span id="submit-box" class="row">
+                    <div class="col-md-6">
+                        <button type="reset">Reset</button>
+                    </div><div class="col-md-6">
+                        <button type="submit">Apply</button>
+                    </div>
+                </span>
+
+
+
+                <style>
+                    #add_cond_creator {
+                        border-radius: 4px;
+                        border: 1px solid white;
+                        margin-right: 25%;
+                        padding: 8px;
+                    }
+
+                </style>
+                <fieldset>
+                    <legend>Automatically Assigned Roles</legend>
+                    <p>Corki can automatically assign roles to users based on given constraints. The syntax for conditions is RPN.</p>
+                    <div>
                         <table class="data-table">
-                            <caption>Accounts</caption>
-                            <thead>
+                            <caption>Roles</caption>
+                            <thead><tr>
+                                <th>Role</th>
+                                <th>Condition</th>
+                                <th>Action</th>
+                            </tr></thead><tbody>
                                 <tr>
-                                    <th>Region</th>
-                                    <th>Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td data-label="Region">NA</td>
-                                    <td data-label="Name">ridderhoff</td>
-                                    <td data-label="Action"><button name="del0">Delete</button></td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Region">NA</td>
-                                    <td data-label="Name">ridderhoff</td>
-                                    <td data-label="Action"><button name="del1">Delete</button></td>
-                                </tr>
-                                <tr>
-                                    <td data-label="Region">NA</td>
-                                    <td data-label="Name">ridderhoff</td>
-                                    <td data-label="Action"><button name="del2">Delete</button></td>
+                                    <td>Major</td>
+                                    <td><pre>lol_mastery_pts("corki") 1000000 >= lol_mastery_lvl("corki") 7  >= and !keep</pre></td>
+                                    <td><button type="button">Delete</button></td>
                                 </tr>
                             </tbody>
                         </table>
-                    </fieldset>
+                        <h4>Add Role</h4>
+                        <input type="text" placeholder="role name"/><br/>
+
+                        <div id="add_cond_creator"><h5>Add condition:</h5>
+                            User <select id="cond_type_dd" onchange="gen_cond_menu()">
+                                <option value="member_age">has guild membership time</option>
+                                <option value="lol_mastery_pts">has LoL mastery pts</option>
+                                <option value="lol_region">has LoL acct in region</option>
+                                <option value="lol_rank">has LoL rank</option>
+                            </select> <span id="cond_bonus_info"> ... </span>
 
 
-                    <style>
-                        div.guild-entry {
-                            border-radius: 8px;
-                            border: 1px solid grey;
-                            background-color: rgb(60, 60, 70);
-                            transition: background-color 0.5s;
-                            cursor: pointer;
-                            margin: 2px;
-                        }
-                        div.guild-entry:hover {
-                            background-color: rgb(50, 50, 60);
-                        }
-
-                        div.guild-icon-container {
-                            border-bottom-left-radius: 8px;
-                            border-top-left-radius: 8px;
-                            background-image: url(https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg);
-                            background-size: contain;
-                            height: 128px;
-                            width: 128px;
-
-                        }
-
-                        div.guild-icon-container img {
-                            width: 100%;
-                            padding: 0;
-                        }
-                    </style>
-
-                    <fieldset>
-                        <legend>Select a Server to Administrate</legend>
-
-                        <div class="guild-entry row" onclick="alert('testing')">
-                            <div class="guild-icon-container">
-                                <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
-                            </div>
-                            <div>
-                                <h3>aTest Server</h3><hr/>
-                            </div>
-                        </div>
-                        <div class="guild-entry row" onclick="alert('testing')">
-                            <div class="guild-icon-container">
-                                <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
-                            </div>
-                            <div>
-                                <h3>aTest Server</h3><hr/>
-                            </div>
-                        </div>
-                        <div class="guild-entry row" onclick="alert('testing')">
-                            <div class="guild-icon-container">
-                                <!--<img src="https://cdn.discordapp.com/icons/319518724774166531/5aaf7a5c12d2baad4d8d1fe36217a783.jpg" />-->
-                            </div>
-                            <div>
-                                <h3>aTest Server</h3><hr/>
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>Corki mains server</legend>
-
-                        <div class="container">
-                            Select the channel and fill in the <a onclick="toggleHelp()">message template</a>.
-                            <input id="modal-toggle" type="checkbox" class="modal" hidden/>
-                            <div class="modal">
-                              <div class="card">
-                                <label for="modal-toggle" class="close"></label>
-                                <h3 class="section">Modal</h3>
-                                <p class="section">This is a modal window!</p>
-                              </div>
-                            </div>
-
-                            <button type="button" onclick="togglemodal()">modal</button>
                             <script>
-                                function toggleHelp() {
-                                    document.getElementById("modal-toggle").checked = !document.getElementById("modal-toggle").checked;
+                                function gen_cond_menu(){
+                                    let cond_bonus = document.getElementById("cond_bonus_info");
+                                    const opt = document.getElementById("cond_type_dd").value;
+                                    if (opt == "member_age") {
+                                        cond_bonus.innerHTML = `<select id="member_age_1">
+                                                <option value="before">before</option>
+                                                <option value="since">after</option>
+                                                <option value="age_gt">for at least</option>
+                                                <option value="age_lt">for less than</option>
+                                            </select>`;
+                                    } else if (opt == "lol_mastery_pts")
+                                }
+
+                                function gen_cond(){
+                                    // complex branching logic..
                                 }
                             </script>
                         </div>
-                    </fieldset>
-                    <span id="submit-box" class="row">
-                        <div class="col-md-6">
-                            <button type="reset">Reset</button>
-                        </div><div class="col-md-6">
-                            <button type="submit">Apply</button>
-                        </div>
-                    </span>
-
-                </form>
+                        <textarea placeholder="condition"></textarea>
+                    </div>
+                </fieldset>
             </div>
 
         </div>

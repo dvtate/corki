@@ -50,12 +50,11 @@ module.exports = [
 
             // make the list of rules from rss.conf into a string
             let rules = rss.getRules()                      // get rules from file
-                .filter(r => r.channel == msg.channel.id)   // take rules applicable to current channel
-                    .map(r => r.url)                        // take the urls for said rules
-                        .join(", ");                        // make a comma separated string of the urls
+                .filter(r => r.channels.includes(msg.channel.id))   // take rules applicable to current channel
+                    .map(r => r.url).join(", ");                    // comma separated list of relevant urls
 
             msg.channel.send("This channel is subscribed to the following rss feeds: " + rules);
-
+            
         }
     },
 
