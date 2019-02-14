@@ -146,14 +146,13 @@ module.exports = [
                     msg.guild.fetchMembers().then(guild => {
 
                         const members = Array.from(guild.members);
-                        const members_ct = members.length;
                         const bot_members = members.filter(m => m[1].user.bot).length;
-                        const humans = members_ct - bot_members;
-                        const online = Array.from(guild.presences).length;
-
+                        const humans = guild.memberCount - bot_members;
+                        const online = members.filter(m => m[1].user.presence.status != "offline" );
                         const available = members.filter(m =>
                             m[1].user.presence.status == "online" || m[1].user.presence.status == "idle")
                                 .length;
+
 
                         msg.channel.send({ embed: {
                             fields: [
@@ -434,7 +433,7 @@ const logHelpInfo = { embed: {
     \`-log guild\`: send information about the current server
     \`-log members\`: send membership information for current server
     \`-log channel\`: describe current channel.
-    \`-log author\`: describe whoever sends this command.
+    \`-log author\`: describe whoever sends this command.`
 
         }
     ]

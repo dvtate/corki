@@ -35,7 +35,7 @@ module.exports.pruneServerDirs = () => {
     const fs = require("fs-extra");
     dirs.forEach(g => {
         if (!global.client.guilds.get(g)) {
-            //
+            // edit this to make it move the bad server directory to a backup folder
             fs.removeSync(`${process.env.HOME}/.corki/servers/${g}`);
             console.log("pruned server dir: " + g);
         }

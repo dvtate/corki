@@ -40,6 +40,7 @@ global.commands = []
 	.concat(require("./cmds/define"))
 	.concat(require("./cmds/help_cmds"));
 
+
 const interactions = []
 	.concat(require("./reactions"));
 
@@ -129,6 +130,7 @@ global.client.on("guildMemberAdd", member => {
     welcome.welcomeNewMember(member);
 
     // TODO: ask new user to `-lol add` accts or sth (if desired by mods)
+
 
 });
 
