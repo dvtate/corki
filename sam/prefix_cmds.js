@@ -32,7 +32,11 @@ module.exports = [
         condition: msg => msg.content.match(/^prefix list(?:$|\s)/),
         act: async msg => {
             logCmd(msg, "listed prefixes");
-
+            if (!msg.guild) {
+                msg.channel.send("Only default prefixes are allowed in DM's. \
+This includes mentions and commands beginning with `-` ");
+                return;
+            }
             let prefixes = prefix.getGuildPrefixes(msg.guild.id);
             msg.channel.send(`Configured prefixes:\n${prefixes.join("\n")}`);
         },
@@ -68,7 +72,7 @@ module.exports = [
             }
             if (!mods.auth(msg))
                 return;
-                
+
             prefix.resetGuildPrefixes(msg.guild.id);
             msg.react("👍");
         }

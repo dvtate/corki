@@ -115,7 +115,7 @@ pointers on any ideas on how to improve the bot, that would be amazing!`))
 		.catch(console.error);
 
 	// server's config directory will get removed
-	sam.pruneServerDirs();
+	//sam.pruneServerDirs();
 
 });
 
