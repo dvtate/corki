@@ -66,9 +66,6 @@ async function getLeaderBoard(members, champ) {
         // filter list to only include members of current server
         users = users.filter(u => members.exists("id", u));
 
-
-
-
         // generates an object containing user name, id and mastery points asynchroniously
         const getDataPoint = async u =>
             new Promise(async (resolve, reject) => {

@@ -322,8 +322,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             let timer = process.hrtime();
 
-            const champName = this.condition(msg)[1].replace(/\s/g, '');
-            const champID = teemo.champIDs[champName.toLowerCase()];
+            const champID = teemo.champIDs[this.condition(msg)[1].replace(/\s/g, '').toLowerCase()];
 
 
             if (!champID)
@@ -333,7 +332,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             msg.channel.startTyping();
 
             lol_lb.getLeaderBoard(msg.client.users, champID).then(data => {
-                msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
+                msg.channel.send(`**${teemo.champNames[champID]} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
 
                 let time = process.hrtime(timer);
                 let ns_per_s = 1e9;

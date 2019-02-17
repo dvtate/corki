@@ -53,154 +53,190 @@ module.exports = [
         tests: [ "-reformat `<@253784341555970048>`" ]
     },
 
-    // this should be split into multiple commands
-    { // log info
-      // useful for getting technical info on things
 
-        condition: msg => msg.content.match(/^log (.+)/),
-
-        act: async function (msg) {
-            logCmd(msg, "-log");
-
-            const req = this.condition(msg)[1].split(' ');
-            if (req.length == 1)
-                if (req[0] == "msg") {
-                    console.log(msg);
-                    msg.channel.send("msg logged to stdout");
-
-                } else if (req[0] == "channel") {
-
-                    // compile channel info
-                    let info = "**channel info:**\n"
-                            + `**type:** ${msg.channel.type}\n`
-                            + `**id:** ${msg.channel.id}\n`;
-
-                    if (msg.channel.type == 'dm') {
-                        info += "**DM user info:**\n"
-                            + `\t**id:** ${msg.channel.recipient.id}\n`
-                            + `\t**username:** @${msg.channel.recipient.username}#${msg.channel.recipient.discriminator}\n`
-                    } else if (msg.channel.type == "text") {
-                        info += `**name:** ${msg.channel.name}\n`;
-                        info += "**Server/Guild info:**\n"
-                            + `\t**id:** ${msg.channel.guild.id}\n`
-                            + `\t**name:** ${msg.channel.guild.name}\n`
+    {
+        condition: msg => msg.content.match(/^log channel/),
+        act: msg => {
+            let info = { embed: {
+                title: "Channel info",
+                fields: [
+                    {
+                        name: "Type",
+                        value: msg.channel.type,
+                        inline: true
+                    }, {
+                        name: "ID",
+                        value: msg.channel.id,
+                        inline: true
                     }
+                ]
+            }};
 
-                    msg.channel.send(info);
-
-                } else if (req[0] == "author") {
-
-                    const info = "**Author info:**\n"
-                        + `**id:** ${msg.author.id}\n`
-                        + `**username:** @${msg.author.username}#${msg.author.discriminator}\n`
-                        + `**avatar:** https://cdn.discordapp.com/avatars/${msg.author.id}/${msg.author.avatar}`;
-
-                    msg.channel.send(info);
-
-                } else if (req[0] == "help") {
-                    msg.channel.send(logHelpInfo);
-                } else if (req[0] == "guild" || req[0] == "server") {
-                    if (!msg.guild) {
-                        msg.channel.send("command not sent from a guild, try `-log channel` or `-log author`");
-                        return;
+            if (msg.channel.type == "dm")
+                info.embed.fields = info.embed.fields.concat([
+                    {
+                        name: "DM User ID",
+                        value: msg.channel.recipient.id,
+                        inline: true
+                    }, {
+                        name: "DM Username",
+                        value: `@${msg.channel.recipient.username}#${msg.channel.recipient.discriminator}`,
+                        inline: true
                     }
-
-                    msg.channel.send({ embed: {
-                        title: msg.guild.name,
-                        description: `${global.client.user} has been in this server since ${msg.guild.joinedAt}.`,
-                        fields: [
-                            {
-                                name: "ID",
-                                value:  msg.guild.id,
-                                inline: true
-                            }, {
-                                name: "Members",
-                                value: `${msg.guild.memberCount} total`,
-                                inline: true
-                            }, {
-                                name: "Created",
-                                value: msg.guild.createdAt,
-                                inline: true
-                            }, {
-                                name: "Region",
-                                value: msg.guild.region,
-                                inline: true
-                            }, {
-                                name: "Verification Level",
-                                value: msg.guild.verificationLevel,
-                                inline: true
-                            },
-                        ],
-                        thumbnail: {
-                            url: msg.guild.iconURL
-                        }
-                    }});
-
-                } else if (req[0] == "members") {
-                    if (!msg.guild) {
-                        msg.channel.send("`-log members` is only available for guilds");
-                        return;
+                ]);
+            else if (msg.channel.type == "text")
+                info.embed.fields = info.embed.fields.concat([
+                    {
+                        name: "Name",
+                        value: `#${msg.channel.name}`,
+                        inline: true
+                    }, {
+                        name: "Guild ID",
+                        value: msg.channel.guild.id,
+                        inline: true
+                    }, {
+                        name: "Guild Name",
+                        value: msg.channel.guild.name,
+                        inline: true
                     }
-
-                    // just in case 250+ members
-                    msg.guild.fetchMembers().then(guild => {
-
-                        const members = Array.from(guild.members);
-                        const bot_members = members.filter(m => m[1].user.bot).length;
-                        const humans = guild.memberCount - bot_members;
-                        const online = members.filter(m => m[1].user.presence.status != "offline" );
-                        const available = members.filter(m =>
-                            m[1].user.presence.status == "online" || m[1].user.presence.status == "idle")
-                                .length;
+                ]);
 
 
-                        msg.channel.send({ embed: {
-                            fields: [
-                                {
-                                    name: "Total",
-                                    value: guild.memberCount,
-                                    inline: true
-                                }, {
-                                    name: "Human",
-                                    value: humans,
-                                    inline: true
-                                }, {
-                                    name: "Bots",
-                                    value: bot_members,
-                                    inline: true
-                                }, {
-                                    name: "Online",
-                                    value: online,
-                                    inline: true
-                                }, {
-                                    name: "Available",
-                                    value: available,
-                                    inline: true
-                                }
-                            ]
-                        }});
+            msg.channel.send(info);
 
-                    });
-
-                } else {
-                    msg.channel.send("error: malformated -log command");
-                    msg.channel.send(logHelpInfo);
-                }
-            else {
-                console.log(msg.contents);
-            }
-
-        },
-        tests: [ "-log channel", "-log guild", "-log author", "-log help" ]
-
-    },
-
-    { // log help if no args
-        condition: msg => msg.content.match(/^log(?:$|\s)|^-help log(?:$|\s)/),
-        act: async function (msg) {
-            msg.channel.send(logHelpInfo);
         }
     },
+
+    {
+        condition: msg => msg.content.match(/^log author|^avatar/),
+        act: msg => {
+            msg.channel.send({ embed: {
+                title: `@${msg.author.username}#${msg.author.discriminator}`,
+                description: `${msg.author} has user ID ${msg.author.id}`,
+                image: {
+                    url: `https://cdn.discordapp.com/avatars/${msg.author.id}/${msg.author.avatar}`
+                }
+            }})
+        }, tests: [ "-log author" ]
+    },
+
+
+    {
+        condition: msg => msg.content.match(/^log guild/),
+        act: msg => {
+            if (!msg.guild) {
+                msg.channel.send("command not sent from a guild, try `-log channel` or `-log author`");
+                return;
+            }
+
+            msg.channel.send({ embed: {
+                title: msg.guild.name,
+                description: `${global.client.user} has been in this server since ${msg.guild.joinedAt}.`,
+                fields: [
+                    {
+                        name: "ID",
+                        value:  msg.guild.id,
+                        inline: true
+                    }, {
+                        name: "Members",
+                        value: `${msg.guild.memberCount} total`,
+                        inline: true
+                    }, {
+                        name: "Created",
+                        value: msg.guild.createdAt,
+                        inline: true
+                    }, {
+                        name: "Region",
+                        value: msg.guild.region,
+                        inline: true
+                    }, {
+                        name: "Verification Level",
+                        value: msg.guild.verificationLevel,
+                        inline: true
+                    },
+                ],
+
+                thumbnail: {
+                    url: msg.guild.iconURL
+                }
+            }});
+        },
+        tests: [ "-log guild" ]
+    },
+
+    {
+        condition: msg => msg.content.match(/^log members/),
+        act: async msg => {
+            if (!msg.guild) {
+                msg.channel.send("`-log members` is only available for guilds");
+                return;
+            }
+
+            // just in case 250+ members
+            msg.guild.fetchMembers().then(guild => {
+
+                const members = Array.from(guild.members);
+                const bot_members = members.filter(m => m[1].user.bot).length;
+                const humans = guild.memberCount - bot_members;
+                const online = members.filter(m => m[1].user.presence.status != "offline").length;
+                const available = members.filter(m =>
+                    m[1].user.presence.status == "online" || m[1].user.presence.status == "idle")
+                        .length;
+
+
+                msg.channel.send({ embed: {
+                    fields: [
+                        {
+                            name: "Total",
+                            value: guild.memberCount,
+                            inline: true
+                        }, {
+                            name: "Human",
+                            value: humans,
+                            inline: true
+                        }, {
+                            name: "Bots",
+                            value: bot_members,
+                            inline: true
+                        }, {
+                            name: "Online",
+                            value: online,
+                            inline: true
+                        }, {
+                            name: "Available",
+                            value: available,
+                            inline: true
+                        }
+                    ]
+                }});
+
+            });
+
+        },
+        tests: [ "-log members" ]
+    },
+
+    {
+        condition: msg =>  msg.content.match(/^log/),
+        act: msg => msg.channel.send({ embed: {
+            title: "-log Help",
+            description: "`-log` is a multi-purpose command used to help the bot developers by giving useful information",
+            fields: [
+                {
+                    name: "Possble arguments",
+                    value: `You must specify what information you want.
+            \`-log\`: send this help entry.
+            \`-log guild\`: send information about the current server
+            \`-log members\`: send membership information for current server
+            \`-log channel\`: describe current channel.
+            \`-log author\`: describe whoever sends this command.
+            \`-log bot\`: describe ${global.client.user.toString()}`
+                }
+            ]
+        }}),
+        tests: [ "-log help", "-log" ]
+    },
+
 
 
     { // msg - send a message to a channel
@@ -353,7 +389,7 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
     },
 
     {
-        condition: msg => msg.content.match(/^about/),
+        condition: msg => msg.content.match(/^about|^log bot/),
         act: async msg => {
             logCmd(msg, "-about");
 
@@ -417,29 +453,28 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
             }})
         },
         tests: [ "-about" ]
-    }, {
+    },
+
+    // show image from feathub
+    {
         condition: msg => msg.content.match(/^feature-request/),
         act: async msg => {
-            require("child_process").execSync(`wget`)
-        }
+            require("child_process").execSync(`wget https://feathub.com/dvtate/corki?format=svg -O /tmp/feathub.svg && convert /tmp/corki.svg /tmp/corki.png`);
+            msg.channel.send({
+                embed: {
+                    title: "Feature Requests",
+                    description: `${global.client.user} is under constant development. \
+If you know JavaScript you can help with code on [GitHub](https://github.com/dvtate/corki), \
+Otherwise you can submit feature requests on [FeatHub](https://feathub.com/dvtate/corki) and bug \
+reports via \`-bug\`. Thanks!`,
+                    image: { url: "attachment://feature_requests.png" },
+                    files: [{
+                        attachment: "/tmp/corki.png",
+                        name: "feature_requests.png"
+                    }]
+                }
+            })
+        },
+        tests: [ "-feature-requests" ]
     }
 ];
-
-
-
-const logHelpInfo = { embed: {
-    title: "-log Help",
-    description: "`-log` is a multi-purpose command used to help the bot developers by giving useful information",
-    fields: [
-        {
-            name: "Possble arguments",
-            value: `You must specify what information you want.
-    \`-log help\`: send this help entry.
-    \`-log guild\`: send information about the current server
-    \`-log members\`: send membership information for current server
-    \`-log channel\`: describe current channel.
-    \`-log author\`: describe whoever sends this command.`
-
-        }
-    ]
-}};

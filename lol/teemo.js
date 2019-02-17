@@ -177,7 +177,7 @@ module.exports.champNames = {
     102 : "Shyvana", 58 : "Renekton", 114 : "Fiora", 222 : "Jinx", 429 : "Kalista",
     105 : "Fizz", 38 : "Kassadin", 37 : "Sona", 39 : "Irelia", 112 : "Viktor",
     497 : "Rakan", 203 : "Kindred", 69 : "Cassiopeia", 57 : "Maokai", 516 : "Ornn",
-    412 : "Thresh", 10 : "Kayle", 120 : "Hecarim", 121 : "Khazix", 2 : "Olaf",
+    412 : "Thresh", 10 : "Kayle", 120 : "Hecarim", 121 : "Kha'Zix", 2 : "Olaf",
     115 : "Ziggs", 134 : "Syndra", 36 : "Dr. Mundo", 43 : "Karma", 1 : "Annie",
     84 : "Akali", 106 : "Volibear", 157 : "Yasuo", 85 : "Kennen", 107 : "Rengar",
     13 : "Ryze", 98 : "Shen", 154 : "Zac", 91 : "Talon", 50 : "Swain", 432 : "Bard",
