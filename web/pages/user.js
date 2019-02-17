@@ -117,7 +117,7 @@ router.get("/user/lol/reset", bot.catchAsync(async (req, res) => {
 
 
 // unlink an account
-router.get("/user/lol/rm/:id([0-9]+)", bot.catchAsync(async (req, res) => {
+router.get("/user/lol/rm/:id", bot.catchAsync(async (req, res) => {
     if (!req.cookies.token) {
         res.redirect("/login/user");
         return;
