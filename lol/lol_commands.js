@@ -13,18 +13,12 @@ module.exports = [
         condition: msg => msg.content.match(/^lol mastery (\S+) (\S+) (.+)/),
         act: async function (msg) {
             const match = this.condition(msg);
-
             const champ = teemo.champIDs[match[1].toLowerCase()];
             const server = teemo.serverNames[match[2].toLowerCase()];
 
-            if (!champ) {
-                msg.channel.send("invalid champion (run `-lol mastery help` for more)");
-                return;
-            }
-            if (!server) {
-                msg.channel.send("invalid server (run `-lol mastery help` for more)");
-                return;
-            }
+            if (!champ || !server)
+                return msg.channel.send(`invalid ${!champ ? "champion" : "region"} (run \`-lol mastery help\` for more)`);
+
 
             // get summoner id
             teemo.riot.get(server, "summoner.getBySummonerName", match[3]).then(summoner => {
@@ -50,14 +44,12 @@ module.exports = [
         act: async function (msg) {
             logCmd(msg, "checked lol mastery");
             const match = this.condition(msg);
-            const champName = match[1].toLowerCase();
-            const champID = teemo.champIDs[champName];
+            const champID = teemo.champIDs[match[1].toLowerCase()];
             const id = match[2];
 
-            if (!champID) {
-                msg.channel.send("invalid champion (run `-lol mastery help` for more)");
-                return;
-            }
+            if (!champID)
+                return msg.channel.send("invalid champion (run `-lol mastery help` for more)");
+
 
             lol.getUserMastery(id, champID).then(data =>
                 msg.channel.send(`<@!${id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`)
@@ -77,10 +69,8 @@ module.exports = [
             const champName = this.condition(msg)[1].toLowerCase();
             const champID =  teemo.champIDs[champName];
 
-            if (!champID) {
-                msg.channel.send("invalid champion (run `-lol mastery help` for more)");
-                return;
-            }
+            if (!champID)
+                return msg.channel.send("invalid champion (run `-lol mastery help` for more)");
 
             lol.getUserMastery(msg.author.id, champID).then(data =>
                 msg.channel.send(`<@!${msg.author.id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`)
@@ -194,10 +184,9 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
             const id = this.condition(msg)[1] || msg.author.id;
             const userObj = lol.getUserData(id);
 
-            if (!userObj) {
-                msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
-                return;
-            }
+            if (!userObj || !userObj.accounts.length)
+                return msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+
             let str = `<@!${id}> has ${userObj.accounts.length} accounts:\n`;
             for (let i = 0; i < userObj.accounts.length; i++)
                 str += `[${i}]: ${userObj.accounts[i].server} ${userObj.accounts[i].name}\n`;
@@ -214,7 +203,7 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
         act: async function (msg) {
             logCmd(msg, "modified their main account");
             let userObj = lol.getUserData(msg.author.id);
-            if (!userObj)
+            if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
 
             userObj.main = this.condition(msg)[1];
@@ -270,7 +259,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         act: async function (msg) {
             logCmd(msg, "made a call to teemo.js");
             if (!require("../bot_admins").auth(msg.author.id))
-                return;
+                return msg.chanel.send("You must be a bot developer to use this command");
 
             const args = this.condition(msg)[1].split(" ");
             teemo.riot.get.apply(teemo.riot, args)
@@ -289,18 +278,13 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             logCmd(msg, "generated leaderboard");
 
-            const champName = this.condition(msg)[1].replace(/\s/g, '');
-            const champID = teemo.champIDs[champName.toLowerCase()];
-
-
-            if (!champID) {
-                msg.channel.send("invalid champion name (make sure to remove spaces)");
-                return;
-            }
+            const champID = teemo.champIDs[this.condition(msg)[1].toLowerCase()];
+            if (!champID)
+                return msg.channel.send("invalid champion name (make sure to remove spaces)");
 
             msg.channel.startTyping();
             lol_lb.getLeaderBoard(msg.guild.members, champID).then(data => {
-                msg.channel.send(`**${champName} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
+                msg.channel.send(`**${teemo.champNames[champID]} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
 
                 let time = process.hrtime(timer);
                 const ns_per_s = 1e9;
@@ -309,6 +293,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.send(`that took ${time} seconds to complete`);
                 msg.channel.stopTyping();
             });
+            setTimeout(msg.channel.stopTyping, 3000);
 
 
         },
@@ -323,11 +308,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let timer = process.hrtime();
 
             const champID = teemo.champIDs[this.condition(msg)[1].replace(/\s/g, '').toLowerCase()];
-
-
             if (!champID)
                 return msg.channel.send("invalid champion name (make sure to remove spaces)");
-
 
             msg.channel.startTyping();
 
@@ -341,7 +323,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.send(`that took ${time} seconds to complete`);
                 msg.channel.stopTyping();
             });
-
+            setTimeout(msg.channel.stopTyping, 3000);
         },
         tests: [ "-lol glb corki" ]
 
@@ -356,7 +338,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         }, tests: [ "-lol servers" ]
     },
 
-
     {
         condition: msg => msg.content.match(/^lol rank(?: <@!?([0-9]+)>)? all|^lol ranks(?: <@!?([0-9]+)>)?/),
         act: async function (msg) {
@@ -366,11 +347,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let userObj = lol.getUserData(userid);
 
             // no accts.
-            if (userObj && userObj.accounts.length == 0) {
-                removeDir(msg.author.id);
-                userObj = null;
-            }
-            if (!userObj)
+            if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
 
             // generate rank summary for each acct
@@ -392,13 +369,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             const id = match[1];
             let userObj = lol.getUserData(id);
 
-            if (userObj && userObj.accounts.length == 0) {
-                removeDir(msg.author.id);
-                userObj = null;
-            }
-            if (!userObj)
+            if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
-
 
             // pick acct
             let acct = userObj.accounts[match[2] ? match[2].trim() : userObj.main];
@@ -423,11 +395,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             const match = this.condition(msg);
             const server = teemo.serverNames[match[1].toLowerCase()];
 
-            if (!server) {
-                msg.channel.send("invalid server (run `-lol servers` for more)");
-                return;
-            }
-
+            if (!server)
+                return msg.channel.send("invalid server (run `-lol servers` for more)");
 
             // get summoner id
             teemo.riot.get(server, "summoner.getBySummonerName", match[2]).then(summoner => {
@@ -443,7 +412,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.send(`${match[2]} wasn't found on ${match[1]} (run \`-lol servers\` for more)`);
             });
 
-
         },
         tests: [ "-lol rank na ridderhoff" ]
     },
@@ -454,19 +422,13 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             logCmd(msg, "checked their -lol rank");
             let userObj = lol.getUserData(msg.author.id);
 
-            // no accts.
-            if (userObj && userObj.accounts.length == 0) {
-                removeDir(msg.author.id);
-                userObj = null;
-            }
-            if (!userObj)
+            if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
 
             const match = this.condition(msg);
             let acct = userObj.accounts[match[1] ? match[1].trim() : userObj.main];
             if (!acct)
                 return msg.channel.send("Invalid account number. Use `-lol list` to see available accounts");
-
 
             teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
                 lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
@@ -483,13 +445,10 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             // get their main account
             let userObj = lol.getUserData(msg.author.id);
 
-            if (!userObj) {
-                msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
-                return;
-            }
+            if (!userObj || !userObj.accounts.length)
+                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
 
             let main = userObj.accounts[userObj.main];
-
             let score = await teemo.riot.get(main.server, "championMastery.getChampionMasteryScore", main.id);
 
             teemo.riot.get(main.server, "championMastery.getAllChampionMasteries", main.id).then(data => {
@@ -524,16 +483,14 @@ last played: ${Date(data[i].lastPlayTime)}`
     { // list user's mastery 7 champs
         condition: msg => msg.content.match(/^lol (?:mastery7|m7|mastery seven)(?:$|\s)/),
         act: async msg => {
-            logCmd(msg, "checked m7 champs");
-
+            logCmd(msg, "-lol m7");
 
             // get their main account
             let userObj = lol.getUserData(msg.author.id);
 
-            if (!userObj) {
-                msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
-                return;
-            }
+            if (!userObj || !userObj.accounts.length)
+                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+
 
             let champs = [];
 
@@ -608,7 +565,7 @@ last played: ${Date(data[i].lastPlayTime)}`
             // get their main account
             let userObj = lol.getUserData(msg.author.id);
 
-            if (!userObj)
+            if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
 
             msg.channel.send("sorry this hasn't been implemented yet.\
@@ -621,6 +578,7 @@ If you want to see this implemented sooner send a `-bug` report.");
     { // convert champ name/id
         condition: msg => msg.content.match(/^lol c (\S+)/),
         act: async function (msg) {
+            logCmd(msg, "-lol c")
             msg.channel.send(teemo.champs[this.condition(msg)[1].toLowerCase()]);
         }, tests: [ "-lol c corki", "-lol c corki" ]
     },
@@ -661,15 +619,13 @@ If you want to see this implemented sooner send a `-bug` report.");
     {
         condition: msg => msg.content.match(/^lol games (\S+)(?: <@!?([0-9]+)>)?/),
         act: async function (msg) {
-
+            logCmd(msg, "-lol games ()");
             const match = this.condition(msg),
                   userId = match[2] || msg.author.id,
                   userObj = lol.getUserData(userId);
 
-            if (!userObj) {
-                msg.channel.send("No linked accounts! Use `-lol add` to link accounts.");
-                return;
-            }
+            if (!userObj || !userObj.accounts.length)
+                return msg.channel.send("No linked accounts! Use `-lol add` to link accounts.");
 
             const champ = teemo.champIDs[match[1]];
 
@@ -679,7 +635,7 @@ If you want to see this implemented sooner send a `-bug` report.");
 
             // fetch the matchlists
             Promise.all(dreqs).then(mls => {
-                console.log(mls);
+
                 // sum up totalgames and send to user
                 let totalGames = 0;
                 mls.forEach(ml => totalGames += ml ? ml.totalGames || 0 : 0);

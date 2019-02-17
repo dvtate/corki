@@ -108,26 +108,24 @@ module.exports = [
     },
 
     {
-        condition: msg => msg.content.match(/^log author|^avatar/),
-        act: msg => {
+        condition: msg => msg.content.match(/^(?:log author|avatar)(?:<@!?([0-9]+)>)?/),
+        act: function (msg) {
+            const m = this.condition(msg)[1];
+            const user = m[1] ? global.client.users.get(m[1]) : msg.author;
             msg.channel.send({ embed: {
-                title: `@${msg.author.username}#${msg.author.discriminator}`,
-                description: `${msg.author} has user ID ${msg.author.id}`,
-                image: {
-                    url: `https://cdn.discordapp.com/avatars/${msg.author.id}/${msg.author.avatar}`
-                }
-            }})
-        }, tests: [ "-log author" ]
+                title: `@${user.username}#${user.discriminator}`,
+                description: `${user} has user ID ${user.id}`,
+                image: { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}` }
+            }});
+        }, tests: [ "-log author" , "-avatar <@253784341555970048>" ]
     },
 
 
     {
         condition: msg => msg.content.match(/^log guild/),
         act: msg => {
-            if (!msg.guild) {
-                msg.channel.send("command not sent from a guild, try `-log channel` or `-log author`");
-                return;
-            }
+            if (!msg.guild)
+                return msg.channel.send("command not sent from a guild, try `-log channel` or `-log author`");
 
             msg.channel.send({ embed: {
                 title: msg.guild.name,
@@ -155,10 +153,7 @@ module.exports = [
                         inline: true
                     },
                 ],
-
-                thumbnail: {
-                    url: msg.guild.iconURL
-                }
+                thumbnail: { url: msg.guild.iconURL }
             }});
         },
         tests: [ "-log guild" ]
@@ -167,10 +162,8 @@ module.exports = [
     {
         condition: msg => msg.content.match(/^log members/),
         act: async msg => {
-            if (!msg.guild) {
-                msg.channel.send("`-log members` is only available for guilds");
-                return;
-            }
+            if (!msg.guild)
+                return msg.channel.send("`-log members` is only available for guilds");
 
             // just in case 250+ members
             msg.guild.fetchMembers().then(guild => {
@@ -254,10 +247,9 @@ module.exports = [
             const contents = match[2];
 
             const chan = global.client.channels.get(channel);
-            if (!chan) {
-                msg.channel.send("Invalid Channel. (Corki must be mutual member of server)");
-                return;
-            }
+            if (!chan)
+                return msg.channel.send("Invalid Channel. (Corki must be mutual member of server)");
+
 
             const guild = chan.guild;
             let perms = guild ? mods.getModData(guild.id, msg.author.id) : {
@@ -306,7 +298,6 @@ is an open-source project, feel free to contribute. https://github.com/dvtate/co
             if (!botAdmins.auth(msg.author.id)) {
                 msg.channel.send("You are not authorized to perform this action.\n"
                                + "Ask @ridderhoff#6333 to add you to the botadmins list.");
-                logCmd(msg, "isn't authorized to use -msg");
                 return;
             }
 
@@ -459,7 +450,7 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
     {
         condition: msg => msg.content.match(/^feature-request/),
         act: async msg => {
-            require("child_process").execSync(`wget https://feathub.com/dvtate/corki?format=svg -O /tmp/feathub.svg && convert /tmp/corki.svg /tmp/corki.png`);
+            require("child_process").execSync(`wget https://feathub.com/dvtate/corki?format=svg -O /tmp/corki.svg && convert /tmp/corki.svg /tmp/corki.png`);
             msg.channel.send({
                 embed: {
                     title: "Feature Requests",
