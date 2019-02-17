@@ -656,6 +656,37 @@ If you want to see this implemented sooner send a `-bug` report.");
             );
 
         }
+    },
+
+    // how many games have you played on a given champ?
+    {
+        condition: msg => msg.content.match(/^lol games (\S+)(?: <@!?([0-9]+)>)?/),
+        act: async function (msg) {
+
+            const match = this.condition(msg),
+                  userId = match[2] || msg.author.id,
+                  userObj = lol.getUserData(userId);
+
+            if (!userObj) {
+                msg.channel.send("No linked accounts! Use `-lol add` to link accounts.");
+                return;
+            }
+
+            const champ = teemo.champIDs[match[1]];
+
+            // matchlist promises
+            let dreqs = userObj.accounts.map(a =>
+                teemo.riot.get(a.server, "match.getMatchlist", a.accountId, { champion: champ }));
+
+            // fetch the matchlists
+            Promise.all(dreqs).then(mls => {
+                console.log(mls);
+                // sum up totalgames and send to user
+                let totalGames = 0;
+                mls.forEach(ml => totalGames += ml ? ml.totalGames || 0 : 0);
+                msg.channel.send(`${msg.author} has played ${totalGames} games on ${teemo.champNames[champ]}`);
+            });
+        }
     }
 ];
 

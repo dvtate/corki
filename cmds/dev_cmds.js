@@ -417,6 +417,11 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
             }})
         },
         tests: [ "-about" ]
+    }, {
+        condition: msg => msg.content.match(/^feature-request/),
+        act: async msg => {
+            require("child_process").execSync(`wget`)
+        }
     }
 ];
 

@@ -9,42 +9,7 @@ module.exports.riot = new Teemo(riotAPIToken);
 
 // champgg api
 const champGGToken = `${fs.readFileSync(`${process.env.HOME}/.corki/champgg_key`)}`.trim();
-module.exports.champgg = new Teemo(champGGToken, {
-    "prefix" : "http://api.champion.gg",
-    "retries" : 3,
-    "maxConcurrent" : 2000,
-    "distFactor" : 1,
-    "defaultBuckets" : [{
-            "timespan" : 600000,
-            "limit" : 3000
-        }, {
-            "timespan" : 10000,
-            "limit" : 50
-    }],
-    "rateLimitTypeApplication" : {
-        "name" : "application",
-        "headerLimit" : null,
-        "headerCount" : "x-rate-limit"
-    },
-    "rateLimitTypeMethod" : null,
-    "defaultRetryAfter" : 10,
-    "headerRetryAfter" : "retry-after",
-    "headerLimitType" : null,
-    "defaultLimitType" : "application",
-    "keyHeader" : null,
-    "keyQueryParam" : "api_key",
-    "collapseQueryArrays" : true,
-    "endpoints" : {
-        "champion" : {
-            "getAllChampions" : "/v2/champions",
-            "getChampionMatchupsByRole" : "/v2/champions/%s/%s/matchups?limit=800",
-            "getChampionMatchups" : "/v2/champions/%s/matchups?limit=800",
-            "getChampion" : "/v2/champions/%s"
-        },
-        "general" : "/v2/general",
-        "overall" : "/v2/overall"
-    }
-});
+module.exports.champgg = new Teemo(champGGToken, Teemo.championGGConfig);
 
 
 // server names for teemo
