@@ -203,7 +203,7 @@ async function postLeaderBoard(chanID, champID, rule) {
 
             // square champ icon
             thumbnail: {
-                url: teemo.ddragon.url + `/img/champion/${ddragon.champName(champID)}.png`
+                url: teemo.ddragon.url + `/img/champion/${teemo.ddragon.champName(champID)}.png`
             },
 
             // more linked accounts == more lag (w/e)

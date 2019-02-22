@@ -296,7 +296,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
                     // square champ icon
                     thumbnail: {
-                        url: teemo.ddragon.url + `/img/champion/${ddragon.champName(champID)}.png`
+                        url: teemo.ddragon.url + `/img/champion/${teemo.ddragon.champName(champID)}.png`
                     },
 
                 }});
@@ -342,11 +342,11 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
                     // square champ icon
                     thumbnail: {
-                        url: teemo.ddragon.url + `/img/champion/${ddragon.champName(champID)}.png`
+                        url: teemo.ddragon.url + `/img/champion/${teemo.ddragon.champName(champID)}.png`
                     },
 
                 }});
-                
+
                 let time = process.hrtime(timer);
                 let ns_per_s = 1e9;
                 time = (time[0] * ns_per_s + time[1]) / ns_per_s;
