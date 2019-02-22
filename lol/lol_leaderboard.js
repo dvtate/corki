@@ -150,8 +150,11 @@ function formatLeaderBoard(arr) {
         ret += `[${i + 1}] **${arr[i].name}**: ${arr[i].pts} points\n`;
     return ret;
 }
-
 module.exports.formatLeaderBoard = formatLeaderBoard;
+
+function findUserRanking(data, id) {
+    return data.findIndex(u => u.id == id);
+}
 
 // weekly post of leaderboard to #mastery in corkimains server
 async function postLeaderBoard(chanID, champID, rule) {

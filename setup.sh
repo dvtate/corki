@@ -87,8 +87,18 @@ if [ ! -f $HOME/.corki/reddit_secret ]; then
 	echo "done"
 fi
 
+# requied commands
+if ! [ -x "$(command -v convert)"]; then
+	echo "Error: imagemagick not installed"
+	exit 1
+fi
+if ! [ -x "$(command -v forever)"]; then
+	echo "Error: forever not installed"
+	echo "run \"sudo npm install -g forever\""
+	exit 1
+fi
+
 
 # install dependencies
 echo "installing dependencies..."
 npm install
-echo "installed dependencies"

@@ -450,7 +450,12 @@ ${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
     {
         condition: msg => msg.content.match(/^feature-request/),
         act: async msg => {
-            require("child_process").execSync(`wget https://feathub.com/dvtate/corki?format=svg -O /tmp/corki.svg && convert /tmp/corki.svg /tmp/corki.png`);
+            logCmd(msg, "-feature-request");
+
+            require("child_process").execSync(
+                "wget https://feathub.com/dvtate/corki?format=svg -O /tmp/corki.svg" // get feathub summary
+                 + " && convert /tmp/corki.svg /tmp/corki.png");                    // convert to png (imagemagick)
+
             msg.channel.send({
                 embed: {
                     title: "Feature Requests",

@@ -284,7 +284,16 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             msg.channel.startTyping();
             lol_lb.getLeaderBoard(msg.guild.members, champID).then(data => {
-                msg.channel.send(`**${teemo.champNames[champID]} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
+                const senderRank = data.findIndex(u => u.id == msg.author.id);
+                msg.channel.send({ embed: {
+                    title: `**${teemo.champNames[champID]} Mastery Leaderboard:**\n`,
+                    description: lol_lb.formatLeaderBoard(data),
+                    footer: {
+                        text: senderRank == -1 ?
+                            "Use `-lol add to get on the board`"
+                            : "Your rank: " + (senderRank + 1)
+                    }
+                }});
 
                 let time = process.hrtime(timer);
                 const ns_per_s = 1e9;
@@ -293,8 +302,9 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.send(`that took ${time} seconds to complete`);
                 msg.channel.stopTyping();
             });
-            setTimeout(msg.channel.stopTyping, 3000);
 
+            // prevent indefinite typing in case of reject()
+            //setTimeout(msg.channel.stopTyping, 3000);
 
         },
         tests: [ "-lol lb corki" ]
@@ -323,7 +333,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 msg.channel.send(`that took ${time} seconds to complete`);
                 msg.channel.stopTyping();
             });
-            setTimeout(msg.channel.stopTyping, 3000);
+            //setTimeout(msg.channel.stopTyping, 3000);
         },
         tests: [ "-lol glb corki" ]
 

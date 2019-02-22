@@ -3,6 +3,7 @@
 ## this is used to update the bot to the newest version from github
 ## the goal here is to minimize downtime
 
+
 echo "Corki is getting a buff... updating sources from GitHub"
 
 # clone the newest version of steve from github
@@ -17,5 +18,5 @@ echo "Re-configuring Corki similar to old one..."
 sh "setup.sh"
 
 # kill and revive steve
-printf "spawning new Corki..."
-node index.js
+echo "spawning new Corki..."
+forever index.js
