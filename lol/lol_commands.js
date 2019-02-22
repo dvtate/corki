@@ -292,7 +292,13 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                         text: senderRank == -1 ?
                             "Use `-lol add to get on the board`"
                             : "Your rank: " + (senderRank + 1)
-                    }
+                    },
+
+                    // square champ icon
+                    thumbnail: {
+                        url: teemo.ddragon.url + `/img/champion/${ddragon.champName(champID)}.png`
+                    },
+
                 }});
 
                 let time = process.hrtime(timer);
@@ -324,8 +330,23 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             msg.channel.startTyping();
 
             lol_lb.getLeaderBoard(msg.client.users, champID).then(data => {
-                msg.channel.send(`**${teemo.champNames[champID]} Mastery Leaderboard:**\n` + lol_lb.formatLeaderBoard(data))
+                const senderRank = data.findIndex(u => u.id == msg.author.id);
+                msg.channel.send({ embed: {
+                    title: `**${teemo.champNames[champID]} Mastery Leaderboard:**\n`,
+                    description: lol_lb.formatLeaderBoard(data),
+                    footer: {
+                        text: senderRank == -1 ?
+                            "Use `-lol add to get on the board`"
+                            : "Your rank: " + (senderRank + 1)
+                    },
 
+                    // square champ icon
+                    thumbnail: {
+                        url: teemo.ddragon.url + `/img/champion/${ddragon.champName(champID)}.png`
+                    },
+
+                }});
+                
                 let time = process.hrtime(timer);
                 let ns_per_s = 1e9;
                 time = (time[0] * ns_per_s + time[1]) / ns_per_s;
