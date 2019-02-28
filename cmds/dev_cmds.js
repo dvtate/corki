@@ -110,7 +110,7 @@ module.exports = [
     {
         condition: msg => msg.content.match(/^(?:log author|avatar)(?:<@!?([0-9]+)>)?/),
         act: function (msg) {
-            const m = this.condition(msg)[1];
+            const m = this.condition(msg);
             const user = m[1] ? global.client.users.get(m[1]) : msg.author;
             msg.channel.send({ embed: {
                 title: `@${user.username}#${user.discriminator}`,
