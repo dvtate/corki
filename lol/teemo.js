@@ -43,7 +43,7 @@ module.exports.champIDs = {
     "braum" : 201,
     "blitzcrank" : 53, "blitz" : 53, "bc" : 52,
 
-    "corki" : 42, "*" : 42,
+    "corgi" : 42 , "corki" : 42,
     "cassiopeia" : 69, "cass" : 69,
     "chogath" : 31, "cho" : 31, "cho'gath" : 31,
     "caitlyn" : 51, "cait" : 51,
