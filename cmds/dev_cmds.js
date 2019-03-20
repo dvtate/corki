@@ -45,26 +45,29 @@ module.exports = [
     },
 
     { // opposite of deformat
-        condition: msg => msg.content.match(/^reformat (?:`(.+)`?)+/),
+        condition: msg => msg.content.match(/^reformat `(.+)`/),
         act: async function (msg) {
             logCmd(msg, "-reformat ()");
-            m = this.condition(msg);
-            console.log(m);
-            let str = "";
-
-            let rm_ticks = (s) => {
-                return s.replace(/^`+|`+$/g, '');
-            }
-
-            for (let i = 1; i < m.length; i++) {
-                str += rm_ticks(m[i]);
-                console.log(rm_ticks(m[i]));
-            }
-            msg.channel.send(str);
+            msg.channel.send(this.condition(msg)[1]);
         },
         tests: [ "-reformat `<@253784341555970048>`" ]
     },
 
+    {
+        condition: msg => msg.content.match(/^emote (\S+)/),
+        act: async function (msg) {
+            logCmd(msg, "-emote () ()");
+            msg.channel.send(`<:E:${this.condition(msg)[1]}>`);
+        },
+        tests: [ "-emote 440285536498876436" ]
+    },
+
+    {
+        condition: msg => msg.content.match(/^emote-react (\S+) (\S+)/),
+        act: async function (msg) {
+            logCmd(msg, "-emote-react () ()");
+        }
+    },
 
     {
         condition: msg => msg.content.match(/^log channel/),
@@ -362,9 +365,36 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
             const ns_per_s = 1e9;
             time = (time[0] * ns_per_s + time[1]) / (ns_per_s);
 
-            msg.channel.send(`Corki Bot has been online for \
-${Math.floor(time / 60 / 60 / 24)} days, ${Math.floor(time / 60 / 60) % 24
-} hours, ${Math.floor(time / 60) % 60} minutes, and ${time % 60} seconds and counting`);
+
+            const ms_to_str = ms => `${Math.floor(ms / 1000 / 60 / 60 / 24)} days, \
+${Math.floor(ms / 1000 / 60 / 60) % 24} hours, ${Math.floor(ms / 1000 / 60) % 60} minutes, \
+and ${(ms / 1000) % 60} seconds`;
+
+            let srv_uptime = await new Promise((resolve, reject) =>
+                // run command and send output
+                require("child_process")
+                    .exec("uptime",
+                        (error, stdout, stderr) => {
+                            resolve(error ? "undefined" : stdout);
+                        }));
+
+
+            msg.channel.send({ embed: {
+                title: "Uptime",
+                description: "",
+                fields: [
+                    {
+                        name: "Server Uptime",
+                        value: srv_uptime,
+                    }, {
+                        inline: true, name: "Bot Uptime",
+                        value: ms_to_str(time * 1000),
+                    }, {
+                        inline: true, name: "Last Outage",
+                        value: `${ms_to_str(global.client.uptime)} ago`,
+                    }
+                ]
+            }})
 
         },
         tests: [ "-uptime" ]
