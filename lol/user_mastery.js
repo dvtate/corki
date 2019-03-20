@@ -5,6 +5,18 @@ const lol = require("./lol_stuff");
 
 /// this file is focused on the caching of user mastery points to reduce riot api calls
 
+/*
+~/.corki/user/___user_id___/lol-mastery.json :
+
+{
+    "champId" : {
+        pts : mastery points,
+        lvl : mastery level,
+    },
+}
+
+*/
+
 
 //
 async function refreshMasteryData(id) {

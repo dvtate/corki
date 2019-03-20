@@ -45,10 +45,22 @@ module.exports = [
     },
 
     { // opposite of deformat
-        condition: msg => msg.content.match(/^reformat `(.+)`/),
+        condition: msg => msg.content.match(/^reformat (?:`(.+)`?)+/),
         act: async function (msg) {
             logCmd(msg, "-reformat ()");
-            msg.channel.send(this.condition(msg)[1]);
+            m = this.condition(msg);
+            console.log(m);
+            let str = "";
+
+            let rm_ticks = (s) => {
+                return s.replace(/^`+|`+$/g, '');
+            }
+
+            for (let i = 1; i < m.length; i++) {
+                str += rm_ticks(m[i]);
+                console.log(rm_ticks(m[i]));
+            }
+            msg.channel.send(str);
         },
         tests: [ "-reformat `<@253784341555970048>`" ]
     },
