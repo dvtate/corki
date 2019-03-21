@@ -514,5 +514,13 @@ reports via \`-bug\`. Thanks!`,
             })
         },
         tests: [ "-feature-requests" ]
+    }, {
+        condition: msg => msg.content.match(/^ar-condition (.+)/),
+        act: async function (msg) {
+            const cond = this.condition(msg)[1];
+            const ar = require("../sam/auto_roles/condition");
+            msg.channel.send(await ar.parseCondition(msg.guild.id, msg.author.id, cond));
+        }
+
     }
 ];

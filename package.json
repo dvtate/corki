@@ -21,6 +21,7 @@
     "open-exchange-rates": "^0.3.0",
     "request": "^2.88.0",
     "rss-parser": "^3.6.2",
+    "splitargs": "0.0.7",
     "teemojs": "^1.3.0",
     "time": "^0.12.0",
     "twitch.tv": "^2.1.0",

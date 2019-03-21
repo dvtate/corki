@@ -12,11 +12,7 @@ const sam = require("./sam");
         mod: if the user has access to server management portal,
         mod_cmds: if the user is allowed to use the server management commands
     }
-
 */
-
-
-
 
 
 function generateModData(serverid) {

@@ -203,7 +203,15 @@ module.exports.champNames = {};
 for (key in module.exports.champIDs)
     module.exports.champNames[module.exports.champIDs[key]] = key;
 */
+
 // both sides of the dict
 module.exports.champs = Object.assign({}, module.exports.champIDs, module.exports.champNames);
-
 module.exports.ddragon = require("./data_dragon");
+
+
+module.exports.rankedQueues = {
+    "soloq" : "RANKED_SOLO_5x5",
+    "flexq" : "RANKED_FLEX_SR",
+    "3s" : "RANKED_FLEX_TT",
+    "tt" : "RANKED_FLEX_TT",
+};
