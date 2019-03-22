@@ -99,6 +99,11 @@ if ! [ -x "$(command -v forever)" ]; then
 fi
 
 
+# compile lol mastery log tool
+printf "Compiling native components... "
+g++ lol/mastery_log_native/*.cpp -O3 -g -Wall -Wextra -o "$HOME/.corki/lol_mastery_log_tool"
+echo "done"
+
 # install dependencies
-echo "installing dependencies..."
+echo "installing dependencies... "
 npm install

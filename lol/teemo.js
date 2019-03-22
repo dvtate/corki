@@ -212,6 +212,29 @@ module.exports.ddragon = require("./data_dragon");
 module.exports.rankedQueues = {
     "soloq" : "RANKED_SOLO_5x5",
     "flexq" : "RANKED_FLEX_SR",
-    "3s" : "RANKED_FLEX_TT",
-    "tt" : "RANKED_FLEX_TT",
+    "flex"  : "RANKED_FLEX_SR",
+    "3s"    : "RANKED_FLEX_TT",
+    "tt"    : "RANKED_FLEX_TT",
 };
+
+
+function convertRank(rank, division) {
+
+    const ranks = {
+        "IRON"      : 'i',
+        "BRONZE"    : 'b',
+        "SILVER"    : 's',
+        "GOLD"      : 'g',
+        "PLATINUM"  : 'p',
+        "DIAMOND"   : 'd',
+        "MASTER"    : 'm',
+        "GRANDMASTER" : 'gm',
+        "CHALLENGER"  : 'c',
+    };
+    
+    const romanNumerals = {
+        "I" : 1, "II" : 2, "III" : 3, "IV" : 4, };
+
+    return ranks[rank] + (romanNumerals[division] || "");
+}
+module.exports.convertRank = convertRank;

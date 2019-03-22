@@ -149,3 +149,6 @@ require("./lol/mastery_roles.js");
 
 // start web portal
 require("./web/server.js");
+
+// start auto-roles daemon
+require("./sam/auto_roles/daemon.js");

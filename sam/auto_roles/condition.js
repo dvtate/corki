@@ -15,7 +15,7 @@ function get_date(stack) {
         return Date.parse(new Date(str));
 
     if (!str || typeof(str) != "string" || str.length == 0)
-        return Date.parse(Date());
+        return Date.now();
 
     const ret = Date.parse(str);
 
@@ -74,61 +74,18 @@ function get_date(stack) {
 
     return ret;
 }
-
-function lol_rank_diff(r1, r2) {
-    const tiers = [ 'i', 'b', 's', 'g', 'p', 'd', 'm', 'gm', 'c' ];
-    const divs  = [ '4', '3', '2', '1' ];
-
-    // "G4" => ['g', '4']
-    const split = r => {
-        const numerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'];
-        let i = 0;
-        while (i < r.length && !numerals.includes(r[i]))
-            i++;
-
-        return [ r.slice(0, i), r.slice(i) ];
-    };
-
-    r1 = split(r1.toLowerCase());
-    r2 = split(r2.toLowerCase());
-
-    // relative value
-    const t1 = tiers.findIndex(v => v == r2[0]) >= 0 ?
-        tiers.findIndex(v => v == r2[0]) : NaN;
-    const t2 = tiers.findIndex(v => v == r1[0]) >= 0 ?
-        tiers.findIndex(v => v == r1[0]) : NaN;
-
-    let cmp_r = t1 - t2;
-    if (cmp_r) // nomalize
-        cmp_r /= Math.abs(cmp_r);
-
-    // difference in divions only significant if specified in both
-    let cmp_d = 0;
-    if (r1[1] && r2[1]) {
-        // relative value
-        const d1 = divs.findIndex(v => v == r2[1]) >= 0 ?
-            divs.findIndex(v => v == r2[1]) : NaN;
-        const d2 = divs.findIndex(v => v == r1[1]) >= 0 ?
-            divs.findIndex(v => v == r1[1]) : NaN;
-
-        cmp_d = d1 - d2;
-        if (cmp_d) // normalize
-            cmp_d /= Math.abs(cmp_d);
-    }
-    return cmp_r * 10 + cmp_d * 0.1;
-}
 function cmp(item1, item2) {
         if (typeof(item1) != typeof(item2)) {
             return NaN; // error
         }
 		console.log("cmp: ", typeof(item1), typeof(item2));
         if (typeof(item1) == "string")
-            return lol_rank_diff(item1, item2);
+            return lol.rank.diff(item1, item2);
 		if (typeof(item1) == "number")
 			return item2 - item1;
 }
 function member_join_date(stack, guildId, userId) {
-    return Date.parse(global.client.guilds.get("319518724774166531").members.get("436604134490243082").joinedAt);
+    return Date.parse(global.client.guilds.get(guildId).members.get(userId).joinedAt);
 }
 function has_role(stack, guildId, userId) {
     const role = stack.pop();
@@ -166,6 +123,54 @@ function todo(stack) {
     return stack.pop();
 }
 
+const user_rank = require("../../lol/user_rank");
+
+async function lol_has_rank(stack, guildid, userid) {
+    const rank = stack.pop(); // desired rank
+    const rankdata = await user_rank.getData(userid);
+    const keys = Object.keys(rankdata);
+
+    for (let i = 0; i < keys.length; i++)
+        for (let j = 0; j < rankdata[keys[i]].length; j++)
+            if (lol.rank.diff(rank, rankdata[keys[i]][j]) == 0)
+                return true;
+
+    return false;
+}
+
+async function lol_has_rank_in_queue(stack, guildid, userid) {
+    const rank = stack.pop(); // desired rank
+    const queue = teemo.rankedQueues(tack.pop()); // in queue
+    const rankdata = await user_rank.getData(userid);
+
+    const ranks = rankdata[queue];
+
+
+    if (ranks)
+        for (let i = 0; i < ranks.length; i++)
+            if (lol.rank.diff(rank, ranks[i]) == 0)
+                return true;
+    return false;
+
+}
+
+async function lol_max_rank(stack, guildid, userid) {
+    const rankdata = await user_rank.getData(userid);
+    let ranks = [];
+    Object.keys(rankdata).forEach(k => {
+        if (rankdata[k].length)
+            rankdata[k].forEach(r => ranks.push(r));
+    });
+    return lol.rank.max(ranks);
+}
+
+async function lol_max_rank_in_queue(stack, guildid, userid) {
+    const queue = teemo.rankedQueues(tack.pop()); // in queue
+    const rankdata = await user_rank.getData(userid);
+    const ranks = rankdata[queue];
+    return lol.rank.max(ranks);
+}
+
 const splitargs = require("splitargs");
 
 // ast too hard, therefore rpn :D
@@ -179,13 +184,13 @@ const cmds = {
     // member has given role
     "has_role" : has_role,
     // has given LoL rank?
-    "lol_has_rank" : todo,
+    "lol_has_rank" : lol_has_rank,
     // has given LoL rnak in given queue (3s, flexq, soloq)?
-    "lol_has_queue_rank" : todo,
+    "lol_has_queue_rank" : lol_has_rank_in_queue,
     // users highest rank
-    "lol_max_rank" : todo,
+    "lol_max_rank" : lol_max_rank,
     // user's highest rank in given queue
-    "lol_max_queue_rank" : todo,
+    "lol_queue_max_rank" : todo,
     // user's mastery score on given champ
     "lol_mastery_points" : lol_mastery_points,
     // mastery level on given champ (1-7)
@@ -224,8 +229,8 @@ async function parseCondition(guildId, userId, expr) {
 
     for (let i = 0; i < tokens.length; i++) {
         const t = tokens[i];
-        console.log("t:", t);
-		console.log("stack:", stack);
+        //console.log("t:", t);
+		//console.log("stack:", stack);
 
 		if (cmds[t]) {
             try {
@@ -234,18 +239,20 @@ async function parseCondition(guildId, userId, expr) {
                     ret = await ret;
     			stack.push(ret);
             } catch (e) {
-                return Nan;
+                console.error(e);
+                return NaN;
             }
 		} else {
             try {
     			stack.push(JSON.parse(t));
     		} catch (e) {
+                console.error(e);
     			return NaN;
     		};
         }
     }
 
-	console.log("stack:", stack);
+	//console.log("stack:", stack);
 	return stack.pop();
 }
 module.exports.parseCondition = parseCondition;

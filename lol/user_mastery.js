@@ -9,14 +9,33 @@ const lol = require("./lol_stuff");
 ~/.corki/user/___user_id___/lol-mastery.json :
 
 {
-    "champId" : {
+    "champId" : {           // order is important here:
         pts : mastery points,
         lvl : mastery level,
     },
+    "timestamp" : epoch_milisecond,
 }
 
 */
+async function nativeLogMasteryData(id, data) {
+    //const data = fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`);
 
+    /* lol-mastery.c_parse
+    timestamp
+    champid:pts
+    champid:pts
+    champid:pts
+    ...
+    */
+
+    const ret = "";
+    ret += data.timestamp;
+    delete data.timestamp;
+    Object.keys(data).forEach(champ => ret += `\n${champ}:${data[champ].pts}`);
+
+    const data = fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.c_parse`, ret);
+    require("child_process").exec(`${process.env.HOME}/.corki/lol_mastery_log_tool ${id}`);
+}
 
 //
 async function refreshMasteryData(id) {
@@ -48,14 +67,14 @@ async function refreshMasteryData(id) {
             accts.forEach(acct => acct.forEach(champ => {
                 // if already an entry increase it's value
                 if (ret[champ.championId])
-                    ret[champ.championId] = {
+                    ret[champ.championId] = { // NOTE: DO NOT CHANGE ORDER!
                         pts: ret[champ.championId].pts + champ.championPoints,
                         lvl: champ.championLevel > ret[champ.championId].lvl
                                 ? champ.championLevel : ret[champ.championId].lvl
                     };
 
                 else // otherwise make new entry
-                    ret[champ.championId] = {
+                    ret[champ.championId] = { // NOTE: DO NOT CHANGE ORDER!
                         pts: champ.championPoints,
                         lvl: champ.championLevel
                     };
@@ -65,9 +84,13 @@ async function refreshMasteryData(id) {
             // cache mastery data to a file
             fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`,
                 JSON.stringify(ret));
+
+
+
             // return
             resolve(ret);
 
+            //nativeLogMasteryData(id, ret);
 
         }).catch(reject);
 

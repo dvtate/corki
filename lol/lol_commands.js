@@ -384,7 +384,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             // generate rank summary for each acct
             userObj.accounts.forEach(acct =>
                 teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank =>
-                    lol.makeRankSummary(msg.client.users.get(userid).username, acct.name, rank)
+                    lol.rank.makeRankSummary(msg.client.users.get(userid).username, acct.name, rank)
                         .then(summary => msg.channel.send(summary)).catch(console.error)
                 ).catch(console.error)
             );
@@ -410,7 +410,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             // send rank summary for acct
             teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank =>
-                lol.makeRankSummary(msg.client.users.get(id).username, acct.name, rank)
+                lol.rank.makeRankSummary(msg.client.users.get(id).username, acct.name, rank)
                     .then(summary => msg.channel.send(summary)).catch(console.error)
             ).catch(console.error);
 
@@ -432,7 +432,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             // get summoner id
             teemo.riot.get(server, "summoner.getBySummonerName", match[2]).then(summoner => {
                 teemo.riot.get(server, "league.getAllLeaguePositionsForSummoner", summoner.id).then(rank => {
-                    lol.makeRankSummary(summoner.name, summoner.name, rank)
+                    lol.rank.makeRankSummary(summoner.name, summoner.name, rank)
                         .then(summary => msg.channel.send(summary)).catch(console.error)
 
                 }).catch(err => {
@@ -462,7 +462,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 return msg.channel.send("Invalid account number. Use `-lol list` to see available accounts");
 
             teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank => {
-                lol.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
+                lol.rank.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
                     .then(summary => msg.channel.send(summary)).catch(console.error)
             }).catch(console.error);
         }
