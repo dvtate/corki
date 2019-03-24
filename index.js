@@ -24,6 +24,8 @@ global.client.on("ready", () => {
 });
 
 
+
+
 // set up our list of commands
 global.commands = []
 	.concat(require("./cmds/dev_cmds"))
@@ -149,6 +151,9 @@ require("./lol/mastery_roles.js");
 
 // start web portal
 require("./web/server.js");
+
+// this is probably bad practice and still might not be enough, but eh
+require('events').EventEmitter.prototype._maxListeners = 400;
 
 // start auto-roles daemon
 require("./sam/auto_roles/daemon.js");

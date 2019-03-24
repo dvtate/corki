@@ -49,6 +49,7 @@ async function processMember(g, m, r) {
             }};
             if (r.announce.msg)
                 msg.embed.description = await ar_cond.parseCondition(g, m.user.id, r.announce.msg);
+            console.log(msg);
             chan.send(msg);
         }
 
@@ -80,9 +81,13 @@ async function processGuild(guildid, rules) {
 function chkin() {
     console.log("starting auto-role service...");
     sam.serverDirsList().forEach(g => {
-        const rules = cfg.get(g);
-        if (rules.length)
-            processGuild(g, rules).catch(console.error);
+        try {
+            const rules = cfg.get(g);
+            if (rules.length)
+                processGuild(g, rules).catch(console.error);
+        } catch (e) {
+            console.error(e);
+        }
     });
 
 }

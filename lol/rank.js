@@ -1,7 +1,8 @@
 
 const teemo = require("./teemo");
 
-module.exports.diff = function(r1, r2) {    const tiers = [ 'i', 'b', 's', 'g', 'p', 'd', 'm', 'gm', 'c' ];
+module.exports.diff = function(r1, r2) {
+    const tiers = [ 'i', 'b', 's', 'g', 'p', 'd', 'm', 'gm', 'c' ];
     const divs  = [ '4', '3', '2', '1' ];
 
     // "G4" => ['g', '4']
@@ -42,8 +43,6 @@ module.exports.diff = function(r1, r2) {    const tiers = [ 'i', 'b', 's', 'g', 
     }
     return cmp_r * 10 + cmp_d * 0.1;
 }
-
-
 
 
 // there is no reason for this to exist here..
@@ -95,8 +94,6 @@ async function makeRankSummary(name, acctName, rank) {
 }
 
 module.exports.makeRankSummary = makeRankSummary;
-
-
 
 
 function maxRank(ranks) {

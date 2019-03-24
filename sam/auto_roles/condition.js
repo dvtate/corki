@@ -12,7 +12,7 @@ in the future I should be able to make a gui which generates/renders rpn express
 function get_date(stack) {
     let str = stack.pop();
     if (typeof(str) == "number")
-        return Date.parse(new Date(str));
+        return str;
 
     if (!str || typeof(str) != "string" || str.length == 0)
         return Date.now();
@@ -65,9 +65,9 @@ function get_date(stack) {
         tokenize(str).forEach((tok, ind, arr) => {
             if (isNaN(tok)) // days, weeks, etc.
                 if (!arr[ind - 1] || isNaN(arr[ind - 1]))
-                    ret += ms_value(tok);
+                    ret += ms_value(tok); // "day"
                 else if (!isNaN(arr[ind - 1]))
-                    ret += JSON.parse(arr[ind - 1]) * ms_value(tok);
+                    ret += JSON.parse(arr[ind - 1]) * ms_value(tok); // "6 days" == 6*day()
         });
         return ret;
     }

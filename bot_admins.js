@@ -27,3 +27,5 @@ module.exports.sendBugReport = async (msg, bug) => {
         global.client.channels.get(bugReportChannel)
             .send(`untraced error: ${bug}`);
 }
+
+module.exports.bug = bug => module.exports.sendBugReport(null, bug);

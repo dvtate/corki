@@ -11,14 +11,21 @@
 
 #include "mastery_log.hpp"
 
-// "/home/user"
+/// I don't think I've written C++ code this ugly and disordered in a long time
+
+
+
+
+// user directory string
 static inline const char* getHomeDir() {
+    // "/home/user"
     const char* homedir;
     if ((homedir = getenv("HOME")) == NULL)
         homedir = getpwuid(getuid())->pw_dir;
     return homedir;
 }
 
+// might get used /shrug
 constexpr size_t conststrlen(const char* s) {
     size_t ret = 0;
 
@@ -26,6 +33,7 @@ constexpr size_t conststrlen(const char* s) {
     return ret - 1;
 }
 
+// filename of users dir file
 static inline const char* getFileName(const char* userid) {
     const char* home = getHomeDir();
     constexpr const char* usersDir = "/.corki/users/";
@@ -41,7 +49,7 @@ static inline const char* getFileName(const char* userid) {
     return ret;
 }
 
-
+// read a file into a std::string
 static inline std::string readFile(const char* fname) {
     // read file as std::string
     std::ifstream t(fname);
@@ -49,6 +57,8 @@ static inline std::string readFile(const char* fname) {
     buffer <<t.rdbuf();
     return buffer.str();
 }
+
+// read a file into a std::string
 static inline std::string readFile(const std::string& fname) {
     // read file as std::string
     std::ifstream t(fname);
@@ -72,9 +82,35 @@ static inline std::string readLog(const char* userid, const char* lf = "/lol_cm_
 
 }
 
+static inline FILE* getCacheFile(const char* userid, const char* lf = "/lol_cm_log") {
+    const char* home = getHomeDir();
+    constexpr const char* usersDir = "/.corki/users/";
+    // const userid
 
+    char fname[strlen(home) + strlen(usersDir) + strlen(userid) + strlen(lf) + 1];
+    strcpy(fname, home);
+    strcat(fname, usersDir);
+    strcat(fname, userid);
+    strcat(fname, lf);
+    return fopen(fname);
+}
 
+/*
+template<class T>
+static inline T readLog(const char* userid, T (*func)(const char*), const char* lf = "/lol_cm_log") {
+    const char* home = getHomeDir();
+    constexpr const char* usersDir = "/.corki/users/";
+    // const userid
 
+    char fname[strlen(home) + strlen(usersDir) + strlen(userid) + strlen(lf) + 1];
+    strcpy(fname, home);
+    strcat(fname, usersDir);
+    strcat(fname, userid);
+    strcat(fname, lf);
+    return func(fname);
+
+}
+*/
 
 /*
 
@@ -94,7 +130,7 @@ static inline std::string readLog(const char* userid, const char* lf = "/lol_cm_
 bool updateLog(const char* userid) {
 
     /* cached user mastery from user_mastery.js
-    ** lol-mastery.c_parse
+    ** user/lol-mastery.c_parse
     timestamp
     champid:pts
     champid:pts
@@ -104,6 +140,8 @@ bool updateLog(const char* userid) {
 
     std::string log = readLog(userid);
     std::string new_data = readLog(userid, "lol-mastery.c_parse");
+
+    // use getline to go through the cache file and update corresponding champids
 
     // get timestamp
     // append new datapoints to each champ (create new entries for new champs)

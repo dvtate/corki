@@ -63,7 +63,7 @@ async function getData(id) {
         let rdata;
         try {
             rdata = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`));
-            console.log("rdata: ", rdata);
+            //console.log("rdata: ", rdata);
 
             if (!rdata.timestamp)
                 resolve(rdata);
