@@ -21,6 +21,20 @@ global.client.on("ready", () => {
 		}
 	}).catch(console.error);
 
+	// spawn daemons:
+
+	// lol champion mastery-based roles
+	global.lol_mastery_roles_d = require("./lol/mastery_roles.js");
+
+	// start web portal
+	global.portal_server_d = require("./web/server.js");
+
+	// this is bad practice but I don't care
+	process.setMaxListeners(0);
+
+	// start auto-roles daemon
+	global.auto_roles_d = require("./sam/auto_roles/daemon.js");
+
 });
 
 
@@ -145,15 +159,3 @@ const token = require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key`).
 
 // Log bot in using token
 global.client.login(token);
-
-// lol champion mastery-based roles
-require("./lol/mastery_roles.js");
-
-// start web portal
-require("./web/server.js");
-
-// this is probably bad practice and still might not be enough, but eh
-require('events').EventEmitter.prototype._maxListeners = 400;
-
-// start auto-roles daemon
-require("./sam/auto_roles/daemon.js");

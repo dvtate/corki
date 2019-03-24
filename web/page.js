@@ -27,7 +27,7 @@ module.exports = class Page {
                 <div class="row" id="topbar">
                     <div class="col-md-3">
                         <a href="/">
-                            <img src="https://b.thumbs.redditmedia.com/V8fcjDBXCWzITicr1z71uNHIkvhTR8aL7u233v8mANA.png" />
+                            <img src="/resources/discord-logowhite.png" />
                         </a>
                     </div>
                     <div class="col-md-6">

@@ -84,6 +84,7 @@ function cmp(item1, item2) {
 		if (typeof(item1) == "number")
 			return item2 - item1;
 }
+
 function member_join_date(stack, guildId, userId) {
     return Date.parse(global.client.guilds.get(guildId).members.get(userId).joinedAt);
 }

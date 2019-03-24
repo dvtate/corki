@@ -15,7 +15,6 @@
 
 
 
-
 // user directory string
 static inline const char* getHomeDir() {
     // "/home/user"

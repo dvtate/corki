@@ -49,7 +49,7 @@ async function processMember(g, m, r) {
             }};
             if (r.announce.msg)
                 msg.embed.description = await ar_cond.parseCondition(g, m.user.id, r.announce.msg);
-            console.log(msg);
+            //console.log(msg);
             chan.send(msg);
         }
 
@@ -70,7 +70,7 @@ async function processGuild(guildid, rules) {
 
     // process each rule in order
     for (let i = 0; i < rules.length; i++) {
-        console.log("rule: ", rules[i].role.name, rules[i].cond);
+    //    console.log("rule: ", rules[i].role.name, rules[i].cond);
         let memberProcs = guild.members.array().map(m => processMember(guild, m, rules[i]).catch(console.error));
         let _ = await Promise.all(memberProcs);
     }
@@ -79,7 +79,7 @@ async function processGuild(guildid, rules) {
 // for each server dir
 // process roles
 function chkin() {
-    console.log("starting auto-role service...");
+
     sam.serverDirsList().forEach(g => {
         try {
             const rules = cfg.get(g);
@@ -99,7 +99,7 @@ module.exports.chkin = chkin;
 // run daemon
 function refresh() {
     chkin();               // check feeds and forward new ones
-    setTimeout(refresh, 1200000); // every 20mins
+    setTimeout(refresh, 900000); // every 15mins
 }
 
 // start daemon

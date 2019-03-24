@@ -148,10 +148,9 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     /* Services to add
 
     League Stuff
-        Mastery roles
+        roles
         Leaderboard - make modular so this can be managed here...
 
-    RSS feeds
     Dictionary
     */
 
@@ -281,6 +280,26 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         <button type="button" onclick="addNewMemberAnnouncement()">Add New Member Announcement Rule</button>
     `)
     page.endFieldset();
+
+    page.startFieldset("Automatically Role assignment").add(`
+        <p>Corki can automatically assign roles to users who qualify given conditions. This feature is
+ still relatively new and thus it may take some time for the interface to become intuitive.</p>
+
+        <h4>Presets:</h4>
+        <button type="button">LoL Rank Roles</button>
+        <button type="button">LoL M7 Roles</button>
+        <button type="button">LoL Mastery Roles</button> <!-- will need to prompt for champ name -->
+
+        <!-- table here -->
+        <!-- add new here -->
+
+    `).endFieldset();
+
+    // gui system like scratch but without drag and drop
+    // <select> tags used to generate blocks and when complete will have an input button
+    // click blanks in operators to insert at specific location
+    // selector for choosing between GUI and text format for conditions
+
 
 
 

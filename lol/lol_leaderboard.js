@@ -280,4 +280,4 @@ function refresh() {
     });
     setTimeout(refresh, 3600000); // check every hr
 }
-setTimeout(refresh, 5000); // give 10 seconds for bot to start before checking
+setTimeout(refresh, 15000); // give 10 seconds for bot to start before checking
