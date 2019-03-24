@@ -166,7 +166,13 @@ module.exports = [
                         name: "Verification Level",
                         value: msg.guild.verificationLevel,
                         inline: true
-                    },
+                    }, {
+                        name: "Roles",
+                        value: msg.guild.roles.array().map(r => `\`${r.name}\`: ${r.id}`).join('\n'),
+                    }, {
+                        name: "Emojis",
+                        value: msg.guild.emojis.array().map(e => `${e} - \`<:${e.name}:${e.id}>\``).join('\n'),
+                    }
                 ],
                 thumbnail: { url: msg.guild.iconURL }
             }});
@@ -457,7 +463,7 @@ and ${(ms / 1000) % 60} seconds`;
 - The currently running patch is ${version}
 - Corki is running on Node ${node_version}`
                     }, {
-                        name: "Severs",
+                        name: "Severs",// for each rule
                         value: global.client.guilds.array().length,
                         inline: true
                     }, {

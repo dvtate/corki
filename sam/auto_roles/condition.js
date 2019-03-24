@@ -78,7 +78,7 @@ function cmp(item1, item2) {
         if (typeof(item1) != typeof(item2)) {
             return NaN; // error
         }
-		console.log("cmp: ", typeof(item1), typeof(item2));
+		//console.log("cmp: ", typeof(item1), typeof(item2));
         if (typeof(item1) == "string")
             return lol.rank.diff(item1, item2);
 		if (typeof(item1) == "number")
@@ -107,14 +107,14 @@ async function lol_mastery_points(stack, guildId, userId) {
     let champ = stack.pop();
     champ = teemo.champIDs[champ] || champ;
     const mdata = await mastery.getUserMastery(userId, champ);
-    console.log("mdata:", mdata);
+    //console.log("mdata:", mdata);
     return mdata.pts;
 }
 async function lol_mastery_level(stack, guildId, userId) {
     let champ = stack.pop();
     champ = teemo.champIDs[champ] || champ;
     const mdata = await mastery.getUserMastery(userId, champ);
-    console.log("mdata:", mdata);
+    //console.log("mdata:", mdata);
     return mdata.lvl;
 }
 

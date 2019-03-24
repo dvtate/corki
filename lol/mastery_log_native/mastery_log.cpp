@@ -22,9 +22,7 @@ static inline const char* getHomeDir() {
 constexpr size_t conststrlen(const char* s) {
     size_t ret = 0;
 
-    while (*(s + ret++)) {
-
-    }
+    while (*(s + ret)) { ret++; }
     return ret - 1;
 }
 
@@ -96,7 +94,7 @@ static inline std::string readLog(const char* userid, const char* lf = "/lol_cm_
 bool updateLog(const char* userid) {
 
     /* cached user mastery from user_mastery.js
-    /* lol-mastery.c_parse
+    ** lol-mastery.c_parse
     timestamp
     champid:pts
     champid:pts
@@ -115,11 +113,12 @@ bool updateLog(const char* userid) {
 
     // insert data_point_t immediately after label
 
+    return cs;
 }
 
 static inline std::string cmJsonStringify(const struct data_point_t pts[], const size_t len) {
     std::string ret = "[";
-    for (int i = 0; i < len; i++)
+    for (size_t i = 0; i < len; i++)
         ret += "{\"t\":" + std::to_string(pts[i].timestamp)
              + ",\"s\":" + std::to_string(pts[i].score) + "},";
     if (ret.length() > 1)
