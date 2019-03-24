@@ -47,14 +47,11 @@ async function refreshData(id) {
                 resolve(ret);
 
                 // cache mastery data to a file
-                fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`,
+                fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`,
                     JSON.stringify(ret));
 
             }
         ).catch(reject);
-
-
-
 
     });
 }
@@ -65,7 +62,7 @@ async function getData(id) {
     return new Promise((resolve, reject) => {
         let rdata;
         try {
-            rdata = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`));
+            rdata = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`));
             console.log("rdata: ", rdata);
 
             if (!rdata.timestamp)
