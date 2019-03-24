@@ -171,7 +171,12 @@ async function lol_max_rank_in_queue(stack, guildid, userid) {
     return lol.rank.max(ranks);
 }
 
-const splitargs = require("splitargs");
+function lol_in_region(stack, guildid, userid) {
+    const userObj = lol.getUserData(userid);
+    const reg = stack.pop();
+    return userObj && userObj.accounts && userObj.accounts.find(a =>
+        a.server == reg || a.server == teemo.serverNames[reg]);
+}
 
 // ast too hard, therefore rpn :D
 const cmds = {
@@ -196,7 +201,7 @@ const cmds = {
     // mastery level on given champ (1-7)
     "lol_mastery_level" : lol_mastery_level,
     // has a lol acct on given regional sever?
-    "lol_in_region" : todo,
+    "lol_in_region" : lol_in_region,
 
     // bln ops
     "and" : stack => stack.pop() && stack.pop(),
@@ -220,6 +225,9 @@ const cmds = {
 
 };
 module.exports.operators = cmds;
+
+
+const splitargs = require("splitargs");
 
 // returns final value or NaN on error
 async function parseCondition(guildId, userId, expr) {

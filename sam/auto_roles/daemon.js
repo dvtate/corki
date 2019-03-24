@@ -24,16 +24,16 @@ const cfg = require("./cfg");
 */
 
 async function processMember(g, m, r) {
-    const cond = await ar_cond.parseCondition(g.id, m.user.id, r.cond);
-    const has_role = m.roles.find(role => role.name == r.role.name) || m.roles.get(r.role.id);
+    const cond = !!await ar_cond.parseCondition(g.id, m.user.id, r.cond);
+    const has_role = !!m.roles.find(role => role.name == r.role.name) || m.roles.get(r.role.id);
 
     //console.log("cond: ", !!cond, "has_role: ", !!has_role, "username: ", m.user.username);
     // no action needed
-    if (!!cond == !!has_role) {
+    if (cond == has_role) {
         return;
 
     } else if (cond && !has_role) {
-        const role = m.roles.find(role => role.name == r.role.name) || g.roles.get(r.role.id);
+        const role = g.roles.find(role => role.name == r.role.name) || g.roles.get(r.role.id);
         if (!role)
             return console.error("invalid role: ", JSON.stringify(r.role));
 
@@ -53,7 +53,7 @@ async function processMember(g, m, r) {
         }
 
     } else if (!cond && has_role && !r.keep) {
-        const role = m.roles.find(role => role.name == r.role.name) || g.roles.get(r.role.id);
+        const role = g.roles.find(role => role.name == r.role.name) || g.roles.get(r.role.id);
         //console.log("removeed role: ", role.name, r.role.name)
         if (!role)
             return console.error("invalid role: ", JSON.stringify(r.role));
@@ -78,6 +78,7 @@ async function processGuild(guildid, rules) {
 // for each server dir
 // process roles
 function chkin() {
+    console.log("starting auto-role service...");
     sam.serverDirsList().forEach(g => {
         const rules = cfg.get(g);
         if (rules.length)

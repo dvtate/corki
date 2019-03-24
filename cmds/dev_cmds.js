@@ -168,10 +168,10 @@ module.exports = [
                         inline: true
                     }, {
                         name: "Roles",
-                        value: msg.guild.roles.array().map(r => `\`${r.name}\`: ${r.id}`).join('\n'),
+                        value: msg.guild.roles.array().map(r => `\`${r.name}\`: ${r.id}`).join('\n').substr(0, 1000),
                     }, {
                         name: "Emojis",
-                        value: msg.guild.emojis.array().map(e => `${e} - \`<:${e.name}:${e.id}>\``).join('\n'),
+                        value: msg.guild.emojis.array().map(e => `${e} - \`<:${e.name}:${e.id}>\``).join('\n').substr(0, 1000),
                     }
                 ],
                 thumbnail: { url: msg.guild.iconURL }
