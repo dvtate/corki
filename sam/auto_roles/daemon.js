@@ -24,8 +24,6 @@ const cfg = require("./cfg");
 */
 
 async function processMember(g, m, r) {
-    if (m.user.bot)
-        return;
     const cond = !!await ar_cond.parseCondition(g.id, m.user.id, r.cond);
     const has_role = !!m.roles.find(role => role.name == r.role.name)
                     || m.roles.get(r.role.id);
