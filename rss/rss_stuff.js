@@ -107,6 +107,11 @@ async function sendItems(items, channel) {
 
     try {
         const chan = global.client.channels.get(channel);
+
+        // channel deleted, no more feeds
+        if (!chan)
+            return removeChannel(channel);
+
         items.forEach(e => chan.send(`${e.title} ${e.link}`));
     } catch (e) {
         console.error(e);

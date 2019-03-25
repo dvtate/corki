@@ -25,7 +25,8 @@ const cfg = require("./cfg");
 
 async function processMember(g, m, r) {
     const cond = !!await ar_cond.parseCondition(g.id, m.user.id, r.cond);
-    const has_role = !!m.roles.find(role => role.name == r.role.name) || m.roles.get(r.role.id);
+    const has_role = !!m.roles.find(role => role.name == r.role.name)
+                    || m.roles.get(r.role.id);
 
     //console.log("cond: ", !!cond, "has_role: ", !!has_role, "username: ", m.user.username);
     // no action needed
@@ -33,14 +34,17 @@ async function processMember(g, m, r) {
         return;
 
     } else if (cond && !has_role) {
-        const role = g.roles.find(role => role.name == r.role.name) || g.roles.get(r.role.id);
+        const role = g.roles.find(role => role.name == r.role.name)
+                  || g.roles.get(r.role.id);
         if (!role)
             return console.error("invalid role: ", JSON.stringify(r.role));
 
         m.addRole(role);
 
         if (r.announce) {
-            const chan = g.channels.find(c => c.name == r.announce.name) || g.channels.get(r.announce.id);
+            const chan = g.channels.find(c => c.name == r.announce.name)
+                      || g.channels.get(r.announce.id);
+
             if (!chan)
                 return console.error("invalid channel: ", JSON.stringify(r.announce));
 
@@ -49,12 +53,13 @@ async function processMember(g, m, r) {
             }};
             if (r.announce.msg)
                 msg.embed.description = await ar_cond.parseCondition(g, m.user.id, r.announce.msg);
-            //console.log(msg);
             chan.send(msg);
         }
 
     } else if (!cond && has_role && !r.keep) {
-        const role = g.roles.find(role => role.name == r.role.name) || g.roles.get(r.role.id);
+        const role = g.roles.find(role => role.name == r.role.name)
+                  || g.roles.get(r.role.id);
+
         //console.log("removeed role: ", role.name, r.role.name)
         if (!role)
             return console.error("invalid role: ", JSON.stringify(r.role));

@@ -91,10 +91,10 @@ static inline FILE* getCacheFile(const char* userid, const char* lf = "/lol_cm_l
     strcat(fname, usersDir);
     strcat(fname, userid);
     strcat(fname, lf);
-    return fopen(fname);
+    return fopen(fname, "r");
 }
 
-/*
+/* ?
 template<class T>
 static inline T readLog(const char* userid, T (*func)(const char*), const char* lf = "/lol_cm_log") {
     const char* home = getHomeDir();
@@ -107,7 +107,6 @@ static inline T readLog(const char* userid, T (*func)(const char*), const char* 
     strcat(fname, userid);
     strcat(fname, lf);
     return func(fname);
-
 }
 */
 
@@ -137,8 +136,18 @@ bool updateLog(const char* userid) {
     ...
     */
 
+    // switch to use ifstream...
+
     std::string log = readLog(userid);
-    std::string new_data = readLog(userid, "lol-mastery.c_parse");
+    FILE* new_data = getCacheFile(userid, "lol-mastery.c_parse");
+
+    size_t line_size = 10;
+    char* line = (char*) malloc(line_size);
+    getline(new_data, &line, &line_size);
+    int64_t ts = std::atoll(line);
+    while (getline(new_data, &line, &line_size)) {
+
+    }
 
     // use getline to go through the cache file and update corresponding champids
 

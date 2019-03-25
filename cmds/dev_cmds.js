@@ -372,9 +372,9 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
             time = (time[0] * ns_per_s + time[1]) / (ns_per_s);
 
 
-            const ms_to_str = ms => `${Math.floor(ms / 1000 / 60 / 60 / 24)} days, \
-${Math.floor(ms / 1000 / 60 / 60) % 24} hours, ${Math.floor(ms / 1000 / 60) % 60} minutes, \
-and ${(ms / 1000) % 60} seconds`;
+            const ms_to_str = ms => `${Math.floor(ms / 1000 / 60 / 60 / 24)} days, ${
+                Math.floor(ms / 1000 / 60 / 60) % 24} hours, ${Math.floor(ms / 1000 / 60) % 60
+                } minutes, and ${Math.round(((ms / 1000) % 60) * 1000) / 1000} seconds`;
 
             let srv_uptime = await new Promise((resolve, reject) =>
                 // run command and send output
@@ -387,7 +387,7 @@ and ${(ms / 1000) % 60} seconds`;
 
             msg.channel.send({ embed: {
                 title: "Uptime",
-                description: "",
+                description: "Corki must be restarted in order to apply updates. Although some outages are planned/expected the majority are a result of Cox Cable Co.",
                 fields: [
                     {
                         name: "Server Uptime",
@@ -428,7 +428,7 @@ and ${(ms / 1000) % 60} seconds`;
     },
 
     {
-        condition: msg => msg.content.match(/^about|^log bot/),
+        condition: msg => msg.content.match(/^(?:about|log bot)/),
         act: async msg => {
             logCmd(msg, "-about");
 
@@ -449,6 +449,7 @@ and ${(ms / 1000) % 60} seconds`;
 
             const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}d ${Math.floor(time / 60 / 60) % 24
     }h, ${Math.floor(time / 60) % 60}m, and ${Math.round(time % 60)}s`;
+
 
             msg.channel.send({ embed: {
                 title: "About Corki",
