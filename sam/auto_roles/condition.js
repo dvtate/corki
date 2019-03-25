@@ -93,10 +93,12 @@ function has_role(stack, guildId, userId) {
     const guild = global.client.guilds.get(guildId);
     const member = guild.members.get(userId);
     if (typeof(role) == "number") { // role id ? find name
-        return member.roles.get(role);
+        return !!member.roles.get(role);
     }
-
-    return !!member.roles.find(r => r.name == role);
+    if (typeof(role) == "string") {
+        return !!member.roles.find(r => r.name == role);
+    }
+    else return false;
 }
 
 
