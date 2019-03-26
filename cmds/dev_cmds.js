@@ -501,6 +501,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
         act: async msg => {
             logCmd(msg, "-feature-request");
 
+
             require("child_process").execSync(
                 "wget https://feathub.com/dvtate/corki?format=svg -O /tmp/corki.svg" // get feathub summary
                  + " && convert /tmp/corki.svg /tmp/corki.png");                    // convert to png (imagemagick)
@@ -526,6 +527,7 @@ reports via \`-bug\`. Thanks!`,
         act: async function (msg) {
             const cond = this.condition(msg)[1];
             const ar = require("../sam/auto_roles/condition");
+            const gid = msg.guild.id;
             msg.channel.send(await ar.parseCondition(msg.guild.id, msg.author.id, cond));
         }
 

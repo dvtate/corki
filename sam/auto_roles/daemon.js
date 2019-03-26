@@ -85,6 +85,10 @@ async function processGuild(guildid, rules) {
 // process roles
 function chkin() {
 
+
+    // this is bad practice
+    process.setMaxListeners(0);
+
     sam.serverDirsList().forEach(g => {
         try {
             const rules = cfg.get(g);

@@ -12,7 +12,8 @@
 #include "mastery_log.hpp"
 
 /// I don't think I've written C++ code this ugly and disordered in a long time
-
+/// most of this should be rewritten using ideas discussed here:
+///      https://courses.cs.vt.edu/~cs2604/fall00/binio.html
 
 
 // user directory string

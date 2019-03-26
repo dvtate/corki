@@ -28,10 +28,7 @@ global.client.on("ready", () => {
 
 	// start web portal
 	global.portal_server_d = require("./web/server.js");
-
-	// this is bad practice but I don't care
-	process.setMaxListeners(0);
-
+	
 	// start auto-roles daemon
 	global.auto_roles_d = require("./sam/auto_roles/daemon.js");
 
