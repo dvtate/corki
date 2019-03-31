@@ -26,7 +26,6 @@ for (key in module.exports.serverNames)
     module.exports.serverNames[module.exports.serverNames[key]] = key;
 
 
-
 // edit when new champs come out
 module.exports.champIDs = {
 
@@ -231,10 +230,31 @@ function convertRank(rank, division) {
         "GRANDMASTER" : 'gm',
         "CHALLENGER"  : 'c',
     };
-    
+
     const romanNumerals = {
         "I" : 1, "II" : 2, "III" : 3, "IV" : 4, };
 
     return ranks[rank] + (romanNumerals[division] || "");
 }
 module.exports.convertRank = convertRank;
+
+
+module.exports.champggRoleNames = {
+    "top" : "TOP",
+
+    "mid" : "MIDDLE", "middle" : "MIDDLE",
+
+    "jg" : "JUNGLE", "jungle" : "JUNGLE",
+    "jng" : "JUNGLE", "jung" : "JUNGLE",
+
+    "adc" : "DUO_CARRY", "bot" : "DUO_CARRY",
+    "ad" : "DUO_CARRY", "carry" : "DUO_CARRY",
+    "adcarry" : "DUO_CARRY",
+
+    "sup" : "DUO_SUPPORT", "supp" : "DUO_SUPPORT",
+    "support" : "DUO_SUPPORT", "realcarry" : "DUO_SUPPORT",
+    "egirl" : "DUO_SUPPORT",
+
+    "adcsupport" : "ADCSUPPORT", "adsupp" : "ADCSUPPORT",
+    "synergy" : "SYNERGY"
+}

@@ -1,6 +1,7 @@
 
 const teemo = require("./teemo");
 
+// result is backwards
 module.exports.diff = function(r1, r2) {
     const tiers = [ 'i', 'b', 's', 'g', 'p', 'd', 'm', 'gm', 'c' ];
     const divs  = [ '4', '3', '2', '1' ];
@@ -101,7 +102,7 @@ function maxRank(ranks) {
         return;
     let max = ranks[0];
     for (let i = 0; i < ranks.length; i++)
-        if (module.exports.diff(ranks[i], max) > 0)
+        if (module.exports.diff(ranks[i], max) < 0)
             max = ranks[i];
 
     return max;

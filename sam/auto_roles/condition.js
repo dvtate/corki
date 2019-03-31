@@ -121,7 +121,6 @@ async function lol_mastery_level(stack, guildId, userId) {
     return mdata.lvl;
 }
 
-
 function todo(stack) {
     return stack.pop();
 }

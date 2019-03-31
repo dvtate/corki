@@ -91,28 +91,7 @@ module.exports = [
             const match = this.condition(msg);
 
 
-            const roleNames = {
-                "top" : "TOP",
-
-                "mid" : "MIDDLE", "middle" : "MIDDLE",
-
-                "jg" : "JUNGLE", "jungle" : "JUNGLE",
-                "jng" : "JUNGLE", "jung" : "JUNGLE",
-
-                "adc" : "DUO_CARRY", "bot" : "DUO_CARRY",
-                "ad" : "DUO_CARRY", "carry" : "DUO_CARRY",
-                "adcarry" : "DUO_CARRY",
-
-                "sup" : "DUO_SUPPORT", "supp" : "DUO_SUPPORT",
-                "support" : "DUO_SUPPORT", "realcarry" : "DUO_SUPPORT",
-                "egirl" : "DUO_SUPPORT",
-
-                "adcsupport" : "ADCSUPPORT", "adsupp" : "ADCSUPPORT",
-                "synergy" : "SYNERGY"
-            }
-
-
-            const role = roleNames[match[1].toLowerCase()];
+            const role = teemo.champggRoleNames[match[1].toLowerCase()];
 
             if (!role) {
                 msg.channel.send("invalid role please use: top, mid, jg, adc, or supp (or any other champgg role)");
@@ -210,6 +189,48 @@ module.exports = [
             });;
         },
         tests: [ "-lol wr corki" ]
-    }
+    }, {
+        condition: msg => msg.content.match(/^lol meta\s?(\S+)?/),
+        act: async function (msg) {
+            const elo = this.condition(msg)[1];
+            const data = (await (elo ?
+                teemo.champgg.get("overall", {elo : elo.toUpperCase()})
+                : teemo.champgg.get("overall") ))[0];
+            console.log(data);
 
+            const formatElo = elo => {
+                if (elo == "DUO_CARRY")
+                    return "Bottom";
+                if (elo == "DUO_SUPPORT")
+                    return "Support";
+                elo = (elo[0].toUpperCase() + elo.slice(1).toLowerCase());
+                // plat+
+                const cmb = elo.split(',');
+                if (cmb.length > 1)
+                    elo = cmb[0] + '+';
+
+                return elo;
+            }
+
+
+            msg.channel.send({ embed: {
+                title: `Meta Champs ${formatElo(data.elo)} patch ${data.patch}`,
+                fields: Object.keys(data.positions).map(role => {
+                    return {
+                        name: formatElo(role),
+                        value: `
+**Best Win Rate:** ${teemo.champNames[data.positions[role].winrate.best.championId]
+    } -- ${Math.round(10000 * data.positions[role].winrate.best.score) / 100}
+**Worst Win Rate:** ${teemo.champNames[data.positions[role].winrate.worst.championId]
+    } -- ${Math.round(10000 * data.positions[role].winrate.worst.score) / 100}
+**Best Champion.gg power rating:** ${teemo.champNames[data.positions[role].performanceScore.best.championId]
+    } -- ${Math.round(1000 * data.positions[role].performanceScore.best.score) / 1000}
+**Worst Champion.gg power rating:** ${teemo.champNames[data.positions[role].performanceScore.worst.championId]
+    } -- ${Math.round(1000 * data.positions[role].performanceScore.worst.score) / 1000}`
+                    };
+                }),
+
+            }});
+        }
+    }
 ];

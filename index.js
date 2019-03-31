@@ -9,6 +9,8 @@ global.Discord = require("discord.js");
 // Create an instance of a Discord client
 global.client = new global.Discord.Client();
 
+
+
 // bot will only start reacting to information
 // from Discord _after_ ready is emitted
 global.client.on("ready", () => {
@@ -28,7 +30,7 @@ global.client.on("ready", () => {
 
 	// start web portal
 	global.portal_server_d = require("./web/server.js");
-	
+
 	// start auto-roles daemon
 	global.auto_roles_d = require("./sam/auto_roles/daemon.js");
 
@@ -52,7 +54,6 @@ global.commands = []
 	.concat(require("./sam/prefix_cmds"))
 	.concat(require("./cmds/define"))
 	.concat(require("./cmds/help_cmds"));
-
 
 const interactions = []
 	.concat(require("./reactions"));
