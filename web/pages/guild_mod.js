@@ -9,7 +9,7 @@ const teemo = require("../../lol/teemo.js");
 const mods = require("../../sam/mods");
 const roles = require("../../sam/roles");
 const welcome = require("../../sam/welcome");
-const masteryRoles = require("../../lol/mastery_roles");
+const auto_roles = require("../../sam/auto_roles/cfg");
 const prefix = require("../../sam/prefix.js");
 const lol_lb = require("../../lol/lol_leaderboard");
 const rss = require("../../rss/rss_stuff");
@@ -374,79 +374,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             <button type="button" onclick="addRSSChan()">Add RSS Feed</button>
             `);
 
-
-    /* TODO: add RSS subs
-    * maybe rewrite RSS first
-    */
-
-/*
-    page.startFieldset("League of Legends Roles [wip]");
-    page.add(`<p>Corki can automatically assign roles to users based on how many mastery points they have on a specific champ</p>`);
-
-    let lol_roles = masteryRoles.getRolesData(guild.id);
-    for (let i = 0; i < lol_roles.length; i++) {
-        page.startFieldset(`${teemo.champNames[lol_roles[i].champ]} Mastery roles`);
-        page.add("Announcements: #" + lol_roles[i].announce);
-        let rData = lol_roles[i].pts_roles.map(r => {
-            return [ r.role, r.required, r.announce,
-                `<button type="button" onclick="redirect('/mod/${guild.id}/rmmasteryrole/${i}/${encodeURIComponent(r.role)}')">remove</button>`];
-        });
-        page.addTable(["Role", "Minimum points", "Announce", "Actions"], rData, "Roles");
-
-        page.startFieldset("Add New Role")
-        page.add(`
-            New Role: <input type="text" id="lol-mrole-${i}-name" ><br/>
-            Points: <input type="number" id="lol-mrole-${i}-pts" ><br/>
-            <div class="input-group">
-                <input type="checkbox" id="lol-mrole-${i}-announce" >
-                <label for="lol-mrole-${i}-announce" >announce in #${lol_roles[i].announce}</label>
-            </div><br/>
-            <button type="button" onclick="">Add Role</button>
-            `)
-            .addScript(`
-                function addRole${i}() {
-
-                    const name = document.getElementById("lol-mrole-${i}-name").value;
-                    const minPts = JSON.parse(document.getElementById("lol-mrole-${i}-pts").value);
-                    const announce = document.getElementById("lol-mrole-${i}-announce").checked;
-
-                    if (!name || !minPts || !announce)
-                        return;
-
-                    redirect("/mod/${guild.id}/addMasteryRole/${i}/"
-                        + encodeURIComponent(name) + '/' + minPts + '/' + announce);
-
-                }
-            `).endFieldset().endFieldset();
-
-    }
-
-    page.addScript(`
-        function addRoleSet() {
-            const champ = document.getElementById("new-mroleset-champ").value;
-            const chan = document.getElementById("new-mroleset-chan").value;
-
-            if (!champ || !chan)
-                return;
-
-            redirect("/mod/${guild.id}/addMasteryRoleset/"
-                + encodeURIComponent(champ) + '/'
-                + encodeURIComponent(chan));
-        }
-    `)
-    page.startFieldset("Add New Roleset")
-        .add(`
-        Roleset Champion: <input type="text" id="new-mroleset-champ" placeholder="corki" /><br/>
-        Roleset Announcement Channel: #<input type="text" id="new-mroleset-chan" placeholder="general"><br/>
-        <button onclick="addRoleSet()">Add Another Champion Roleset</button>`)
-        .endFieldset()
-        .endFieldset();
-
-    page.startFieldset("More Coming soon").add(`Corki has so many more features
-         which are already implemented but not currently accessable here. Come back later for more :D`).endFieldset();
-*/
-
-
+    // todo: add autoRoles system
 
     res.send(page.export());
 
