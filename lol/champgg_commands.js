@@ -189,7 +189,10 @@ module.exports = [
             });;
         },
         tests: [ "-lol wr corki" ]
-    }, {
+    },
+
+    // meta champs and stuff
+    {
         condition: msg => msg.content.match(/^lol meta\s?(\S+)?/),
         act: async function (msg) {
             const elo = this.condition(msg)[1];

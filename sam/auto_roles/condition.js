@@ -22,13 +22,13 @@ function get_date(stack) {
     // not handled by default so we convert manually
     if (!ret || ret == NaN) {
 		const ms_value = t => {
-    		if (t == "year" || t == "years" || t == "yr" || t == "yrs")
+    		if (t == "year" || t == "years" || t == "yr" || t == "yrs" || t == "y")
     			return 1000 * 60 * 60 * 24 * 365;
-    		if (t == "day" || t == "days")
+    		if (t == "day" || t == "days" || t == "d")
     			return 1000 * 60 * 60 * 24;
-			if (t == "hour" || t == "hours" || t == "hrs" || t == "hr")
+			if (t == "hour" || t == "hours" || t == "hrs" || t == "hr" || t == "h")
 				return 1000 * 60 * 60;
-    		if (t == "min" || t == "mins" || t == "minutes" || t == "mins")
+    		if (t == "min" || t == "mins" || t == "minutes" || t == "minute" || t == "m")
     			return 1000 * 60;
 			//console.log("invalid label");
     		return NaN;

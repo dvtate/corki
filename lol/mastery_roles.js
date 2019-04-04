@@ -6,7 +6,8 @@ const teemo = require("./teemo.js");
 const lol = require("./lol_stuff.js");
 const sam = require("../sam/sam");
 
-
+/// deprecated
+/// soon to be removed
 
 function removeRoles(server, member, roles) {
     const guild = global.client.guilds.get(server)
@@ -33,7 +34,6 @@ module.exports.makeRolesFile = makeRolesFile;
 
 
 function getRolesData(serverid) {
-    sam.populateServerDir(serverid);
 
     try {
         return JSON.parse(
@@ -122,7 +122,7 @@ function checkin(server) {
 
                         console.log(`${guild.name}: promoting ${member[1].user.username} to ${roles[i].role}`);
                         console.log(`previously had: ${Array.from(member[1].roles).map(r => r[1].name).join()}`);
-                        
+
                         // reset and replace associate roles
                         removeRoles(server, member[0], roles);
                         member[1].addRole(role);
@@ -150,8 +150,13 @@ function checkin(server) {
 
 function refresh() {
     sam.serverDirsList().forEach(serverid => {
-        if (getRolesData(serverid).length)
+        if (getRolesData(serverid).length) {
             checkin(serverid);
+            global.client.guilds.get(serverid).owner.createDM(dm => {
+                dm.send("Your server makes ")
+            })
+        }
+
     });
     setTimeout(refresh, 3600000); // check every hr
 }

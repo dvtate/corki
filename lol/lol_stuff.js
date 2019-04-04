@@ -60,7 +60,6 @@ module.exports.removeDir = removeDir;
 
 */
 
-
 function getUserData (id) {
     if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}/lol.json`))
         return null;
