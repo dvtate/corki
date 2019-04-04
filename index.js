@@ -25,13 +25,10 @@ global.client.on("ready", () => {
 
 	// spawn daemons:
 
-	// lol champion mastery-based roles
-	global.lol_mastery_roles_d = require("./lol/mastery_roles.js");
-
-	// start web portal
+		// start web portal server
 	global.portal_server_d = require("./web/server.js");
 
-	// start auto-roles daemon
+		// start auto-roles daemon
 	global.auto_roles_d = require("./sam/auto_roles/daemon.js");
 
 });
