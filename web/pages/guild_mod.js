@@ -349,7 +349,6 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         <p>Corki can automatically forward RSS feeds to a channel.</p>
     `);
 
-
     const rss_table = rss.serverRules(req.params.serverid).map(r => {
         return [ '#' + global.client.channels.get(r.chan).name,
             r.url,
@@ -360,7 +359,6 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     if (rss_table.length == 0)
         page.add("<center><h4>None (yet)</h4></center>");
 
-    //page.add("This interface is not yet complete. Please use bot commands. Sorry");
 
     page.addScript(`
         function addRSSChan(){
@@ -372,13 +370,11 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             # <input list="chans" id="rss-chan" placeholder="destination channel" /> :
             <input type="text" id="rss-url" placeholder="https://reddit.com/r/leagueoflegends/new/.rss" title="feed url">
             <button type="button" onclick="addRSSChan()">Add RSS Feed</button>
-            `);
+    `);
 
     // todo: add autoRoles system
 
     res.send(page.export());
-
-    // welcome msgs
 
 }));
 

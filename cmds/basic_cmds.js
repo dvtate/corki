@@ -193,8 +193,12 @@ Go to corki.js.org to add corki to yours.");
         condition: msg => msg.content.match(/^urban (.+)/),
         act: async function (msg) {
             logCmd(msg, "-urban ()");
-            const def = urban(this.condition(msg)[1]);
-            def.first(json => msg.channel.send(formatUrbanDef(json)));
+            if (msg.channel.nsfw) {
+                const def = urban(this.condition(msg)[1]);
+                def.first(json => msg.channel.send(formatUrbanDef(json)));
+            } else {
+                msg.channel.send("Sorry, TOS requires this command only be available in NSFW channels");
+            }
         }
     },
 
@@ -202,7 +206,11 @@ Go to corki.js.org to add corki to yours.");
         condition: msg => msg.content.match(/^urban(?:$|\s)/),
         act: async msg => {
             logCmd(msg, "-urban");
-            urban.random().first(json => msg.channel.send(formatUrbanDef(json)));
+            if (msg.channel.nsfw) {
+                urban.random().first(json => msg.channel.send(formatUrbanDef(json)));
+            } else {
+                msg.channel.send("Sorry, TOS requires this command only be available in NSFW channels");
+            }
         }
     }
 

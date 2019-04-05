@@ -23,7 +23,8 @@ function get(id) {
     try {
         return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${id}/ar-config.json`));
     } catch(e) {
-        console.log(e);
+        if (e.code == "ENOENT")
+            console.error(e);
         return [];
     }
 }
