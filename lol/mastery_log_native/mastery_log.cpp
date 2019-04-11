@@ -15,6 +15,13 @@
 /// most of this should be rewritten using ideas discussed here:
 ///      https://courses.cs.vt.edu/~cs2604/fall00/binio.html
 
+/// thankfully this was just to put down ideas and isn't currently in use
+
+
+
+///
+// Util
+///
 
 // user directory string
 static inline const char* getHomeDir() {
@@ -29,7 +36,9 @@ static inline const char* getHomeDir() {
 constexpr size_t conststrlen(const char* s) {
     size_t ret = 0;
 
-    while (*(s + ret)) { ret++; }
+    while (*(s + ret))
+        ret++;
+
     return ret - 1;
 }
 
@@ -111,17 +120,16 @@ static inline T readLog(const char* userid, T (*func)(const char*), const char* 
 }
 */
 
-/*
-
-#### #   # ##         #   # ##### ##### #
-#    ##  # #  #       #   #   #     #   #
-##   # # # #   #      #   #   #     #   #
-#    #  ## #   #      #   #   #     #   #
-#### #   # ####        ###    #   ##### #####
-
-*/
 
 
+
+
+
+
+
+///
+// implementation
+///
 
 
 

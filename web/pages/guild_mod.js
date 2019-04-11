@@ -157,7 +157,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     page.add(`
         <!-- league of legends champion names -->
         <datalist id="champs">
-            <option value="${Object.keys(teemo.champIDs).join("\">\n<option value=\"")}">
+            <option value="${Object.keys(teemo.champIDs).join("\"><option value=\"")}">
         </datalist>
 
         <!-- text channels in current guild -->
@@ -165,8 +165,13 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             <option value="${
                 Array.from(global.client.guilds.get(req.params.serverid).channels)
                     .filter(c => c[1].type == "text").map(c => c[1].name)
-                    .join("\">\n<option value=\"")
+                    .join("\"><option value=\"")
             }">
+        </datalist>
+
+        <!-- roles in given sever -->
+        <datalist id="roles">
+            <option value"${guild.roles.array().map(r => r.name).join("\"><option value=\"")}">
         </datalist>
     `);
 
@@ -286,13 +291,37 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
  still relatively new and thus it may take some time for the interface to become intuitive.</p>
 
         <h4>Presets:</h4>
-        <button type="button">LoL Rank Roles</button>
-        <button type="button">LoL M7 Roles</button>
-        <button type="button">LoL Mastery Roles</button> <!-- will need to prompt for champ name -->
+        <!-- these will open a popup that prompts for more info -->
+        <button type="button" onclick="alert('notimplemented')">LoL Rank Roles</button>
+        <button type="button" onclick="alert('notimplemented')">LoL M7 Roles</button>
+        <button type="button" onclick="alert('notimplemented')">LoL Mastery Roles</button>
+    `)
 
-        <!-- table here -->
-        <!-- add new here -->
+    const ar_table = auto_roles.get(req.params.serverid).map(r => {
+        return [
+            guild.roles.find(rl => rl.name == r.role.name).name || guild.roles.get(r.role.id).name || "*invalid_role",
+            `<kbd>${r.cond}</kbd>`,
+            guild.channels.find(c => c.name == r.announce.name).name || guild.channels.get(r.announce.id).name || "not announced",
+            r.keep ? "kept" : "removed",
+            `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rm_ar/${r.role.id}')">Remove</button>`
+        ];
+    });
+    page.addTable(["Role", "Rule", "Announce", "Keep", "Actions"], ar_table, "Automatic Roles");
+    page.addScript(`
+        function addAARole() {
 
+        }
+        function presetRoles(ps) {
+            alert("preset '" + ps + "' not yet implemented, sorry");
+        }
+    `).add(`
+        <br/>
+        <input list="roles" id="aar-role" placeholder="Role to be Assigend" />
+        <input type="text" id="aar-cond" placeholder="condition expression" title="eventually this will be replaced with an intuitive graphical system" />
+        <div class="input-group"><input type="checkbox" id="aar-keep" /><label for="aar-keep">Keep when Condition is false</label></div>
+        <input list="chans" id="aar-announce-chan" placeholder="Promotion Announcement Channel" title="leave blank for no promotion announcements. Message will get sent here" />
+        <input type="text" id="aar-announce-msg" placeholder="Optional promotion subtitle" title="you can include bonus info here when someone gets promoted and it will get annnounced" />
+        <button type="button" id="aar-submit" onclick="addAARole()">Add Role</button>
     `).endFieldset();
 
     // gui system like scratch but without drag and drop

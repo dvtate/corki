@@ -206,11 +206,10 @@ Go to corki.js.org to add corki to yours.");
         condition: msg => msg.content.match(/^urban(?:$|\s)/),
         act: async msg => {
             logCmd(msg, "-urban");
-            if (msg.channel.nsfw) {
+            if (msg.channel.nsfw)
                 urban.random().first(json => msg.channel.send(formatUrbanDef(json)));
-            } else {
+            else
                 msg.channel.send("Sorry, TOS requires this command only be available in NSFW channels");
-            }
         }
     }
 

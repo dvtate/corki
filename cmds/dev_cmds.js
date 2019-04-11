@@ -123,7 +123,7 @@ module.exports = [
     },
 
     {
-        condition: msg => msg.content.match(/^(?:log author|avatar)(?:<@!?([0-9]+)>)?/),
+        condition: msg => msg.content.match(/^(?:log author|avatar)(?:\s?<@!?([0-9]+)>)?/),
         act: function (msg) {
             const m = this.condition(msg);
             const user = m[1] ? global.client.users.get(m[1]) : msg.author;
@@ -229,29 +229,6 @@ module.exports = [
         },
         tests: [ "-log members" ]
     },
-
-    {
-        condition: msg =>  msg.content.match(/^log/),
-        act: msg => msg.channel.send({ embed: {
-            title: "-log Help",
-            description: "`-log` is a multi-purpose command used to help the bot developers by giving useful information",
-            fields: [
-                {
-                    name: "Possble arguments",
-                    value: `You must specify what information you want.
-            \`-log\`: send this help entry.
-            \`-log guild\`: send information about the current server
-            \`-log members\`: send membership information for current server
-            \`-log channel\`: describe current channel.
-            \`-log author\`: describe whoever sends this command.
-            \`-log bot\`: describe ${global.client.user.toString()}`
-                }
-            ]
-        }}),
-        tests: [ "-log help", "-log" ]
-    },
-
-
 
     { // msg - send a message to a channel
         condition: msg => msg.content.match(/^msg (\S+) ([\s\S]+)/),
@@ -493,6 +470,27 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
             }})
         },
         tests: [ "-about" ]
+    },
+
+    {
+        condition: msg =>  msg.content.match(/^log/),
+        act: msg => msg.channel.send({ embed: {
+            title: "-log Help",
+            description: "`-log` is a multi-purpose command used to help the bot developers by giving useful information",
+            fields: [
+                {
+                    name: "Possble arguments",
+                    value: `You must specify what information you want.
+            \`-log\`: send this help entry.
+            \`-log guild\`: send information about the current server
+            \`-log members\`: send membership information for current server
+            \`-log channel\`: describe current channel.
+            \`-log author\`: describe whoever sends this command.
+            \`-log bot\`: describe ${global.client.user.toString()}`
+                }
+            ]
+        }}),
+        tests: [ "-log help", "-log" ]
     },
 
     // show image from feathub
