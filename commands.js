@@ -118,7 +118,7 @@ const c_lol = [
         name: "-lol global leaderboard",
         usage: "<p>Shows leaderboard for masterypoints on a champion including all of corki users with accounts</p>",
         args: "champion name<br/><kbd>-lol leaderboard &lt;championname></kbd>",
-        example: "<kbd>-lol global leaderboard corki</kbd><br/><kbd>-lol glb leblanc</kbd>"
+        example: "<kbd>-lol global leaderboard corki</kbd><br/><kbd>-lol glb lb</kbd>"
     }, {
         name: "-lol servers",
         usage: "<p>Shows a list of supported League of Legends servers</p>",
@@ -166,8 +166,15 @@ const c_lol = [
         usage: "<p>Refresh cached data associated with your LoL accounts. (champion mastery points, summoner name, etc.)</p>",
         args: "takes no arguments",
         example: "<kbd>-lol refresh</kbd>"
+    }, {
+        name: "-lol meta",
+        usage: "<p>Shows meta picks in given elo based on champion.gg's data</p>",
+        args: `
+<kbd>-lol meta</kbd>: shows meta picks in platinum+</kbd>
+<kbd>-lol meta&lt;elo></kbd>: shows meta picks in given elo</kbd>
+        `,
+        example: "<kbd>-lol meta<kbd><br/><kbd>-lol meta silver</kbd>"
     }
-
 ];
 
 const c_international = [
@@ -384,6 +391,11 @@ const c_devtools = [
         args: "message to the developer to give an idea of whats wrong and/or what you want to see",
         example: "<kbd>-bug the bot isn't responding to -ping and shows as offline</kbd>"
     }, {
+        name: "-feature-request",
+        usage: "<p>Shows a list of requested features for the bot, feel free to add your ideas</p>",
+        args: "takes no arguments",
+        example: "<kbd>-feature-request</kbd>"
+    }, {
         name: "-system",
         usage: "<p>Runs BASH code on the bot's server</p><br/><b>(requires BotAdmin priveleges)</b>",
         args: "requires shell command to run",
@@ -419,7 +431,7 @@ const c_devtools = [
         usage: "<p>format raw text into a message (opposite of -deformat)</p>",
         args: "raw text enclosed in <kbd>`</kbd>'s",
         example: "<kbd>-reformat `<@332958493722017792>`</kbd>"
-    }
+    },
 ];
 
 commands = {
