@@ -377,7 +377,7 @@ const c_devtools = [
     {
         name: "-log",
         usage: "<p>Share commonly needed information which the bot has access to</p>",
-        args: `<kbd>-log [help|channel|author|msgid]</kbd>
+        args: `<kbd>-log [help|guild|members|channel|user [@mention]|bot]</kbd>
 <p>Different arguments produce different information</p>`,
         example: "<kbd>-log help</kbd>"
     }, {
