@@ -292,15 +292,25 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
         <h4>Presets:</h4>
         <!-- these will open a popup that prompts for more info -->
-        <button type="button" onclick="alert('notimplemented')">LoL Rank Roles</button>
-        <button type="button" onclick="alert('notimplemented')">LoL M7 Roles</button>
-        <button type="button" onclick="alert('notimplemented')">LoL Mastery Roles</button>
+        <button type="button" onclick="aarPresetRoles('lol_rank')">LoL Rank Roles</button>
+        <button type="button" onclick="aarPresetRoles('lol_m7')">LoL M7 Roles</button>
+        <button type="button" onclick="aarPresetRoles('lol_mastery')">LoL Mastery Roles</button>
+        <div id="aar-preset-popup"></div>
+    `).addStyle(`
+        #aar-preset-popup {
+    		display: none;
+    		position: -webkit-sticky;
+    		position: sticky;
+    		background-color: white;
+    		color: black;
+    		padding: 15px;
+        }
     `)
 
     const ar_table = auto_roles.get(req.params.serverid).map(r => {
         return [
             guild.roles.find(rl => rl.name == r.role.name).name || guild.roles.get(r.role.id).name || "*invalid_role",
-            `<kbd>${r.cond}</kbd>`,
+            `<kbd>${ r.cond.replace(/\</g, "&lt;") }</kbd>`,
             guild.channels.find(c => c.name == r.announce.name).name || guild.channels.get(r.announce.id).name || "not announced",
             r.keep ? "kept" : "removed",
             `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rm_ar/${r.role.id}')">Remove</button>`
@@ -308,17 +318,65 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     });
     page.addTable(["Role", "Rule", "Announce", "Keep", "Actions"], ar_table, "Automatic Roles");
     page.addScript(`
-        function addAARole() {
 
+
+        function addAARole() {
+            alert("adding automatic roles isn't implemented yet, sorry");
+            const obj = {
+
+            }
         }
-        function presetRoles(ps) {
+
+		// check which queue then apply
+		function aarLolRankPreset() {
+			var q = document.getElementById("aar-ps-lol_rank-queue").value;
+			redirect("/mod/${req.params.serverid}/aar_ps_lol_m7/" + q);
+		}
+
+		// check increment
+		function aarLolMasteryPreset() {
+            var champ = document.getElementById("aar-ps-lol_mastery-champ").value;
+			var incr = document.getElementById("aar-ps-lol_mastery-incr").value;
+			redirect("/mod/${req.params.serverid}/aar_ps_lol_mastery/" + champ + '/' + incr);
+		}
+
+        function aarPresetRoles(ps) {
             alert("preset '" + ps + "' not yet implemented, sorry");
+
+			var box = document.getElementById("aar-preset-popup");
+			if (ps == "lol_rank") {
+				box.style.display = "block";
+				box.innerHTML = \`
+					Ranked Queue:
+					<select>
+						<option value="soloq">Ranked Solo/Duo</option>
+						<option value="flexq">Ranked Flex 5v5</option>
+						<option value="3s">Ranked Twisted Treeline</option>
+						<option value="high">Highest</option>
+						<option value="any">Any Queue</option>
+					</select><br/>
+					<button type="button" onclick="aarLoLRankPreset()">Apply</button>
+				\`;
+			} else if (ps == "lol_m7") {
+				redirect("/mod/${req.params.serverid}/aar_ps_lol_m7");
+			} else if (ps == "lol_mastery") {
+				box.style.display = "block";
+				box.innerHTML = \`
+					Relevant Champion: <input list="champs" id="aar-ps-lol_mastery-champ"><br/>
+					Increments: <select>
+						<option value="50k">Every 50k points</option>
+						<option value="100k">Every 100k points</option>
+						<option value="lvl">Every Mastery Level (0-7)</option>
+					</select><br/>
+					<button type="button" onclick="aarLolMasteryPreset()">Apply</button>
+				\`;
+			}
         }
     `).add(`
         <br/>
         <input list="roles" id="aar-role" placeholder="Role to be Assigend" />
         <input type="text" id="aar-cond" placeholder="condition expression" title="eventually this will be replaced with an intuitive graphical system" />
-        <div class="input-group"><input type="checkbox" id="aar-keep" /><label for="aar-keep">Keep when Condition is false</label></div>
+        <div class="input-group"><input type="checkbox" id="aar-keep" /><label for="aar-keep">Keep when Condition is false</label></div><br/>
         <input list="chans" id="aar-announce-chan" placeholder="Promotion Announcement Channel" title="leave blank for no promotion announcements. Message will get sent here" />
         <input type="text" id="aar-announce-msg" placeholder="Optional promotion subtitle" title="you can include bonus info here when someone gets promoted and it will get annnounced" />
         <button type="button" id="aar-submit" onclick="addAARole()">Add Role</button>
@@ -365,7 +423,6 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
                 { champ : champ, chan: chan, per: per }));
             redirect("/mod/${req.params.serverid}/addcmlb/" + uri);
         }
-        console.log(addCMLB);
     `).add(`<br/><br/>
         Send a <input list="champs" id="cmlb-champ" placeholder="champ" />
         leaderboard to #<input list="chans" id="cmlb-chan" placeholder="channel-name" />
