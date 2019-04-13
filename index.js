@@ -63,17 +63,26 @@ global.commands = []
 	.concat(require("./rss/rss_cmds"))
 	.concat(require("./sam/prefix_cmds"))
 	.concat(require("./cmds/define"))
-	.concat(require("./cmds/help_cmds"));
+	.concat(require("./cmds/help_cmds"))
+	.concat(require("./sam/blacklist_cmds"));
 
+//
 const interactions = []
 	.concat(require("./reactions"));
 
+
+const bl = require("./sam/blacklist"); // should ignore msgs in certan servers/channels
+const prefix = require("./sam/prefix"); // respond to different commands in dfferent severs
+const bot_admins = require("./bot_admins"); // bot owner auth & meta stuff
+
 // message event listener
 global.client.on("message", async msg => {
+	if ((msg.guild && bl.guilds().includes(msg.guild.id)) || bl.chans().includes(msg.channel.id))
+		return;
 
 	// check for prefix
 	const prefixes = [ `<@${global.client.user.id}>`, `<@!${global.client.user.id}>` ] // mention
-		.concat(msg.guild ? require("./sam/prefix").getGuildPrefixes(msg.guild.id) : [ '-' ]);
+		.concat(msg.guild ? prefix.getGuildPrefixes(msg.guild.id) : [ '-' ]);
 
 	// performance for this is O(N) :(
 
@@ -89,9 +98,8 @@ global.client.on("message", async msg => {
 					commands[i].act(msg)
 						.catch(e => {
 							msg.channel.send(`Sorry, that errored. If there's anything you would like to add, send a \`-bug\` report\n\`\`\`\n${e.stack}\n\`\`\``);
-							require("./bot_admins.js").sendBugReport(msg, ` Error:\n\`\`\`\n${e.stack}\n\`\`\``);
-							//console.error(`Error(${msg.content}):`);
-							//console.error(e.stack);
+							bot_admins.sendBugReport(msg, ` Error:\n\`\`\`\n${e.stack}\n\`\`\``);
+
 						});
 					break; // we're done here
 				}
@@ -102,80 +110,22 @@ global.client.on("message", async msg => {
 	// ie - if somoene says something bad about corki he reacts w/ question mark
 	interactions.forEach(i => {
 		if (i.condition(msg))
-			i.act(msg)
-			 .catch(e => {
-				require("./bot_admins.js").sendBugReport(msg, `Interaction Error:\n\`\`\`\n${e.stack}\n\`\`\``);
-				//console.error(`InteractionError(${msg.content}):`);
-				//console.error(e.stack);
-			});
+			i.act(msg).catch(e => bot_admins.sendBugReport(msg,
+				 `Interaction Error:\n\`\`\`\n${e.stack}\n\`\`\``));
 	});
 
 });
 
 // something broke
 global.client.on("error", async e => {
-	require("./bot_admins.js").sendBugReport(null, `Client Error:\n\`\`\`\n${e.stack || e.message || e}\n\`\`\``);
+	bot_admins.sendBugReport(null, `Client Error:\n\`\`\`\n${e.stack || e.message || e}\n\`\`\``);
 	console.error("Client Error:", e);
 });
 
 // when corki is added to a server
-global.client.on("guildCreate", async g => {
-	g.owner.createDM().then(dm => dm.send(`Hey, you just added me to ${g.name}. :D
-- To set up your server, add features, change behavior, etc. goto https://corki.js.org/portal?rdr=mod
-- To allow admins/mods to do it for you goto https://corki.js.org/portal?rdr=admin
-- For some general info on the bot go to https://corki.js.org`));
-	console.log(`Guild joined: ${g.name}#${g.id}`);
+global.client.on("guildCreate", bot_admins.joinGuild);
 
-	global.client.channels.get("566432610532982804").send({ embed: {
-		title: "Added to Guild",
-		description: `${global.client.user} was added to ${g.name}#${g.id} :D`,
-		fields: [
-			{
-				name: "Servers",
-				value: global.client.guilds.array().length,
-				inline: true,
-			}, {
-				name: "Users Gained",
-				value: g.memberCount,
-				inline: true,
-			}, {
-				name: "Total Users",
-				value: global.client.users.array().length + "Note, grows inaccurate with increased uptime.",
-			}
-		]
-	}});
-});
-
-const sam = require("./sam/sam");
-global.client.on("guildDelete", g => {
-	console.log(`Guild deleted/left: ${g.name}#${g.id}`);
-
-	g.owner.createDM().then(dm => dm.send(`
-I'm not sure what happened to ${g.name}. If the server was deleted you can \
-disregard this message. If you no longer need corki bot in your server \
-that's fine too. If you could please send a \`-bug\` report (or contact @ridderhoff#6333) giving some \
-pointers on any ideas on how to improve the bot, that would be amazing!`))
-		.catch(console.error);
-
-	global.client.channels.get("566432610532982804").send({ embed: {
-		title: "Removed from giuld",
-		description: `${global.client.user} was removed from ${g.name}#${g.id} :(`,
-		fields: [
-			{
-				name: "Servers",
-				value: global.client.guilds.array().length,
-				inline: true
-			}, {
-				name: "Users Lost",
-				value: g.memberCount,
-				inline: true
-			}
-		],
-	}})
-	// server's config directory will get removed
-	//sam.pruneServerDirs();
-
-});
+global.client.on("guildDelete", bot_admins.leaveGuild);
 
 const welcome = require("./sam/welcome");
 

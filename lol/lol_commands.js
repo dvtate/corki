@@ -537,6 +537,8 @@ last played: ${Date(data[i].lastPlayTime)}`
 
             // fill a list with mastery promise requests
             let dreqs = userObj.accounts.map(a => teemo.riot.get(a.server, "championMastery.getAllChampionMasteries", a.id));
+            // unfortunate i can't cache this data
+
             // request them all at once
             Promise.all(dreqs).then(accts => {
 
@@ -600,7 +602,7 @@ last played: ${Date(data[i].lastPlayTime)}`
                 return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
 
             msg.channel.send("sorry this hasn't been implemented yet.\
-*ETA:* Spring 2019*\
+*ETA:* Summer 2019*\
 If you want to see this implemented sooner send a `-bug` report.");
         }
     },
@@ -695,4 +697,4 @@ const masteryHelpInfo = { embed: {
 \`-lol mastery zed kr hideonbush\`: show faker's points on zed`
         }
     ]
-}}
+}};
