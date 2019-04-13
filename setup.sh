@@ -87,11 +87,23 @@ if [ ! -f $HOME/.corki/reddit_secret ]; then
 	echo "done"
 fi
 
-# requied commands
+# discord bots list api key
+if [ ! -f $HOME/.corki/dbl_api_key ]; then
+	printf "Enter Discord Bots List API key: "
+	read DBL_API_KEY
+
+	printf "inserting key into ~/.corki/dbl_api_key... "
+	echo $DBL_API_KEY > $HOME/.corki/dbl_api_key
+	echo "done"
+fi
+
+
+# required commands
 if ! [ -x "$(command -v convert)" ]; then
 	echo "Error: imagemagick not installed"
 	exit 1
 fi
+
 if ! [ -x "$(command -v forever)" ]; then
 	echo "Error: forever not installed"
 	echo "run \"sudo npm install -g forever\""

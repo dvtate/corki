@@ -2,7 +2,7 @@
 
 // see file if ur concerned about privacy, its not bad
 const logCmd = require("./logging.js");
-
+const fs = require("fs");
 // Import the discord.js module
 global.Discord = require("discord.js");
 
@@ -31,9 +31,22 @@ global.client.on("ready", () => {
 		// start auto-roles daemon
 	global.auto_roles_d = require("./sam/auto_roles/daemon.js");
 
+
 });
 
 
+const DBL = require("dblapi.js");
+const dbl_token = fs.readFileSync(`${process.env.HOME}/.corki/dbl_api_key`).toString().trim();
+const dbl = new DBL(dbl_token, global.client);
+
+// Optional events
+dbl.on('posted', () => {
+  console.log('DBL server count posted!');
+});
+
+dbl.on('error', e => {
+ console.log(`discorbotslist error! ${e}`);
+});
 
 
 // set up our list of commands
@@ -111,8 +124,26 @@ global.client.on("guildCreate", async g => {
 - To set up your server, add features, change behavior, etc. goto https://corki.js.org/portal?rdr=mod
 - To allow admins/mods to do it for you goto https://corki.js.org/portal?rdr=admin
 - For some general info on the bot go to https://corki.js.org`));
+	console.log(`Guild joined: ${g.name}#${g.id}`);
 
-	console.log("Guild Joined: " + g.name);
+	global.client.channels.get("566432610532982804").send({ embed: {
+		title: "Added to Guild",
+		description: `${global.client.user} was added to ${g.name}#${g.id} :D`,
+		fields: [
+			{
+				name: "Servers",
+				value: global.client.guilds.array().length,
+				inline: true,
+			}, {
+				name: "Users Gained",
+				value: g.memberCount,
+				inline: true,
+			}, {
+				name: "Total Users",
+				value: global.client.users.array().length + "Note, grows inaccurate with increased uptime.",
+			}
+		]
+	}});
 });
 
 const sam = require("./sam/sam");
@@ -126,6 +157,21 @@ that's fine too. If you could please send a \`-bug\` report (or contact @ridderh
 pointers on any ideas on how to improve the bot, that would be amazing!`))
 		.catch(console.error);
 
+	global.client.channels.get("566432610532982804").send({ embed: {
+		title: "Removed from giuld",
+		description: `${global.client.user} was removed from ${g.name}#${g.id} :(`,
+		fields: [
+			{
+				name: "Servers",
+				value: global.client.guilds.array().length,
+				inline: true
+			}, {
+				name: "Users Lost",
+				value: g.memberCount,
+				inline: true
+			}
+		],
+	}})
 	// server's config directory will get removed
 	//sam.pruneServerDirs();
 
@@ -147,11 +193,7 @@ global.client.on("guildMemberAdd", member => {
 });
 
 
-
-
-
-
-const token = require("fs").readFileSync(`${process.env.HOME}/.corki/disc_key`).toString().trim();
+const token = fs.readFileSync(`${process.env.HOME}/.corki/disc_key`).toString().trim();
 
 // Log bot in using token
 global.client.login(token);
