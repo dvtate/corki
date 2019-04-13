@@ -52,7 +52,7 @@ module.exports.joinGuild = g => {
                 inline: true,
             }, {
                 name: "Total Users",
-                value: global.client.users.array().length + "Note, grows inaccurate with increased uptime.",
+                value: usersCount()
             }
         ]
     }});
@@ -82,8 +82,18 @@ pointers on any ideas on how to improve the bot, that would be amazing!`))
 				name: "Users Lost",
 				value: g.memberCount,
 				inline: true
-			}
+			}, {
+                name: "Total Users",
+                value: usersCount()
+            }
 		],
 	}});
 
 }
+
+function usersCount() {
+    return global.client.guilds.array()
+        .map(g => g.memberCount)
+        .reduce((accum, v) => accum + v);
+}
+module.exports.usersCount = usersCount;

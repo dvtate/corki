@@ -450,7 +450,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
                         inline: true
                     }, {
                         name: "Users",
-                        value: global.client.users.array().length,
+                        value: botAdmins.usersCount(),
                         inline: true
                     }, {
                         name: "Memory",

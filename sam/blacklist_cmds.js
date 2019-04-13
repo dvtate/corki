@@ -1,11 +1,14 @@
 const sam = require("./sam");
 const mods = require("./mods")
 const bl = require("./blacklist");
+const logCmd = require("../logging");
+
 
 module.exports = [
     {
-        condition: msg => msg.content.match(/(?:bl|blacklist) guild/),
+        condition: msg => msg.content.match(/(?:bl|blacklist) (?:guild|server)/),
         act: async msg => {
+            logCmd(msg, "-blacklist guild");
             if (!msg.guild)
                 return msg.channel.send("Sorry, you can't blacklist a dm");
 
@@ -18,8 +21,9 @@ module.exports = [
     },
 
     {
-        condition: msg => msg.content.match(/(?:bl|blacklist) channel/),
+        condition: msg => msg.content.match(/(?:bl|blacklist) chan(?:nel)?/),
         act: async msg => {
+            logCmd(msg, "-blacklist channel");
             if (!msg.guild)
                 return msg.channel.send("Sorry you can't blacklist a dm");
             if (!mods.auth(msg))
@@ -38,6 +42,7 @@ module.exports = [
     { // unblacklist a given channel/server
         condition: msg => msg.content.match(/(?:bl|blacklist) remove ([0-9]+)/),
         act: async function (msg) {
+            logCmd(msg, "-blacklist remove ()");
             const id = this.condition(msg)[1];
 
             const guild = global.client.guilds.get(id);
@@ -48,7 +53,7 @@ module.exports = [
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
 
                 bl.setGuilds(bl.guilds().filter(gid => gid != id));
-                
+
             } else if (chan) {
 
                 if (!chan.guild)
