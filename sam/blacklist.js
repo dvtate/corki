@@ -5,6 +5,8 @@ This file makes it so that corki ignores messages in given channels/servers
 const fs = require("fs");
 const sam = require("./sam");
 
+
+// cached as it will be needed for every single message
 let blGuilds = [];
 let blChans = [];
 
@@ -32,9 +34,11 @@ function setGuilds(json) {
 function loadFromConf() {
     blGuilds = loadGuilds();
     blChans = [];
-    const chans = sam.serverDirsList().map(g => loadChannels(g));
-    chans.forEach(cs => blChans = blChans.concat(cs));
+    blChans = sam.serverDirsList()
+        .map(g => loadChannels(g))
+        .reduce((a, v) => a.concat(v));
 }
+
 loadFromConf();
 
 module.exports.load = loadFromConf;

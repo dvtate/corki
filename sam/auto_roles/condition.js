@@ -252,14 +252,14 @@ async function parseCondition(guildId, userId, expr) {
                 console.error(e);
                 return NaN;
             }
-		} else {
+		} else if (t) {
             try {
     			stack.push(JSON.parse(t));
     		} catch (e) {
-                console.error(e);
+                console.error("Parse Error: ", e);
     			return NaN;
     		};
-        }
+        } // else, empty string
     }
 
 	//console.log("stack:", stack);

@@ -311,7 +311,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         return [
             guild.roles.find(rl => rl.name == r.role.name).name || guild.roles.get(r.role.id).name || "*invalid_role",
             `<kbd>${ r.cond.replace(/\</g, "&lt;") }</kbd>`,
-            guild.channels.find(c => c.name == r.announce.name).name || guild.channels.get(r.announce.id).name || "not announced",
+            r.announce ? (guild.channels.find(c => c.name == r.announce.name).name || guild.channels.get(r.announce.id).name || "not announced") : "not announced",
             r.keep ? "kept" : "removed",
             `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rm_ar/${r.role.id}')">Remove</button>`
         ];

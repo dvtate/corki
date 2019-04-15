@@ -92,7 +92,18 @@ async function refreshMasteryData(id) {
 
             //nativeLogMasteryData(id, ret);
 
-        }).catch(reject);
+        }).catch(e => {
+            let masteries;
+            try {
+                let masteries = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`));
+            } catch (json_err) {
+                reject(e);
+            }
+            masteries.timestamp = Date.now();
+            fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`,
+                JSON.stringify(masteries));
+            resolve(masteries);
+        });
 
 
     });
@@ -126,6 +137,8 @@ async function getUserMasteryData(id) {
         resolve(masteries);
     });
 }
+module.exports.getUserMasteryData = getUserMasteryData;
+
 
 // total number of mastery points on a specific champ across multiple accts
 function getUserMastery (id, champ) {
@@ -140,5 +153,4 @@ function getUserMastery (id, champ) {
             })
     );
 }
-
 module.exports.getUserMastery = getUserMastery;

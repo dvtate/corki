@@ -122,9 +122,10 @@ global.client.on("error", async e => {
 	console.error("Client Error:", e);
 });
 
-// when corki is added to a server
+// when corki is added to a server give server owner a quick intro
 global.client.on("guildCreate", bot_admins.joinGuild);
 
+// when corki is removed from server, try to ask owner why (only works if they're in a mutual server)
 global.client.on("guildDelete", bot_admins.leaveGuild);
 
 const welcome = require("./sam/welcome");
