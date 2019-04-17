@@ -517,7 +517,7 @@ last played: ${Date(data[i].lastPlayTime)}`
 
     { // list user's mastery 7 champs
         condition: msg => msg.content.match(/^lol (?:mastery7|m7|mastery seven)(?: <@!?([0-9]+)>)?/),
-        act: async msg => {
+        act: async function (msg) {
             logCmd(msg, "-lol m7");
 
             // get their main account
