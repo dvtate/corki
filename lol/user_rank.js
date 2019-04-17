@@ -26,9 +26,7 @@ async function refreshData(id) {
 
         Promise.all(dreqs).then(ranks => {
 
-                let ret = {
-                    timestamp: Date.now()
-                };
+                let ret = { timestamp : Date.now() };
 
                 ranks.forEach(rank => rank.forEach(q => {
                     if (!ret[q.queueType])

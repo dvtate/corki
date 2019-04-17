@@ -30,14 +30,18 @@ router.get("/user", bot.catchAsync(async (req, res) => {
     const userid = await bot.getUserID(req.cookies.token, res);
 
     let page = new Page("User Settings", userid);
+
+
+    lol.setupDir(userid);
+    let data = lol.getUserData(userid);
+
     page.startFieldset(`League of Legends Accounts`)
         .addRaw(`
             <button type="button" onclick="redirect('/user/lol/import/reddit')">Import from Reddit</button>
             <button type="button" onclick="redirect('/user/lol/reset')">Clear Accounts</button>
+            <button type="button" onclick="redirect('/user/lol/hideranktoggle')">${
+                data.hide_rank ? "Show Rank" : "Hide Rank"}</button>
         `);
-
-    lol.setupDir(userid);
-    let data = lol.getUserData(userid);
 
     let table = [];
 
@@ -94,8 +98,6 @@ router.get("/user", bot.catchAsync(async (req, res) => {
         `);
 
     page.endFieldset();
-
-    // TODO: add "hide_rank" option
 
     res.send(page.export());
 }));
@@ -377,5 +379,22 @@ router.get("/user/lol/import/reddit/none", bot.catchAsync(async (req, res) => {
         .endFieldset();
 }));
 
+
+router.get("/user/lol/hideranktoggle",  bot.catchAsync(async (req, res) => {
+    if (!req.cookies.token) {
+        res.redirect("/login/user");
+        return;
+    }
+
+    const userid = await bot.getUserID(req.cookies.token, res);
+    if (!userid) {
+        res.redirect("/login/user");
+        return;
+    }
+    let userObj = lol.getUserData(userid);
+    userObj.hide_rank = !userObj.hide_rank;
+    lol.setUserData(userid, userObj);
+    res.redirect("/user");
+}));
 
 module.exports = router;
