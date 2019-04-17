@@ -21,13 +21,8 @@ async function refreshData(id) {
         if (userObj.hide_rank)
             resolve({});
 
-
         let dreqs = userObj.accounts.map(a =>
-            teemo.riot.get(a.server, "league.getAllLeaguePositionsForSummoner", a.id)
-                .catch(e => {
-                    console.error("lol-rank error ignored");
-                    return [];
-        }));
+            teemo.riot.get(a.server, "league.getAllLeaguePositionsForSummoner", a.id));
 
         Promise.all(dreqs).then(ranks => {
 
@@ -55,8 +50,17 @@ async function refreshData(id) {
                     JSON.stringify(ret));
 
             }
-        ).catch(reject);
 
+        // if it fails, try to update timestamp, otherwise return no ranks
+        ).catch(e => {
+            console.log("user-rank error...");
+            let rdata = {};
+            try {
+                rdata = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`));
+                rdata.timestamp = Date.now();
+            } catch (e) { }
+            fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`, JSON.stringify(rdata));
+        });
     });
 }
 module.exports.refreshData = refreshData;
