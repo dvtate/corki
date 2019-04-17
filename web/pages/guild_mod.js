@@ -330,6 +330,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 		// check which queue then apply
 		function aarLolRankPreset() {
 			var q = document.getElementById("aar-ps-lol_rank-queue").value;
+            var announce = encodeURIComponent(document.getElementById("aar-announce-chan").value);
 			redirect("/mod/${req.params.serverid}/aar_ps_lol_m7/" + q);
 		}
 
@@ -337,6 +338,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 		function aarLolMasteryPreset() {
             var champ = document.getElementById("aar-ps-lol_mastery-champ").value;
 			var incr = document.getElementById("aar-ps-lol_mastery-incr").value;
+            var announce = encodeURIComponent(document.getElementById("aar-announce-chan").value);
 			redirect("/mod/${req.params.serverid}/aar_ps_lol_mastery/" + champ + '/' + incr);
 		}
 
@@ -368,6 +370,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 						<option value="100k">Every 100k points</option>
 						<option value="lvl">Every Mastery Level (0-7)</option>
 					</select><br/>
+
 					<button type="button" onclick="aarLolMasteryPreset()">Apply</button>
 				\`;
 			}

@@ -40,7 +40,6 @@ async function removeDir(id) {
             console.log(e);
     });
 
-
 }
 module.exports.removeDir = removeDir;
 
@@ -48,6 +47,7 @@ module.exports.removeDir = removeDir;
 
 {
     main: 0,
+    hide_rank: true/false,
     accounts: [
         {
             name: "",

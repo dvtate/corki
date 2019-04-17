@@ -344,7 +344,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                     thumbnail: {
                         url: teemo.ddragon.url + `/img/champion/${teemo.ddragon.champName(champID)}.png`
                     },
-
                 }});
 
                 let time = process.hrtime(timer);
@@ -380,11 +379,13 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             // no accts.
             if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+            if (userObj.hide_rank)
+                return msg.channel.send("Rank is hidden.");
 
             // generate rank summary for each acct
             userObj.accounts.forEach(acct =>
                 teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank =>
-                    lol.rank.makeRankSummary(msg.client.users.get(userid).username, acct.name, rank)
+                    lol.rank.makeRankSummary(msg.client.users.get(userid).username, `(${acct.server}) ${acct.name}`, rank)
                         .then(summary => msg.channel.send(summary)).catch(console.error)
                 ).catch(console.error)
             );
@@ -402,6 +403,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("They don't have any linked accounts. They should use `-lol add` to link their account(s)");
+            if (userObj.hide_rank)
+                return msg.channel.send("Rank is hidden.");
 
             // pick acct
             let acct = userObj.accounts[match[2] ? match[2].trim() : userObj.main];
@@ -410,7 +413,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             // send rank summary for acct
             teemo.riot.get(acct.server, "league.getAllLeaguePositionsForSummoner", acct.id).then(rank =>
-                lol.rank.makeRankSummary(msg.client.users.get(id).username, acct.name, rank)
+                lol.rank.makeRankSummary(msg.client.users.get(id).username, `(${acct.server}) ${acct.name}`, rank)
                     .then(summary => msg.channel.send(summary)).catch(console.error)
             ).catch(console.error);
 
@@ -434,7 +437,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 teemo.riot.get(server, "league.getAllLeaguePositionsForSummoner", summoner.id).then(rank => {
                     lol.rank.makeRankSummary(summoner.name, summoner.name, rank)
                         .then(summary => msg.channel.send(summary)).catch(console.error)
-
                 }).catch(err => {
                     console.log(err);
                 });
@@ -455,6 +457,8 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+            if (userObj.hide_rank)
+                return msg.channel.send("Rank is hidden.");
 
             const match = this.condition(msg);
             let acct = userObj.accounts[match[1] ? match[1].trim() : userObj.main];
@@ -512,16 +516,16 @@ last played: ${Date(data[i].lastPlayTime)}`
 
 
     { // list user's mastery 7 champs
-        condition: msg => msg.content.match(/^lol (?:mastery7|m7|mastery seven)(?:$|\s)/),
+        condition: msg => msg.content.match(/^lol (?:mastery7|m7|mastery seven)(?: <@!?([0-9]+)>)?/),
         act: async msg => {
             logCmd(msg, "-lol m7");
 
             // get their main account
-            let userObj = lol.getUserData(msg.author.id);
+            const id = this.condition(msg)[1] || msg.author.id;
+            const userObj = lol.getUserData(id);
 
             if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
-
 
             let champs = [];
 
@@ -550,7 +554,7 @@ last played: ${Date(data[i].lastPlayTime)}`
 
 
                         // skip useless data
-                        if (data[i].championLevel < 7 && entry == -1)
+                        if (data[i].championLevel < 7)
                             continue;
 
                         // no entry for this champ yet
@@ -578,7 +582,7 @@ last played: ${Date(data[i].lastPlayTime)}`
 
                 // send summary or if they dont have m7 tell them
                 if (champs.length == 0)
-                    msg.channel.send("You have no m7 champs");
+                    msg.channel.send("No m7 champs");
                 else
                     msg.channel.send(summary);
 
@@ -675,6 +679,19 @@ If you want to see this implemented sooner send a `-bug` report.");
                 msg.channel.send(`${msg.author} has played ${totalGames} games on ${teemo.champNames[champ]}`);
             });
         }
+    },
+
+    {
+        condition: msg => msg.content.match(/^lol hide\s?rank/),
+        act: async msg => {
+            logCmd(msg, "-lol hide rank");
+            let userObj = lol.getUserData(msg.author.id);
+            userObj.hide_rank = true;
+            lol.setUserData(msg.author.id, userObj);
+            msg.react("👍");
+
+        }
+
     }
 ];
 

@@ -18,6 +18,10 @@ async function refreshData(id) {
         if (!userObj || !userObj.accounts.length)
             resolve({});
 
+        if (userObj.hide_rank)
+            resolve({});
+
+
         let dreqs = userObj.accounts.map(a =>
             teemo.riot.get(a.server, "league.getAllLeaguePositionsForSummoner", a.id)
                 .catch(e => {

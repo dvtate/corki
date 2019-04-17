@@ -1,4 +1,5 @@
-
+/// This file is dedicated to the management and improvement of the bot
+///
 
 // list of people who are trustworthy of not breaking my server
 const botAdmins = [ "253784341555970048",   // @ridderhoff#6333
@@ -12,7 +13,7 @@ module.exports.list = botAdmins;
 module.exports.auth = id => botAdmins.includes(id);
 
 
-const root = [ "253784341555970048" ]; // @ridderhoff
+const root = [ "253784341555970048" ]; // @ridderhoff 
 
 // feel free to join the server btw: https://discord.gg/cXcXSmy
 const bugReportChannel = "455415485173858318";
@@ -68,7 +69,6 @@ disregard this message. If you no longer need corki bot in your server \
 that's fine too. If you could please send a \`-bug\` report (or contact @ridderhoff#6333) giving some \
 pointers on any ideas on how to improve the bot, that would be amazing!`))
 		.catch(console.error);
-
 
 	global.client.channels.get("566432610532982804").send({ embed: {
 		title: "Removed from giuld",

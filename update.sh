@@ -6,17 +6,17 @@
 
 echo "Corki is getting a buff... updating sources from GitHub"
 
-# clone the newest version of steve from github
+# clone the newest version from github
 printf "Fetching the newest version of Corki..."
 git fetch --all
 printf "Hard forcing changes to Corki's source..."
 git reset --hard origin/master
 
 
-# setup new Steve
+# setup new bot
 echo "Re-configuring Corki similar to old one..."
 sh "setup.sh"
 
-# kill and revive steve
-echo "spawning new Corki..."
-forever index.js
+# restart bot
+#echo "spawning new Corki..."
+#forever index.js

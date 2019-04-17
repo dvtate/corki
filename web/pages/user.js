@@ -93,7 +93,9 @@ router.get("/user", bot.catchAsync(async (req, res) => {
         <button type="button" onclick="addAcct()">Add</button>
         `);
 
-    page.endFieldset()
+    page.endFieldset();
+
+    // TODO: add "hide_rank" option
 
     res.send(page.export());
 }));
