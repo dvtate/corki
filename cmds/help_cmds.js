@@ -101,6 +101,9 @@ module.exports = [
                         name: "`-lol leaderboard <championname>`",
                         value: "see a list of users with the most mastery points on the given champion in the server"
                     }, {
+                        name: "`-lol glb <championame>`",
+                        value: "See a list of users with most mastery points on the given champion out of all of corki's users"
+                    }, {
                         name: "`-lol list [@mention]`",
                         value: "list League accounts associated with you [or another user]"
                     }, {
@@ -130,6 +133,12 @@ module.exports = [
                     }, {
                         name: "`-lol wr <champname>`",
                         value: "show average winrate for given champion"
+                    }, {
+                        name: "`-lol meta [elo]`",
+                        value: "Show meta picks for given elo"
+                    }, {
+                        name: "`-lol hide rank`, `lol unhide rank`",
+                        value: "Show/hide your linked account's rank"
                     }
                 ],
 
@@ -161,7 +170,7 @@ module.exports = [
                     }, {
                         name: "`-timezone <timezone>`",
                         value: "check local time in given [timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)/UTC offset (see `-help timezone` for more)"
-                    }
+                    },
                 ],
 
                 timestamp: "2018-09-30T20:04:50.607Z",
@@ -186,10 +195,10 @@ module.exports = [
 
                 fields: [
                     {
-                        name: "`-add-sar <role(s)>`",
+                        name: "`-sar add <role(s)>`",
                         value: "Make a given role self-assignable [[requires mod](https://corki.js.org/permissions.html)]"
                     }, {
-                        name: "`-reset-sar`",
+                        name: "`-sar reset`",
                         value: "Stop all roles from being self-assignable [[requires mod](https://corki.js.org/permissions.html)]"
                     }, {
                         name: "`-iam <role(s)>`",
@@ -222,6 +231,20 @@ The template string can be used to set the announcement text. (note keywords `{{
                     }, {
                         name: "`-ignore-new-members`",
                         value: "Remove new members announcements configured via `-announce-new-members` in the given channel. [[requires mod](https://corki.js.org/permissions.html)]"
+                    }, {
+                        name: "`-log members`, `-log guild`, `-log channel`, `-log user <@mention>`",
+                        value: "Get useful data"
+                    }, {
+                        name: "`-msg <channel> <message>`",
+                        value: "Send a message to a channel in a server you moderate"
+                    }, {
+                        name: "`-blacklist <server|channel>`",
+                        value: "Prevent Corki from reading messages in the server/channel the command is sent in"
+                    }, {
+                        name: "`-blacklist remove <server/channel id>`",
+                        value: "Make Corki start reading messages again (command doesn't work in blacklisted channels)."
+                    }, {
+
                     }
                 ],
 
@@ -289,8 +312,41 @@ The template string can be used to set the announcement text. (note keywords `{{
 
                 fields: [
                     {
-                        name: "coming soon",
-                        value: "Will probably be here tomorrow"
+                        name: "`-bug <message to bot developer>`",
+                        value: "send a message to the bot developer about literally anything you want :D"
+                    }, {
+                        name: "`-deformat <contents>`",
+                        value: "send the raw text data of a message without discord formatting"
+                    }, {
+                        name: "`-reformat <text in \`\`>`",
+                        value: "opposite of deformat"
+                    }, {
+                        name: "`-err <string>`",
+                        value: "throw given string as an error"
+                    }, {
+                        name: "`-eval <JavaScript code>`",
+                        value: "[requires botadmin] runs given code"
+                    }, {
+                        name: "`-feature-request`",
+                        value: "sends list of requested features"
+                    }, {
+                        name: "`-log [help|guild|members|channel|user [@mention]|bot]`",
+                        value: "sends relevant information"
+                    }, {
+                        name: "`-lol api <api args>`",
+                        value: "[requires botadmin] makes a league of legends api request"
+                    }, {
+                        name: "`-ping`",
+                        value: "check to see if the bot is online/responsive"
+                    }, {
+                        name: "-system <shell command>",
+                        value: "[requires botadmin] run shell commands on the server"
+                    }, {
+                        name: "-uptime",
+                        value: "see how long the bot has been running for and how reliable it is"
+                    }, {
+                        name: "-about",
+                        value: "see some general information about corki bot"
                     }
                 ],
 
@@ -341,14 +397,14 @@ The template string can be used to set the announcement text. (note keywords `{{
                     }
                 ],
 
-
                 timestamp: "2018-05-27T20:04:50.607Z",
 
                 footer: {
                     text: "Corki - corki.js.org"
                 }
             }});
-            if (!msg.contents || msg.contents.trim() == "")
+
+            if (msg.guild && (!msg.contents || msg.contents.trim() == ""))
                 msg.channel.send(global.client.user.toString() + "prefix list");
         }
 

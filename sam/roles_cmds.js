@@ -6,7 +6,7 @@ const mods = require("./mods");
 module.exports = [
     { // mod add roles
 
-        condition: msg => msg.content.match(/^add-(?:ssignable-roles?|sar) (.+)/),
+        condition: msg => msg.content.match(/^(?:add-(?:ssignable-roles?|sar)|sar add) (.+)/),
 
         act: async function (msg) {
 
@@ -138,7 +138,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
     },
 
     { // make roles unassignable again
-        condition: msg => msg.content.match(/^reset-(?:ssignable-roles?|sar)/),
+        condition: msg => msg.content.match(/^(?:reset-(?:ssignable-roles?|sar)|sar reset)/),
         act: async (msg) => {
 
             if (!msg.guild) {
@@ -162,6 +162,5 @@ you these powers via https://corki.js.org/admin or give you the MANAGE_ROLES pri
         },
         tests: [ "-reset-sar" ]
     }
-
 
 ];

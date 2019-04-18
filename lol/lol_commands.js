@@ -505,13 +505,9 @@ chest: ${data[i].chestGranted}${
     : "\ntokens: " + data[i].tokensEarned}
 last played: ${Date(data[i].lastPlayTime)}`
                     });
-
+                });
                 msg.channel.send(summary);
-            });
-
-
         }
-
     },
 
 
@@ -689,10 +685,18 @@ If you want to see this implemented sooner send a `-bug` report.");
             userObj.hide_rank = true;
             lol.setUserData(msg.author.id, userObj);
             msg.react("👍");
-
         }
-
-    }
+    },
+    {
+        condition: msg => msg.content.match(/^lol unhide\s?rank/),
+        act: async msg => {
+            logCmd(msg, "-lol hide rank");
+            let userObj = lol.getUserData(msg.author.id);
+            userObj.hide_rank = undefined;
+            lol.setUserData(msg.author.id, userObj);
+            msg.react("👍");
+        }
+    },
 ];
 
 

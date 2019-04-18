@@ -6,7 +6,7 @@ const logCmd = require("../logging");
 
 module.exports = [
     {
-        condition: msg => msg.content.match(/(?:bl|blacklist) (?:guild|server)/),
+        condition: msg => msg.content.match(/(?:bl|blacklist) (?:g(?:uild)?|s(?:erver)?)/),
         act: async msg => {
             logCmd(msg, "-blacklist guild");
             if (!msg.guild)
@@ -21,7 +21,7 @@ module.exports = [
     },
 
     {
-        condition: msg => msg.content.match(/(?:bl|blacklist) chan(?:nel)?/),
+        condition: msg => msg.content.match(/(?:bl|blacklist) c(?:han(?:nel)?)?/),
         act: async msg => {
             logCmd(msg, "-blacklist channel");
             if (!msg.guild)
