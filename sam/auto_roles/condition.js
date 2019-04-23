@@ -142,12 +142,13 @@ async function lol_has_rank(stack, guildid, userid) {
 
 async function lol_has_rank_in_queue(stack, guildid, userid) {
     const rank = stack.pop(); // desired rank
-    const queue = teemo.rankedQueues(tack.pop()); // in queue
+    const q = stack.pop();
+    if (q == any) {
+        stack.push(rank);
+        return lol_has_rank(stack, guildid, userid);
+    }
     const rankdata = await user_rank.getData(userid);
-
-    const ranks = rankdata[queue];
-
-
+    const ranks = rankdata[teemo.rankedQueues(q)];
     if (ranks)
         for (let i = 0; i < ranks.length; i++)
             if (lol.rank.diff(rank, ranks[i]) == 0)
@@ -167,9 +168,11 @@ async function lol_max_rank(stack, guildid, userid) {
 }
 
 async function lol_max_rank_in_queue(stack, guildid, userid) {
-    const queue = teemo.rankedQueues(tack.pop()); // in queue
+    const q = stack.pop();
+    if (q == "any")
+        return lol_max_rank(stack, guildid, userid);
     const rankdata = await user_rank.getData(userid);
-    const ranks = rankdata[queue];
+    const ranks = rankdata[teemo.rankedQueues(q)];
     return lol.rank.max(ranks);
 }
 
@@ -193,7 +196,7 @@ const cmds = {
     // has given LoL rank?
     "lol_has_rank" : lol_has_rank,
     // has given LoL rnak in given queue (3s, flexq, soloq)?
-    "lol_has_queue_rank" : lol_has_rank_in_queue,
+    "lol_queue_has_rank" : lol_has_rank_in_queue,
     // users highest rank
     "lol_max_rank" : lol_max_rank,
     // user's highest rank in given queue
@@ -256,10 +259,10 @@ async function parseCondition(guildId, userId, expr) {
             try {
     			stack.push(JSON.parse(t));
     		} catch (e) {
-                console.error("Parse Error: ", e);
+                console.error("Parse Error: ", t, e);
     			return NaN;
     		};
-        } // else, empty string
+        } // else, empty string, no token
     }
 
 	//console.log("stack:", stack);

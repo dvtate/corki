@@ -6,14 +6,14 @@ module.exports.diff = function(r1, r2) {
     const tiers = [ 'i', 'b', 's', 'g', 'p', 'd', 'm', 'gm', 'c' ];
     const divs  = [ '4', '3', '2', '1' ];
 
-    // "G4" => ['g', '4']
+    // "G4" => ['g', '4', 97]
     const split = r => {
         const numerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'];
         let i = 0;
         while (i < r.length && !numerals.includes(r[i]))
             i++;
-
-        return [ r.slice(0, i), r.slice(i) ];
+        const lp = r.split(' ')[1];
+        return [ r.slice(0, i), r.slice(i), lp ];
     };
 
     r1 = split(r1.toLowerCase());
@@ -42,7 +42,16 @@ module.exports.diff = function(r1, r2) {
         if (cmp_d) // normalize
             cmp_d /= Math.abs(cmp_d);
     }
-    return cmp_r * 10 + cmp_d * 0.1;
+
+    // difference in lp only significant if specified in both
+    let cmp_lp = 0;
+    if (r1[2] && r2[2]) {
+        cmp_lp = r2[2] - r1[2];
+        if (cmp_lp)
+            cmp_lp /= Math.abs(cmp_lp);
+    }
+
+    return cmp_r * 10 + cmp_d * 0.1 + cmp_lp * 0.001;
 }
 
 
@@ -75,7 +84,7 @@ async function makeRankSummary(name, acctName, rank) {
             rank.forEach(q => {
                 games += q.wins + q.losses;
 
-                summary.embed.fields = summary.embed.fields.concat({
+                summary.embed.fields.push({
                     name: `${queues[q.queueType] || q.queueType}${
                          q.position && q.position != "NONE" ? ` [${captitalizeFirstLetter(q.position.toLowerCase())}] `: " "
                         }- ${captitalizeFirstLetter(q.tier.toLowerCase())} ${q.rank} ${q.leaguePoints}LP`,

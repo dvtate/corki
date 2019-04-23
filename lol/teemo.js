@@ -217,7 +217,7 @@ module.exports.rankedQueues = {
 };
 
 
-function convertRank(rank, division) {
+function convertRank(rank, division, lp) {
 
     const ranks = {
         "IRON"      : 'i',
@@ -234,7 +234,7 @@ function convertRank(rank, division) {
     const romanNumerals = {
         "I" : 1, "II" : 2, "III" : 3, "IV" : 4, };
 
-    return ranks[rank] + (romanNumerals[division] || "");
+    return ranks[rank] + (romanNumerals[division] || "") + (lp ? ' ' + lp : "");
 }
 module.exports.convertRank = convertRank;
 

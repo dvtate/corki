@@ -361,7 +361,6 @@ The template string can be used to set the announcement text. (note keywords `{{
     },
 
 
-
     { // help overview (table of contents)
         condition: msg => msg.content.match(/^(?:h(?:elp)?|commands)(?:$|\s)|^$/),
         act: async function (msg) {
