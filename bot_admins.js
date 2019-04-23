@@ -13,7 +13,7 @@ module.exports.list = botAdmins;
 module.exports.auth = id => botAdmins.includes(id);
 
 
-const root = [ "253784341555970048" ]; // @ridderhoff 
+const root = [ "253784341555970048" ]; // @ridderhoff
 
 // feel free to join the server btw: https://discord.gg/cXcXSmy
 const bugReportChannel = "455415485173858318";
@@ -53,7 +53,8 @@ module.exports.joinGuild = g => {
                 inline: true,
             }, {
                 name: "Total Users",
-                value: usersCount()
+                value: usersCount(),
+                inline: true,
             }
         ]
     }});
@@ -77,14 +78,15 @@ pointers on any ideas on how to improve the bot, that would be amazing!`))
 			{
 				name: "Servers",
 				value: global.client.guilds.array().length,
-				inline: true
+				inline: true,
 			}, {
 				name: "Users Lost",
 				value: g.memberCount,
-				inline: true
+				inline: true,
 			}, {
                 name: "Total Users",
-                value: usersCount()
+                value: usersCount(),
+                inline: true,
             }
 		],
 	}});

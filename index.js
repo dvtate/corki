@@ -26,26 +26,29 @@ global.client.on("ready", () => {
 	// spawn daemons:
 
 		// start web portal server
-	global.portal_server_d = require("./web/server.js");
+	global.daemon_portal_server = require("./web/server.js");
 
 		// start auto-roles daemon
-	global.auto_roles_d = require("./sam/auto_roles/daemon.js");
+	global.daemon_auto_roles = require("./sam/auto_roles/daemon.js");
 
+	const DBL = require("dblapi.js");
 
-});
+	try {
+		const dbl_token = fs.readFileSync(`${process.env.HOME}/.corki/dbl_api_key`).toString().trim();
+		global.dbl = new DBL(dbl_token, global.client);
+		// Optional events
+		global.dbl.on('posted', () => {
+			console.log('DBL server count posted!');
+		});
 
+		global.dbl.on('error', e => {
+			console.log(`discorbotslist error! ${e}`);
+		});
 
-const DBL = require("dblapi.js");
-const dbl_token = fs.readFileSync(`${process.env.HOME}/.corki/dbl_api_key`).toString().trim();
-const dbl = new DBL(dbl_token, global.client);
+	} catch (e) {
+		console.log("DBL failed " + e);
+	}
 
-// Optional events
-dbl.on('posted', () => {
-  console.log('DBL server count posted!');
-});
-
-dbl.on('error', e => {
- console.log(`discorbotslist error! ${e}`);
 });
 
 
