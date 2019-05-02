@@ -159,7 +159,7 @@ module.exports = [
                     msg.channel.send("not enough data for that matchup :/");
 
             }).catch(e => {
-                msg.channel.send("champion.gg api appears to be having issues.");
+                msg.channel.send("champion.gg api appears to be having issues (again).");
                 console.error(e);
                 throw e;
             });
@@ -183,7 +183,7 @@ module.exports = [
                     msg.channel.send(`${teemo.champs[champ]} ${d.role.trim().toLowerCase()} has a winrate of ${Math.round(d.winRate * 10000) / 100}`)
                 )
             ).catch(e => {
-                msg.channel.send("champion.gg api appears to be having issues.");
+                msg.channel.send("champion.gg api appears to be having issues (again).");
                 console.error(e);
                 throw e;
             });;
@@ -196,10 +196,15 @@ module.exports = [
         condition: msg => msg.content.match(/^lol meta\s?(\S+)?/),
         act: async function (msg) {
             const elo = this.condition(msg)[1];
-            const data = (await (elo ?
-                teemo.champgg.get("overall", {elo : elo.toUpperCase()})
-                : teemo.champgg.get("overall") ))[0];
-            console.log(data);
+
+            try {
+                const data = (await (elo ?
+                    teemo.champgg.get("overall", {elo : elo.toUpperCase()})
+                    : teemo.champgg.get("overall") ))[0];
+                console.log(data);
+            } catch (e) {
+                msg.channel.send("champion.gg api appears to be having issues (again).")
+            }
 
             const formatElo = elo => {
                 if (elo == "DUO_CARRY")
