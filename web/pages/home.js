@@ -12,7 +12,6 @@ router.get('/', bot.catchAsync(async (req, res) => {
         return;
     }
 
-
     const userid = await bot.getUserID(req.cookies.token, res);
 
     let page = new Page(null, userid);
@@ -22,7 +21,7 @@ router.get('/', bot.catchAsync(async (req, res) => {
                 <button type="button" onclick="redirect('/user')">User Settings</button>
                 <button type="button" onclick="redirect('/admin')">Server Administration</button>
                 <button type="button" onclick="redirect('/mod')">Server Management</button>
-                <button type="button" onclick="redirect('/server')">Server Preferences</button>
+                <!--<button type="button" onclick="redirect('/member')">Server Preferences</button>-->
         `)
         .addImage("/resources/discord-logowhite.png", "corki discord logo")
         .endFieldset()

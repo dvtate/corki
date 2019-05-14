@@ -27,16 +27,13 @@ app.use((err, req, res, next) => {
     }
 });
 
-
 app.use("/resources", express.static(path.join(__dirname, "resources")));
-
 app.use('/', require("./pages/home"));          // /
-app.use('/', require("./pages/login"));         // /login
-app.use('/', require("./pages/user"));          // /user
-app.use('/', require("./pages/guild_admin"));   // /admin
-app.use('/', require("./pages/guild_mod"));     // /mod
-app.use('/', require("./pages/guild_member"));  // /mod
-
+app.use('/', require("./pages/login"));         // /login/*
+app.use('/', require("./pages/user"));          // /user/*
+app.use('/', require("./pages/guild_admin"));   // /admin/*
+app.use('/', require("./pages/guild_mod"));     // /mod/*
+app.use('/', require("./pages/guild_member"));  // /server/*
 
 // use port 5050
 app.listen(5050, (req, res) => {

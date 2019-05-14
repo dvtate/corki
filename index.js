@@ -10,7 +10,6 @@ global.Discord = require("discord.js");
 global.client = new global.Discord.Client();
 
 
-
 // bot will only start reacting to information
 // from Discord _after_ ready is emitted
 global.client.on("ready", () => {
@@ -38,11 +37,11 @@ global.client.on("ready", () => {
 		global.dbl = new DBL(dbl_token, global.client);
 		// Optional events
 		global.dbl.on('posted', () => {
-			console.log('DBL server count posted!');
+			//console.log('DBL server count posted!');
 		});
 
 		global.dbl.on('error', e => {
-			console.log(`discorbotslist error! ${e}`);
+			//console.log(`discorbotslist error! ${e}`);
 		});
 
 	} catch (e) {

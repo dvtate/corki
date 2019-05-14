@@ -10,34 +10,18 @@ const sam = require("../../sam/sam");
 
 const router = express.Router();
 
-/* mods.json
+/*
+inrterfacee for sam/mods.js
 
-[
-    {
-        id: userid,
-        permissions: true, // full admin
-    },
-    {
-        id: 5,
-        permissions: {
-            "Manage Server": {
-                "Manage Users" : true,
-                "Manage Roles" : true,
-                "Manage Channels": true
-            },
-            "Manage Bot": {
-                "Manage Automated Messages": true,
-                "Manage Server Metadata": true,
-                "Manage Server Metadata": true
-            }
-        }
-    }
-]
+mods.json
 
-
+    [{
+        id: relevant user id,
+        admin: if the user has access to the admin portal and/or discord lists them as admin,
+        mod: if the user has access to server management portal,
+        mod_cmds: if the user is allowed to use the server management commands
+    }]
 */
-
-
 
 
 router.get("/admin", bot.catchAsync(async (req, res) => {

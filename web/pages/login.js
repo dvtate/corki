@@ -13,11 +13,11 @@ router.get("/login/:source", (req, res) => {
     const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}&state=${req.params.source}`);
 });
-
 router.get("/login/", (req, res) => {
     const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}`);
 });
+
 
 router.get("/callback", bot.catchAsync(async (req, res) => {
     const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);

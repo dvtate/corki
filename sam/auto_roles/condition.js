@@ -32,13 +32,12 @@ function get_date(stack) {
     			return 1000 * 60;
 			//console.log("invalid label");
     		return NaN;
-
         };
 
         // split string into [1, year, 6, days, 2, hours, ...]
         const tokenize = s => {
             // "6years2days",1 => "years"
-            const getTok = (s, i) => {
+            const getTok = (s, i) => { // string, offset
                 const numerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'];
                 const isDig = numerals.includes(s[i]);
                 const start = i;
@@ -69,6 +68,7 @@ function get_date(stack) {
                 else if (!isNaN(arr[ind - 1]))
                     ret += JSON.parse(arr[ind - 1]) * ms_value(tok); // "6 days" == 6*day()
         });
+
         return ret;
     }
 
@@ -78,7 +78,6 @@ function cmp(item1, item2) {
         if (typeof(item1) != typeof(item2)) {
             return NaN; // error
         }
-		//console.log("cmp: ", typeof(item1), typeof(item2));
         if (typeof(item1) == "string")
             return lol.rank.diff(item1, item2);
 		if (typeof(item1) == "number")
@@ -88,6 +87,7 @@ function cmp(item1, item2) {
 function member_join_date(stack, guildId, userId) {
     return Date.parse(global.client.guilds.get(guildId).members.get(userId).joinedAt);
 }
+
 function has_role(stack, guildId, userId) {
     const role = stack.pop();
     const guild = global.client.guilds.get(guildId);
@@ -227,6 +227,8 @@ const cmds = {
     "-" : stack => stack.pop() - stack.pop(),
     "*" : stack => stack.pop() * stack.pop(),
     "/" : stack => stack.pop() / stack.pop(),
+    "abs" : stack => Math.abs(stack.pop()),
+
 
 };
 module.exports.operators = cmds;

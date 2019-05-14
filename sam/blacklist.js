@@ -26,6 +26,7 @@ function loadGuilds() {
         return [];
     }
 }
+
 function setGuilds(json) {
     fs.writeFileSync(`${process.env.HOME}/.corki/bl_servers.json`, JSON.stringify(json));
     loadFromConf();
@@ -38,7 +39,6 @@ function loadFromConf() {
         .map(g => loadChannels(g))
         .reduce((a, v) => a.concat(v));
 }
-
 loadFromConf();
 
 module.exports.load = loadFromConf;

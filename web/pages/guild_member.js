@@ -18,8 +18,8 @@ router.get("/member", bot.catchAsync(async (req, res) => {
 
     // list servers
 
-    console.log(req);
 
+    
 
 }));
 

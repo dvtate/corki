@@ -196,14 +196,14 @@ module.exports = [
         condition: msg => msg.content.match(/^lol meta\s?(\S+)?/),
         act: async function (msg) {
             const elo = this.condition(msg)[1];
-
+            let data;
             try {
-                const data = (await (elo ?
+                data = (await (elo ?
                     teemo.champgg.get("overall", {elo : elo.toUpperCase()})
                     : teemo.champgg.get("overall") ))[0];
                 console.log(data);
             } catch (e) {
-                msg.channel.send("champion.gg api appears to be having issues (again).")
+                return msg.channel.send("champion.gg api appears to be having issues (again).")
             }
 
             const formatElo = elo => {

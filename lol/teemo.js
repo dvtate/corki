@@ -76,7 +76,7 @@ module.exports.champIDs = {
 
     "karthus" : 30, "karth" : 30,
     "kaisa" : 145, "kai'sa" : 145, "kindred" : 203,
-    "kled" : 240, "kalista" : 429, "karma" : 43, "kayn" : 141, "kennen" : 85,
+    "kled" : 240, "kalista" : 429, "karma" : 43, "kayn" : 141, "kayne" : 141, "kennen" : 85,
     "kassadin" : 38, "kass" : 38,
     "khazix" : 121, "bug" : 121, "zix" : 121, "k6" : 121, "kha" : 121, "kha'zix" : 121,
     "katarina" : 55, "kat" : 55, "kata" : 55,
@@ -163,9 +163,9 @@ module.exports.champIDs = {
     "zilean" : 26, "zil" : 26,
 
 };
-
 // inverse of champIDs
 module.exports.champNames = {
+    // TODO: sort alphabetically
     62: "Wukong", 24 : "Jax", 9 : "Fiddlesticks", 35 : "Shaco", 19 : "Warwick",
     498 : "Xayah", 76 : "Nidalee", 143 : "Zyra", 240 : "Kled", 63 : "Brand",
     33 : "Rammus", 420 : "Illaoi", 42 : "Corki", 201 : "Braum", 122 : "Darius",
@@ -180,7 +180,7 @@ module.exports.champNames = {
     115 : "Ziggs", 134 : "Syndra", 36 : "Dr. Mundo", 43 : "Karma", 1 : "Annie",
     84 : "Akali", 106 : "Volibear", 157 : "Yasuo", 85 : "Kennen", 107 : "Rengar",
     13 : "Ryze", 98 : "Shen", 154 : "Zac", 91 : "Talon", 50 : "Swain", 432 : "Bard",
-    14 : "Sion", 67 : "Vayne", 75 : "Nasus", 141 : "Kayne", 4 : "Twisted Fate",
+    14 : "Sion", 67 : "Vayne", 75 : "Nasus", 141 : "Kayn", 4 : "Twisted Fate",
     31 : "Cho'Gath", 77 : "Udyr", 236 : "Lucian", 427 : "Ivern", 89 : "Leona",
     51 : "Caitlyn", 113 : "Sejuani", 56 : "Nocturne", 26 : "Zilean", 268 : "Azir",
     68 : "Rumble", 25 : "Morgana", 163 : "Taliyah", 17 : "Teemo", 6 : "Urgot",
@@ -188,8 +188,8 @@ module.exports.champNames = {
     161 : "Vel'Koz", 27 : "Singed", 72 : "Skarner", 110 : "Varus", 29 : "Twitch",
     86 : "Garen", 53 : "Blitzcrank", 11 : "Master Yi", 60 : "Elise", 12 : "Alistar",
     55 : "Katarina", 245 : "Ekko", 82 : "Mordekaiser", 117 : "Lulu", 164 : "Camille",
-    266 : "Aatrox", 119 : "Draven", 223 : "Tham Kench", 80 : "Pantheon", 5 : "Xin Zhao",
-    136 : "Aurellion Sol", 64 : "Lee Sin", 44 : "Taric", 90 : "Malzahar", 145 : "Kaisa",
+    266 : "Aatrox", 119 : "Draven", 223 : "Tahm Kench", 80 : "Pantheon", 5 : "Xin Zhao",
+    136 : "Aurelion Sol", 64 : "Lee Sin", 44 : "Taric", 90 : "Malzahar", 145 : "Kaisa",
     131 : "Diana", 18 : "Tristana", 421 : "Rek'Sai", 8 : "Vladimir", 59 : "Jarvan IV",
     267 : "Nami", 202 : "Jhin", 16 : "Soraka", 45 : "Veigar", 40 : "Janna",
     111 : "Nautilus", 28 : "Evelynn", 79 : "Gragas", 238 : "Zed", 254 : "Vi",

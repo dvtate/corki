@@ -1,4 +1,4 @@
-/// config file stuff
+        /// config file stuff
 const fs = require("fs");
 const sam = require("../sam");
 

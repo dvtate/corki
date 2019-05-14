@@ -15,10 +15,9 @@ module.exports = [
             logCmd(msg, "-8ball");
 
             // send random response from [yes,no, maybe]
-            msg.channel.send(["yes", "no", "maybe"] [Math.floor(Math.random() * 3)]);
+            //msg.channel.send(["yes", "no", "maybe"] [Math.floor(Math.random() * 3)]);
 
-            /*
-            // all the responses on standard 8ball, i think this is too much tho
+
             const responses = [ "It is certain", "It is decidedly so", "Without a doubt",
               "Yes definitely", "You may rely on it", "As I see it, yes",
               "Most likely", "Outlook good", "Yes", "Signs point to yes",
@@ -29,7 +28,7 @@ module.exports = [
               "Very doubtful"];
 
             msg.channel.send(responses[Math.floor(Math.random() * responses.length)]);
-            */
+
         },
         tests: [ "-8ball" ]
     },
@@ -134,21 +133,18 @@ Go to corki.js.org to add corki to yours.");
 
             request(url, (error, response, body) => {
 
-                if (error) {
-                    console.log(`-xkcd - error: ${error}`);
-                    console.log(`    statusCode: ${response && response.statusCode}`);
-                    msg.channel.send("xkcd appears to be down right now :/");
-                    return;
-                }
+                if (error)
+                    return msg.channel.send("xkcd appears to be down right now");
 
-                if (!body.match(/<div id="comic">\n<img src="(.+?)"\s/)) {
+                const url = !body.match(/<div id="comic">\n<img src="(.+?)"\s/);
+                if (!url) {
                     console.log("invalid -xkcd number");
                     msg.channel.send("invalid xkcd comic number :/");
                     return;
                 }
 
-                const imgurl = `https:${body.match(/<div id="comic">\n<img src="(.+?)"\s/)[1]}`;
-                const title = body.match(/<div id="ctitle">(.+?)<\/div>/)[1];
+                const imgurl = `https:${url[1]}`;
+                const title  = body.match(/<div id="ctitle">(.+?)<\/div>/)[1];
                 msg.channel.send(`${title} ${imgurl}`);
 
             });
@@ -165,22 +161,12 @@ Go to corki.js.org to add corki to yours.");
             logCmd(msg, "-xkcd");
             request("https://c.xkcd.com/random/comic/", (error, response, body) => {
 
-                if (error) {
-                    console.log(`-xkcd - error: ${error}`);
-                    console.log(`    statusCode: ${response && response.statusCode}`);
-                    bot.sendMessage(msg.chat.id, "xkcd appears to be down right now :/", { reply_to_message_id : msg.message_id });
-                    return;
-                }
+                if (error)
+                    return msg.channel.send("xkcd appears to be down right now");
 
-                try {
-                    const imgurl = `https:${ body.match(/<div id="comic">\n<img src="(.+?)"\s/)[1] }`;
-                    const title = body.match(/<div id="ctitle">(.+?)<\/div>/)[1];
-                    msg.channel.send(`${title} ${imgurl}`);
-                } catch (e) {
-                    console.log("xkcd error: page: ", body);
-                    msg.channel.send("xkcd errored, try again");
-                    return;
-                }
+                const imgurl = `https:${ body.match(/<div id="comic">\n<img src="(.+?)"\s/)[1] }`;
+                const title  = body.match(/<div id="ctitle">(.+?)<\/div>/)[1];
+                msg.channel.send(`${title} ${imgurl}`);
 
             });
         },

@@ -416,13 +416,6 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
                         (error, stdout, stderr) => {
                             resolve(error ? "undefined" : stdout);
                         }));
-            let node_version = await new Promise((resolve, reject) =>
-                // run command and send output
-                require("child_process")
-                    .exec("node --version",
-                        (error, stdout, stderr) => {
-                            resolve(error ? "undefined" : stdout);
-                        }));
 
             const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}d ${Math.floor(time / 60 / 60) % 24
     }h, ${Math.floor(time / 60) % 60}m, and ${Math.round(time % 60)}s`;
@@ -438,8 +431,7 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
                     {
                         name: "Version",
                         value: `Corki is on a roling release system.
-- The currently running patch is ${version}
-- Corki is running on Node ${node_version}`
+- The currently running patch is ${version}`
                     }, {
                         name: "Severs",// for each rule
                         value: global.client.guilds.array().length,
