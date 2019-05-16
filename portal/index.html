@@ -9,7 +9,7 @@ function findGetParameter(parameterName) {
     }
     return result;
 }
-
+alert("Warning: Attempting to redirect you to the web portal. Due to experimental dns optimizations this may not work correctly. (2019.5.16-20)");
 let redirect = findGetParameter("rdr");
 window.location = "http://cbotportal.dvtate.com/" + (redirect ? redirect : "");
 
