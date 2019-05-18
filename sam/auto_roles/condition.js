@@ -8,15 +8,19 @@ in the future I should be able to make a gui which generates/renders rpn express
 */
 
 
-// process date command
+// process date command (pushes epoch ms onto stack)
 function get_date(stack) {
     let str = stack.pop();
+
+    // already epoch ms
     if (typeof(str) == "number")
         return str;
 
+    // empty string arg ==> today's date
     if (!str || typeof(str) != "string" || str.length == 0)
         return Date.now();
 
+    // attempt to parse date str
     const ret = Date.parse(str);
 
     // not handled by default so we convert manually
@@ -74,6 +78,8 @@ function get_date(stack) {
 
     return ret;
 }
+
+// compare 2 values
 function cmp(item1, item2) {
         if (typeof(item1) != typeof(item2)) {
             return NaN; // error
@@ -84,10 +90,12 @@ function cmp(item1, item2) {
 			return item2 - item1;
 }
 
+// epoch ms when user joined relevant guild
 function member_join_date(stack, guildId, userId) {
     return Date.parse(global.client.guilds.get(guildId).members.get(userId).joinedAt);
 }
 
+// bool if user has given role
 function has_role(stack, guildId, userId) {
     const role = stack.pop();
     const guild = global.client.guilds.get(guildId);
@@ -101,32 +109,30 @@ function has_role(stack, guildId, userId) {
     else return false;
 }
 
-
+// League of Legends imports
 const lol = require("../../lol/lol_stuff");
 const teemo = require("../../lol/teemo");
 const mastery = require("../../lol/user_mastery");
 
+// number of points user has on a given champion
 async function lol_mastery_points(stack, guildId, userId) {
     let champ = stack.pop();
     champ = teemo.champIDs[champ] || champ;
     const mdata = await mastery.getUserMastery(userId, champ);
-    //console.log("mdata:", mdata);
     return mdata.pts;
 }
+// mastery level user has on given champ
 async function lol_mastery_level(stack, guildId, userId) {
     let champ = stack.pop();
     champ = teemo.champIDs[champ] || champ;
     const mdata = await mastery.getUserMastery(userId, champ);
-    //console.log("mdata:", mdata);
     return mdata.lvl;
 }
 
-function todo(stack) {
-    return stack.pop();
-}
-
+// League of legends cached rank data
 const user_rank = require("../../lol/user_rank");
 
+// bool does user have an equivalent rank?
 async function lol_has_rank(stack, guildid, userid) {
     const rank = stack.pop(); // desired rank
     const rankdata = await user_rank.getData(userid);
@@ -140,6 +146,7 @@ async function lol_has_rank(stack, guildid, userid) {
     return false;
 }
 
+// bool does user have given rank in specfied queue?
 async function lol_has_rank_in_queue(stack, guildid, userid) {
     const rank = stack.pop(); // desired rank
     const q = stack.pop();
@@ -157,6 +164,7 @@ async function lol_has_rank_in_queue(stack, guildid, userid) {
 
 }
 
+// string users highes rank
 async function lol_max_rank(stack, guildid, userid) {
     const rankdata = await user_rank.getData(userid);
     let ranks = [];
@@ -167,6 +175,7 @@ async function lol_max_rank(stack, guildid, userid) {
     return lol.rank.max(ranks);
 }
 
+// string users max rank in a given queue
 async function lol_max_rank_in_queue(stack, guildid, userid) {
     const q = stack.pop();
     if (q == "any")
@@ -176,6 +185,7 @@ async function lol_max_rank_in_queue(stack, guildid, userid) {
     return lol.rank.max(ranks);
 }
 
+// does user have an account in the given region?
 function lol_in_region(stack, guildid, userid) {
     const userObj = lol.getUserData(userid);
     const reg = stack.pop();
@@ -183,7 +193,7 @@ function lol_in_region(stack, guildid, userid) {
         a.server == reg || a.server == teemo.serverNames[reg]);
 }
 
-// ast too hard, therefore rpn :D
+// ast waste of time here, therefore postfix style solution :D
 const cmds = {
     // reference a specfic date
     "date" : get_date,
@@ -223,51 +233,57 @@ const cmds = {
     "!=" : stack => cmp(stack.pop(), stack.pop()) != 0,
 
     // math ops
-    "+" : stack => stack.pop() + stack.pop(), // should also work on strings
-    "-" : stack => stack.pop() - stack.pop(),
+    "+" : stack => stack.pop() + stack.pop(), // also works on strings (note: backwards)
+    "-" : stack => stack.pop() - stack.pop(), // (note: backwards)
     "*" : stack => stack.pop() * stack.pop(),
-    "/" : stack => stack.pop() / stack.pop(),
+    "/" : stack => stack.pop() / stack.pop(), // (note: backwards)
     "abs" : stack => Math.abs(stack.pop()),
-
 
 };
 module.exports.operators = cmds;
 
-
+// using a command line argument parser as my tokenizer as it does what's needed
 const splitargs = require("splitargs");
 
 // returns final value or NaN on error
 async function parseCondition(guildId, userId, expr) {
-
+    // tokenize expr
     const tokens = splitargs(expr, ' ', true);
-    let stack = [];
+    let stack = []; // builtin array for stack
 
+    // for each token
     for (let i = 0; i < tokens.length; i++) {
         const t = tokens[i];
         //console.log("t:", t);
-		//console.log("stack:", stack);
+        //console.log("stack:", stack);
 
-		if (cmds[t]) {
+        // operator?
+        if (cmds[t]) {
             try {
+                // run relevant command
                 let ret = cmds[t](stack, guildId, userId);
                 if (ret instanceof Promise)
                     ret = await ret;
-    			stack.push(ret);
+                stack.push(ret);
             } catch (e) {
                 console.error(e);
                 return NaN;
             }
-		} else if (t) {
+
+        // literal?
+        } else if (t) {
             try {
-    			stack.push(JSON.parse(t));
-    		} catch (e) {
+                stack.push(JSON.parse(t));
+            } catch (e) {
                 console.error("Parse Error: ", t, e);
-    			return NaN;
-    		};
+                return NaN;
+            };
         } // else, empty string, no token
     }
 
-	//console.log("stack:", stack);
-	return stack.pop();
+    //console.log("stack:", stack);
+
+    // return top of stack
+    return stack.pop();
 }
 module.exports.parseCondition = parseCondition;
