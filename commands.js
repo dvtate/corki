@@ -230,11 +230,16 @@ const c_sam = [
         example: `<kbd>-iamnot weeaboo</kbd><br/>
 <kbd>-iamnot Scammer, Unicorn Lover</kbd>`
     }, {
-        name: "-add-assignable-role<br/><div class=\"mod-box\">Mod</div>",
+        name: "-sar add<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>makes given role self-assignable</p><b>(requires MANAGE_ROLES permission)</b>",
         args: "self-assignable role(s)<br><kbd>-add-assignable-role &lt;role(s)>",
-        example: `<kbd>-add-assignable-role dota2</kbd><br/>
-        <kbd>-add-assignable-role NA, EUW, LAN, LAS</kbd>`
+        example: `<kbd>-sar add dota2</kbd><br/>
+        <kbd>-sar add NA, EUW, LAN, LAS</kbd>`
+    }, {
+        name: "-sar reset<br/><div class=\"mod-box\">Mod</div>",
+        usage: "<p>resets list of self-assignable roles</p>",
+        args: "takes no arguments",
+        example: "<kbd>-sar reset</kbd>"
     }, {
         name: "-rss add<br/><div class=\"mod-box\">Mod</div>",
         usage: "<p>forward all new post from an rss feed to this channel (see <kbd>-help rss</kbd> for more)</p>",
@@ -294,8 +299,17 @@ const c_sam = [
     <li><b>message:</b> message contents</li>
 </ul>`,
         example: "<kbd>-msg 1234 hello there</kbd>"
-    }
-
+    }, {
+        name: "-blacklist",
+        usage: "Prevent Corki from reading messages in the server/channel the command is sent in",
+        args: "<kbd>server</kbd> or <kbd>channel</kbd>, whichever you wish to blacklist",
+        example: "<kbd>-blacklist server</kbd><bd/><kbd>-bl channel</kbd>"
+    }, {
+        name: "-blacklist remove",
+        usage: "Allow corki to read messages again. (send via dm or non-blacklisted channel)",
+        arguments: "accepts the id of relevant server/channel (accessable via right-click menu)",
+        example: "<kbd>-blacklist remove 319518724774166531</kbd>"
+    },
 ];
 
 
