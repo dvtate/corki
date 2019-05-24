@@ -243,8 +243,6 @@ The template string can be used to set the announcement text. (note keywords `{{
                     }, {
                         name: "`-blacklist remove <server/channel id>`",
                         value: "Make Corki start reading messages again (command doesn't work in blacklisted channels)."
-                    }, {
-
                     }
                 ],
 

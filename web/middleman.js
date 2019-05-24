@@ -21,7 +21,6 @@ async function getUserID(token, res) {
 }
 module.exports.getUserID = getUserID
 
-
 // async/await error catcher
 module.exports.catchAsync = fn => (
     (req, res, next) => {
@@ -30,7 +29,6 @@ module.exports.catchAsync = fn => (
             routePromise.catch(err => next(err));
     }
 );
-
 
 
 function mutualServers(userid) {

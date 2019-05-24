@@ -12,20 +12,13 @@ const app = express();
 app.use(cookieParser());
 
 // catch errs
-app.use((err, req, res, next) => {
-    switch (err.message) {
-        case 'NoCodeProvided':
-            return res.status(400).send({
-                status: 'ERROR',
-                error: err.message,
-            });
-        default:
-            return res.status(500).send({
-                status: 'ERROR',
-                error: err.message,
-            });
-    }
-});
+app.use((err, req, res, next) =>
+    res.status(err.message == "NoCodeProvided" ? 400 : 500)
+        .send({
+            status: "ERROR",
+            error: err.message,
+        })
+);
 
 app.use("/resources", express.static(path.join(__dirname, "resources")));
 app.use('/', require("./pages/home"));          // /
@@ -36,6 +29,7 @@ app.use('/', require("./pages/guild_mod"));     // /mod/*
 app.use('/', require("./pages/guild_member"));  // /server/*
 
 // use port 5050
-app.listen(5050, (req, res) => {
-    console.info("portal running on port 5050");
+const port = 5050;
+app.listen(port, (req, res) => {
+    console.info("portal running on port " + port);
 });
