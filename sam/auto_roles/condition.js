@@ -210,7 +210,7 @@ const cmds = {
     // users highest rank
     "lol_max_rank" : lol_max_rank,
     // user's highest rank in given queue
-    "lol_queue_max_rank" : todo,
+    "lol_queue_max_rank" : lol_has_rank_in_queue,
     // user's mastery score on given champ
     "lol_mastery_points" : lol_mastery_points,
     // mastery level on given champ (1-7)
