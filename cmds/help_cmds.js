@@ -239,11 +239,11 @@ The template string can be used to set the announcement text. (note keywords `{{
                         value: "Send a message to a channel in a server you moderate"
                     }, {
                         name: "`-blacklist <server|channel>`",
-                        value: "Prevent Corki from reading messages in the server/channel the command is sent in"
+                        value: "Prevent Corki from reading messages in the server/channel the command is sent in [[requires mod](https://corki.js.org/permissions.html)]"
                     }, {
                         name: "`-blacklist remove <server/channel id>`",
-                        value: "Make Corki start reading messages again (command doesn't work in blacklisted channels)."
-                    }
+                        value: "Make Corki start reading messages again (command doesn't work in blacklisted channels). [[requires mod](https://corki.js.org/permissions.html)]"
+                    },
                 ],
 
                 timestamp: "2018-05-27T20:04:50.607Z",
