@@ -128,7 +128,6 @@ To self-assign a role you can use the command \`-iam <role>\``);
                         console.log("Couldn't rm role:", e);
                     }
                 });
-
             });
 
             msg.react("👍");
@@ -140,11 +139,11 @@ To self-assign a role you can use the command \`-iam <role>\``);
     { // make roles unassignable again
         condition: msg => msg.content.match(/^(?:reset-(?:ssignable-roles?|sar)|sar reset)/),
         act: async (msg) => {
-
             if (!msg.guild) {
                 msg.channel.send("This command cannot be used in DM's")
                 return;
             }
+            // unauthorized
             if (!mods.isMod(msg.guild.id, msg.author.id) && (
                     !msg.member
                     || !msg.member.permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES))
@@ -162,5 +161,4 @@ you these powers via https://corki.js.org/admin or give you the MANAGE_ROLES pri
         },
         tests: [ "-reset-sar" ]
     }
-
 ];

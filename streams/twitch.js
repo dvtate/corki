@@ -4,6 +4,8 @@
 
 const request = require("request");
 
+// todo: convert to use promises...
+
 module.exports = function getAPI(apiMethod, options, callback) {
 	let baseUrl = "https://api.twitch.tv/kraken/";
 

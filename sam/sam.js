@@ -30,7 +30,6 @@ module.exports.serverDirsList = () =>
     fs.readdirSync(`${process.env.HOME}/.corki/servers`);
 
 
-
 // TODO:
 module.exports.backupServerDirs = () => {
     // backup

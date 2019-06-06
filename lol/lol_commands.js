@@ -486,27 +486,27 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let main = userObj.accounts[userObj.main];
             let score = await teemo.riot.get(main.server, "championMastery.getChampionMasteryScore", main.id);
 
-            teemo.riot.get(main.server, "championMastery.getAllChampionMasteries", main.id).then(data => {
-                let totalPoints = 0;
-                data.forEach(c => totalPoints += c.championPoints);
+            const data = await teemo.riot.get(main.server, "championMastery.getAllChampionMasteries", main.id);
 
-                let summary = { embed: {
-                    title: "Champion Mastery Summary",
-                    description: `${msg.author.username} has aquired ${totalPoints} mastery points their main account ${main.name}, which has a mastery score of ${score}`,
-                    fields: []
-                }};
+            let totalPoints = 0;
+            data.forEach(c => totalPoints += c.championPoints);
+            let summary = { embed: {
+                title: "Champion Mastery Summary",
+                description: `${msg.author.username} has aquired ${totalPoints} mastery points their main account ${main.name}, which has a mastery score of ${score}`,
+                fields: []
+            }};
 
-                for (let i = 0; i < 10 && i < data.length; i++)
-                    summary.embed.fields.push({
-                        name: teemo.champs[data[i].championId],
-                        value: `mastery level: ${data[i].championLevel}, ${data[i].championPoints} points
+            for (let i = 0; i < 10 && i < data.length; i++)
+                summary.embed.fields.push({
+                    name: teemo.champs[data[i].championId],
+                    value: `mastery level: ${data[i].championLevel}, ${data[i].championPoints} points
 chest: ${data[i].chestGranted}${
-    data[i].championLevel == 7 || data[i].championLevel < 5 ? ""
-    : "\ntokens: " + data[i].tokensEarned}
+data[i].championLevel == 7 || data[i].championLevel < 5 ? ""
+: "\ntokens: " + data[i].tokensEarned}
 last played: ${Date(data[i].lastPlayTime)}`
-                    });
                 });
-                msg.channel.send(summary);
+            
+            msg.channel.send(summary);
         }
     },
 

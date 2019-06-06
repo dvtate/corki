@@ -33,6 +33,10 @@ const fw_chars = {
 	'>': '＞', '?': '？', ' ': '　'
 };
 
-function toFullWidth(c) {
-	return fw_chars[c] || c;
+function toFullWidth(c,i,a) {
+	return fw_chars[c] || `${
+		i != 0 ? a[i - 1] == ' ' ? '' : ' ' : ''
+	}${c}${
+		i + 1 < a.length ? a[i + 1] == ' ' ? '' : ' ' : ''
+	}`;
 }

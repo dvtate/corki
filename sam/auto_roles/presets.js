@@ -48,3 +48,9 @@ async function lol_mastery_level_roles(guildId, options) {
 
 }
 module.exports.lol_mastery_level_roles = lol_mastery_level_roles;
+
+
+async function lol_mastery_point_roles(guildId, options) {
+
+}
+module.exports.lol_mastery_point_roles = lol_mastery_point_roles;
