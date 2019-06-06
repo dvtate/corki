@@ -3,7 +3,7 @@
 
 // list of people who are trustworthy of not breaking my server
 const botAdmins = [ "253784341555970048",   // @ridderhoff#6333
-                    "186157998538883092",   // @fsm
+                    "186157998538883092",   // @fsm#
                   ];
 
 // export list

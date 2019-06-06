@@ -44,7 +44,6 @@ async function removeDir(id) {
 module.exports.removeDir = removeDir;
 
 /*
-
 {
     main: 0,
     hide_rank: true/false,
@@ -53,12 +52,33 @@ module.exports.removeDir = removeDir;
             name: "",
             server: "",
             id: "num num",
-            accountId:""
-        }
-    ]
+            accountId:"",
+            puuid:"",
+        },
+    ],
+}
+*/
+
+
+async function fakeUserObj(region, summoner_name) {
+    let ret = {
+        main: 0,
+        hide_rank: false,
+    };
+
+    let summ = await teemo.riot.get(region, "summoner.getBySummonerName", summoner_name)
+    ret.accounts = [{
+        name: summ.name,
+        server: region,
+        id: summ.id,
+        accountId: summ.accountId,
+        puuid: summ.puuid
+    }];
+
+    return ret;
 }
 
-*/
+module.exports.tempUserData = fakeUserObj;
 
 function getUserData (id) {
     if (!fs.existsSync(`${process.env.HOME}/.corki/users/${id}/lol.json`))

@@ -473,26 +473,46 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
     },
 
     { // summary of user champion mastery levels
-        condition: msg => msg.content.match(/^lol masteries(?:$|\s)/),
-        act: async msg => {
+        condition: msg => msg.content.match(/^lol masteries(?:$|\s)(?:<@!?([0-9]+)>|(\S+) (.+))?/),
+        act: async function (msg) {
+            const match = this.condition(msg);
+            console.log(match);
+
+            let userObj;
+            let is_self = false;
+            let user = null;
+            if (match[1]) {
+                user = global.client.users.get(match[1]);
+                userObj = lol.getUserData(match[1]);
+            } else if (match[2] && match[3]) {
+                const server = teemo.serverNames[match[2].toLowerCase()];
+                userObj = await lol.tempUserData(server, match[3]);
+            } else {
+                // get their main account
+                userObj = lol.getUserData(msg.author.id);
+                is_self = true;
+            }
+
             logCmd(msg, "got mastery info");
 
-            // get their main account
-            let userObj = lol.getUserData(msg.author.id);
-
+            console.log(userObj);
             if (!userObj || !userObj.accounts.length)
-                return msg.channel.send("You don't have any linked accounts. You should use `-lol add` to link your account(s)");
+                return msg.channel.send(`${is_self ? "You" : "They"} don't have \
+any linked accounts. ${is_self ? "You" : "They"} should use \`-lol add\` to link LoL account(s)`);
 
             let main = userObj.accounts[userObj.main];
-            let score = await teemo.riot.get(main.server, "championMastery.getChampionMasteryScore", main.id);
+            const score = await teemo.riot.get(main.server, "championMastery.getChampionMasteryScore", main.id);
 
             const data = await teemo.riot.get(main.server, "championMastery.getAllChampionMasteries", main.id);
 
             let totalPoints = 0;
             data.forEach(c => totalPoints += c.championPoints);
+
             let summary = { embed: {
                 title: "Champion Mastery Summary",
-                description: `${msg.author.username} has aquired ${totalPoints} mastery points their main account ${main.name}, which has a mastery score of ${score}`,
+                description: ` ${is_self ? "You have " : `${user || match[3]} has `
+} aquired ${totalPoints} mastery points on ${is_self ? "your main" : "their"
+} account ${main.name}, which has a mastery score of ${score}.`,
                 fields: []
             }};
 
@@ -505,7 +525,7 @@ data[i].championLevel == 7 || data[i].championLevel < 5 ? ""
 : "\ntokens: " + data[i].tokensEarned}
 last played: ${Date(data[i].lastPlayTime)}`
                 });
-            
+
             msg.channel.send(summary);
         }
     },
@@ -644,7 +664,6 @@ If you want to see this implemented sooner send a `-bug` report.");
             ).catch(err =>
                 msg.channel.send(`That didn't work. Check server and username\n\`\`\`\nerr: ${err.stack}\n\`\`\``)
             );
-
         }
     },
 
