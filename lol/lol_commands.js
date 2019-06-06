@@ -476,7 +476,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
         condition: msg => msg.content.match(/^lol masteries(?:$|\s)(?:<@!?([0-9]+)>|(\S+) (.+))?/),
         act: async function (msg) {
             const match = this.condition(msg);
-            console.log(match);
 
             let userObj;
             let is_self = false;
@@ -495,7 +494,6 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
 
             logCmd(msg, "got mastery info");
 
-            console.log(userObj);
             if (!userObj || !userObj.accounts.length)
                 return msg.channel.send(`${is_self ? "You" : "They"} don't have \
 any linked accounts. ${is_self ? "You" : "They"} should use \`-lol add\` to link LoL account(s)`);
