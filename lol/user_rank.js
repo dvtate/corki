@@ -22,36 +22,37 @@ async function refreshData(id) {
             resolve({});
 
         let dreqs = userObj.accounts.map(a =>
-            teemo.riot.get(a.server, "league.getAllLeaguePositionsForSummoner", a.id));
+            teemo.riot.get(a.server, "league.getLeagueEntriesForSummoner", a.id));
 
         Promise.all(dreqs).then(ranks => {
+            //console.log(ranks);
+            let ret = { timestamp : Date.now() };
 
-                let ret = { timestamp : Date.now() };
+            ranks.forEach(rank => rank.forEach(q => {
+                if (!ret[q.queueType])
+                    ret[q.queueType] = [];
+                ret[q.queueType].push(teemo.convertRank(q.tier, q.rank));
 
-                ranks.forEach(rank => rank.forEach(q => {
-                    if (!ret[q.queueType])
-                        ret[q.queueType] = [];
-                    ret[q.queueType].push(teemo.convertRank(q.tier, q.rank));
+                if (!ret["wins"])
+                    ret["wins"] = 0;
+                if (!ret["losses"])
+                    ret["losses"] = 0;
+                ret["wins"] += q.wins;
+                ret["losses"] += q.losses;
+            }));
 
-                    if (!ret["wins"])
-                        ret["wins"] = 0;
-                    if (!ret["losses"])
-                        ret["losses"] = 0;
-                    ret["wins"] += q.wins;
-                    ret["losses"] += q.losses;
-                }));
+            resolve(ret);
 
-                resolve(ret);
+            // cache mastery data to a file
+            fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`,
+                JSON.stringify(ret));
 
-                // cache mastery data to a file
-                fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`,
-                    JSON.stringify(ret));
 
-            }
 
-        // if it fails, try to update timestamp, otherwise return no ranks
-        ).catch(e => {
+            // if it fails, try to update timestamp, otherwise return no ranks
+        }).catch(e => {
             console.log("user-rank error...");
+            console.error(e);
             let rdata = {};
             try {
                 rdata = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`));

@@ -68,7 +68,7 @@ async function makeRankSummary(name, acctName, rank) {
 
 
     return new Promise((resolve, reject) => {
-
+        //console.log(rank);
         if (rank.length == 0) {
             resolve(name + " is unranked");
         } else {
@@ -104,7 +104,6 @@ async function makeRankSummary(name, acctName, rank) {
 }
 
 module.exports.makeRankSummary = makeRankSummary;
-
 
 function maxRank(ranks) {
     if (!ranks || !ranks.length)
