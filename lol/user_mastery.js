@@ -17,6 +17,11 @@ const lol = require("./lol_stuff");
 }
 
 */
+
+
+let cache = {};
+
+
 async function nativeLogMasteryData(id, data) {
     //const data = fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`);
 
@@ -82,10 +87,8 @@ async function refreshMasteryData(id) {
             }));
 
             // cache mastery data to a file
-            fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`,
-                JSON.stringify(ret));
-
-
+            //fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`, JSON.stringify(ret));
+            cache[id] = ret;
 
             // return
             resolve(ret);
@@ -93,16 +96,12 @@ async function refreshMasteryData(id) {
             //nativeLogMasteryData(id, ret);
 
         }).catch(e => {
-            let masteries;
-            try {
-                let masteries = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`));
-            } catch (json_err) {
+            if (cache[id]) {
+                cache[id].timestamp = Date.now();
+                resolve(cache[id]);
+            } else {
                 reject(e);
             }
-            masteries.timestamp = Date.now();
-            fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`,
-                JSON.stringify(masteries));
-            resolve(masteries);
         });
 
 
@@ -114,27 +113,18 @@ module.exports.refresh = refreshMasteryData;
 //
 async function getUserMasteryData(id) {
     return new Promise(async (resolve, reject) => {
-        let masteries;
-
-
-        // attempt to read from cache file
         try {
-            masteries = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.json`));
-        } catch (e) {
-            // cache file not found
-            try { // get new data
+            // try to pull from cache
+            let masteries = cache[id];
+
+            // if data is > 15mins old, request new data
+            if (!masteries || Date.now() - masteries.timestamp > 900000)
                 masteries = await refreshMasteryData(id);
-            } catch (e) { // rito potato servers not working
-                reject(e);
-                return;
-            }
+
+            resolve(masteries);
+        } catch(e) {
+            reject(e);
         }
-
-        // if data is > 15mins old, request new data
-        if (!masteries || Date.now() - masteries.timestamp > 900000)
-            masteries = await refreshMasteryData(id);
-
-        resolve(masteries);
     });
 }
 module.exports.getUserMasteryData = getUserMasteryData;

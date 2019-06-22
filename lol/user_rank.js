@@ -4,6 +4,9 @@ const fs = require("fs");
 const teemo = require("./teemo");
 const lol = require("./lol_stuff")
 
+
+let cache = {};
+
 //
 /*
 {
@@ -41,11 +44,9 @@ async function refreshData(id) {
                 ret["losses"] += q.losses;
             }));
 
-            resolve(ret);
+            resolve(cache[id] = ret);
 
-            // cache mastery data to a file
-            fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`,
-                JSON.stringify(ret));
+
 
 
 
@@ -53,12 +54,8 @@ async function refreshData(id) {
         }).catch(e => {
             console.log("user-rank error...");
             console.error(e);
-            let rdata = {};
-            try {
-                rdata = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`));
-                rdata.timestamp = Date.now();
-            } catch (e) { }
-            fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`, JSON.stringify(rdata));
+            if (cache[id])
+                cache[id].timestamp = Date.now();
         });
     });
 }
@@ -67,22 +64,19 @@ module.exports.refreshData = refreshData;
 
 async function getData(id) {
     return new Promise((resolve, reject) => {
-        let rdata;
-        try {
-            rdata = JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/users/${id}/lol-rank.json`));
-            //console.log("rdata: ", rdata);
-
-            if (!rdata.timestamp)
-                resolve(rdata);
-
-            // data > 10mins old
-            if (Date.now() - rdata.timestamp > 600000)
-                throw "fuckin ancient data";
-        } catch (e) {
-             refreshData(id).then(resolve).catch(reject);
-             return;
-        }
-        resolve(rdata);
+        if (cache[id] && (!cache[id].timestamp || Date.now() - cache[id].timestamp < 600000))
+            resolve(cache[id]);
+        else
+            refreshData(id).then(resolve).catch(reject);
     });
 }
 module.exports.getData = getData;
+
+
+
+module.exports.resetCache = id => {
+    if (!id)
+        cache = {};
+    else
+        delete cache[id];
+};

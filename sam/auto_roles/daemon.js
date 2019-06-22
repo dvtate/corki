@@ -84,7 +84,7 @@ async function processGuild(guildid, rules) {
 // for each server dir
 // process roles
 function chkin() {
-
+    //console.log("processing auto-roles");
     // this is bad practice
     process.setMaxListeners(1000);
 
