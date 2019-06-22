@@ -154,7 +154,8 @@ module.exports.champIDs = {
     "xayah" : 498, "xerath" : 101,
 
     "yorick" : 83,
-    "yasuo" : 157, "yas" : 157, "trashuo" : 157,
+    "yasuo" : 157, "yas" : 157, "trashuo" : 157, "elohell" : 157,
+    "yuumi" : 350, "cat" : 350, "book" : 350,
 
     "zyra" : 143, "plants" : 143,
     "zac" : 154,
@@ -194,7 +195,7 @@ module.exports.champNames = {
     267 : "Nami", 202 : "Jhin", 16 : "Soraka", 45 : "Veigar", 40 : "Janna",
     111 : "Nautilus", 28 : "Evelynn", 79 : "Gragas", 238 : "Zed", 254 : "Vi",
     96 : "Kog'Maw", 103 : "Ahri", 133 : "Quinn", 7 : "LeBlanc", 81 : "Ezreal",
-    555 : "Pyke", 518 : "Neeko", 517 : "Sylas"
+    555 : "Pyke", 518 : "Neeko", 517 : "Sylas", 350 : "Yuumi"
 };
 
 /*
