@@ -290,7 +290,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                     description: lol_lb.formatLeaderBoard(data),
                     footer: {
                         text: senderRank == -1 ?
-                            "Use `-lol add to get on the board`"
+                            "Use `-lol add` to get on the board"
                             : "Your rank: " + (senderRank + 1)
                     },
 
@@ -336,7 +336,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                     description: lol_lb.formatLeaderBoard(data),
                     footer: {
                         text: senderRank == -1 ?
-                            "Use `-lol add to get on the board`"
+                            "Use `-lol add` to get on the board"
                             : "Your rank: " + (senderRank + 1)
                     },
 
