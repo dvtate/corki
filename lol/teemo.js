@@ -25,7 +25,6 @@ module.exports.champNames = {};
 for (key in module.exports.serverNames)
     module.exports.serverNames[module.exports.serverNames[key]] = key;
 
-
 // edit when new champs come out
 module.exports.champIDs = {
 
@@ -156,6 +155,7 @@ module.exports.champIDs = {
     "yorick" : 83,
     "yasuo" : 157, "yas" : 157, "trashuo" : 157, "elohell" : 157,
     "yuumi" : 350, "cat" : 350, "book" : 350,
+    "qiyana" : 246,
 
     "zyra" : 143, "plants" : 143,
     "zac" : 154,
@@ -164,6 +164,7 @@ module.exports.champIDs = {
     "zilean" : 26, "zil" : 26,
 
 };
+
 // inverse of champIDs
 module.exports.champNames = {
     // TODO: sort alphabetically
@@ -195,7 +196,7 @@ module.exports.champNames = {
     267 : "Nami", 202 : "Jhin", 16 : "Soraka", 45 : "Veigar", 40 : "Janna",
     111 : "Nautilus", 28 : "Evelynn", 79 : "Gragas", 238 : "Zed", 254 : "Vi",
     96 : "Kog'Maw", 103 : "Ahri", 133 : "Quinn", 7 : "LeBlanc", 81 : "Ezreal",
-    555 : "Pyke", 518 : "Neeko", 517 : "Sylas", 350 : "Yuumi"
+    555 : "Pyke", 518 : "Neeko", 517 : "Sylas", 350 : "Yuumi", 246: "Qiyana",
 };
 
 /*
@@ -232,8 +233,7 @@ function convertRank(rank, division, lp) {
         "CHALLENGER"  : 'c',
     };
 
-    const romanNumerals = {
-        "I" : 1, "II" : 2, "III" : 3, "IV" : 4, };
+    const romanNumerals = {  "I" : 1, "II" : 2, "III" : 3, "IV" : 4, };
 
     return ranks[rank] + (romanNumerals[division] || "") + (lp ? ' ' + lp : "");
 }
