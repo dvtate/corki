@@ -11,7 +11,7 @@ module.exports = class Page {
         <!doctype html>
         <html>
             <head>
-                <link rel="icon" type="image/png" href="https://corki.js.org/Corkiporo.png" />
+                <link rel="icon" type="image/gif" href="corgi.gif" />
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <title>Corki Portal${this.title ? " - " + this.title : ""}</title>
@@ -92,6 +92,7 @@ module.exports = class Page {
         this.html += code;
         return this;
     }
+
     addRaw(code)
         { return this.add(code); }
 
@@ -194,4 +195,4 @@ module.exports = class Page {
         return this.html + this.end;
     }
 
-}
+};
