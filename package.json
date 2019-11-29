@@ -30,7 +30,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "run" : "forever index.js",
+    "run" : "node index.js"
   },
   "repository": {
     "type": "git",
