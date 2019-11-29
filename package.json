@@ -30,7 +30,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "node index.js"
+    "run" : "forever index.js",
   },
   "repository": {
     "type": "git",
@@ -43,7 +43,7 @@
     "lol"
   ],
   "author": "ridderhoff (dvtate)",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/dvtate/corki-bot/issues"
   },
