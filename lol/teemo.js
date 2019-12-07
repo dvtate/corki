@@ -125,7 +125,7 @@ module.exports.champIDs = {
     "sivir" : 15, "singed" : 27, "skarner" : 72,
     "sejuani" : 113, "sej" : 113,
     "soraka" : 16, "raka" : 16,
-    "sylas" : 517,
+    "sylas" : 517, "senna" : 235, "sena":235,
 
     "talon" : 91, "taliyah" : 163,
     "tahmkench" : 223, "taric" : 44,
@@ -197,6 +197,7 @@ module.exports.champNames = {
     111 : "Nautilus", 28 : "Evelynn", 79 : "Gragas", 238 : "Zed", 254 : "Vi",
     96 : "Kog'Maw", 103 : "Ahri", 133 : "Quinn", 7 : "LeBlanc", 81 : "Ezreal",
     555 : "Pyke", 518 : "Neeko", 517 : "Sylas", 350 : "Yuumi", 246: "Qiyana",
+    235 : "Senna",
 };
 
 /*
