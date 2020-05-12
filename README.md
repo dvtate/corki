@@ -1,5 +1,5 @@
 # corki-bot 
-A Discord bot for the CorkiMains server
+Originally made for the CorkiMains Discord server, Corki Bot now has over 100k users in more than more than 50 communitites. If you think Corki bot might be a good fit for your community, feel free to add it or ask me directly ([@ridderhoff#6333](https://corki.js.org/support)) if you have any questions.
 
 [![Discord Bots](https://discordbots.org/api/widget/332958493722017792.svg)](https://discordbots.org/bot/332958493722017792)
 
