@@ -14,35 +14,42 @@ router.get("/login/:source", (req, res) => {
     const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect_uri}&state=${req.params.source}`);
 });
-router.get("/login/", (req, res) => {    
+router.get("/login/", (req, res) => {
     const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect_uri}`);
 });
 
+function toUrlFormEnclosed(data) {
+    return Object.entries(data)
+        .map(kv => kv.map(encodeURIComponent))
+        .map(([k,v]) =>`${k}=${v}`)
+        .join('&');
+}
 
 router.get("/callback", bot.catchAsync(async (req, res) => {
     const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
-    
+
     if (!req.query.code)
         throw new Error("NoCodeProvided");
 
     const code = req.query.code;
     const source = req.query.state || '/';
     const creds = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
-    const data = new FormData();
-    data.append("client_id", global.CLIENT_ID);
-    data.append("client_secret", global.CLIENT_SECRET);
-    data.append('grant_type', 'authorization_code');
-    data.append("redirect_uri", encodeURIComponent(redirect_uri));
-    data.append("code", code);
-    data.append("scope", "identify");
+
+    const data = {
+            client_id: global.CLIENT_ID,
+            client_secret: global.CLIENT_SECRET,
+            grant_type: "authorization_code",
+            redirect_uri,
+            code,
+            scope: "identify"
+    };
     const response = await fetch("https://discordapp.com/api/v6/oauth2/token?grant_type=authorization_code", {
         method: 'POST',
-        body: data,
+        body: toUrlFormEnclosed(data),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
-	}
-	    
+    	}
     });
     const json = await response.json();
     console.log({json});
