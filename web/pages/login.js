@@ -10,20 +10,19 @@ const bot = require("../middleman.js");
 
 const router = express.Router();
 
-
-const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
-
 router.get("/login/:source", (req, res) => {
+    const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect_uri}&state=${req.params.source}`);
 });
-router.get("/login/", (req, res) => {
+router.get("/login/", (req, res) => {    
+    const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect_uri}`);
 });
 
 
 router.get("/callback", bot.catchAsync(async (req, res) => {
-    const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
-
+    const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
+    
     if (!req.query.code)
         throw new Error("NoCodeProvided");
 
@@ -33,18 +32,20 @@ router.get("/callback", bot.catchAsync(async (req, res) => {
     const data = new FormData();
     data.append("client_id", global.CLIENT_ID);
     data.append("client_secret", global.CLIENT_SECRET);
-    data.append("grant_type", "authorization_code");
-    data.append("redirect_uri", redirect_uri);
+    data.append('grant_type', 'authorization_code');
+    data.append("redirect_uri", encodeURIComponent(redirect_uri));
     data.append("code", code);
     data.append("scope", "identify");
-    const response = await fetch("https://discordapp.com/api/oauth2/token", {
+    const response = await fetch("https://discordapp.com/api/v6/oauth2/token?grant_type=authorization_code", {
         method: 'POST',
         body: data,
         headers: {
-            Authorization: `Basic ${creds}`,
-        }
+            'Content-Type': 'application/x-www-form-urlencoded'
+	}
+	    
     });
     const json = await response.json();
+    console.log({json});
 
     let id = await bot.getUserID(json.access_token, res);
     if (!id) {

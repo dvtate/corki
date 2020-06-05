@@ -38,7 +38,7 @@ async function nativeLogMasteryData(id, data) {
     delete data.timestamp;
     Object.keys(data).forEach(champ => ret += `\n${champ}:${data[champ].pts}`);
 
-    const data = fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.c_parse`, ret);
+    const data_resp = fs.writeFileSync(`${process.env.HOME}/.corki/users/${id}/lol-mastery.c_parse`, ret);
     require("child_process").exec(`${process.env.HOME}/.corki/lol_mastery_log_tool ${id}`);
 }
 

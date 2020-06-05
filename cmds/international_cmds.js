@@ -1,5 +1,5 @@
 
-const time = require("time");
+const time = {}; //require("time");
 const logCmd = require("../logging.js");
 
 module.exports = [
