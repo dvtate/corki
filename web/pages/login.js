@@ -2,20 +2,22 @@
 const express = require("express");
 
 const fetch = require("node-fetch");
-
-const bot = require("../middleman.js");
 const btoa = require("btoa");
+const FormData = require("form-data");
+const bot = require("../middleman.js");
+
+
 
 const router = express.Router();
 
 
+const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
+
 router.get("/login/:source", (req, res) => {
-    const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
-    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}&state=${req.params.source}`);
+    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect_uri}&state=${req.params.source}`);
 });
 router.get("/login/", (req, res) => {
-    const redirect = encodeURIComponent(`http://${req.headers.host}/callback`);
-    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect}`);
+    res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect_uri}`);
 });
 
 
@@ -28,8 +30,16 @@ router.get("/callback", bot.catchAsync(async (req, res) => {
     const code = req.query.code;
     const source = req.query.state || '/';
     const creds = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
-    const response = await fetch(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}&redirect_uri=${redirect}`, {
+    const data = new FormData();
+    data.append("client_id", global.CLIENT_ID);
+    data.append("client_secret", global.CLIENT_SECRET);
+    data.append("grant_type", "authorization_code");
+    data.append("redirect_uri", redirect_uri);
+    data.append("code", code);
+    data.append("scope", "identify");
+    const response = await fetch("https://discordapp.com/api/oauth2/token", {
         method: 'POST',
+        body: data,
         headers: {
             Authorization: `Basic ${creds}`,
         }
