@@ -21,7 +21,6 @@ router.get("/login/", (req, res) => {
 
 function toUrlFormEnclosed(data) {
     return Object.entries(data)
-        .map(kv => kv.map(encodeURIComponent))
         .map(([k,v]) =>`${k}=${v}`)
         .join('&');
 }
@@ -52,7 +51,6 @@ router.get("/callback", bot.catchAsync(async (req, res) => {
     	}
     });
     const json = await response.json();
-    console.log({json});
 
     let id = await bot.getUserID(json.access_token, res);
     if (!id) {
