@@ -1,12 +1,9 @@
-
 const express = require("express");
 
 const fetch = require("node-fetch");
 const btoa = require("btoa");
 const FormData = require("form-data");
 const bot = require("../middleman.js");
-
-
 
 const router = express.Router();
 
@@ -19,14 +16,8 @@ router.get("/login/", (req, res) => {
     res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=${global.CLIENT_ID}&scope=identify&response_type=code&redirect_uri=${redirect_uri}`);
 });
 
-function toUrlFormEnclosed(data) {
-    return Object.entries(data)
-        .map(([k,v]) =>`${k}=${v}`)
-        .join('&');
-}
-
 router.get("/callback", bot.catchAsync(async (req, res) => {
-    const redirect_uri = encodeURIComponent(`http://${req.headers.host}/callback`);
+    const redirect_uri = `http://${req.headers.host}/callback`;
 
     if (!req.query.code)
         throw new Error("NoCodeProvided");
@@ -45,7 +36,7 @@ router.get("/callback", bot.catchAsync(async (req, res) => {
     };
     const response = await fetch("https://discordapp.com/api/v6/oauth2/token?grant_type=authorization_code", {
         method: 'POST',
-        body: toUrlFormEnclosed(data),
+        body: new URLSearchParams(data),
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
     	}

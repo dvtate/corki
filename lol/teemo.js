@@ -1,6 +1,6 @@
 const fs = require("fs");
 const Teemo = require("teemojs");
-const fetch = require('fetch');
+const fetch = require('node-fetch');
 
 
 // riot api
@@ -266,6 +266,8 @@ let lol_version;
 let championByIdCache = {};
 let championJson = {};
 
+module.exports.champData = [];
+
 /**
 * Update our lookup so that we don't have to manually enter it every time they add a new champ lol
 */
@@ -282,7 +284,6 @@ async function getLatestChampionsDDragon(language = "en_US") {
     }
 
     let response;
-
     const versions = (await fetch("http://ddragon.leagueoflegends.com/api/versions.json").then(async(r) => await r.json()));
 
     for (const version of versions) {
@@ -299,9 +300,10 @@ async function getLatestChampionsDDragon(language = "en_US") {
 
     // Name => { }
     const champs = await response.json();
+    module.exports.champData = Object.values(champs.data);
 
     // Add to cache
-    champs.data.forEach(c => {
+    module.exports.champData.forEach(c => {
         module.exports.champIDs[c.name.toLowerCase()] = module.exports.champIDs[c.name.toLowerCase()]
             || Number(c.key);
         module.exports.champIDs[c.id.toLowerCase()] = module.exports.champIDs[c.id.toLowerCase()]
