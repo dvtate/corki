@@ -1,6 +1,6 @@
 const fs = require("fs");
 const Teemo = require("teemojs");
-
+const fetch = require('fetch');
 
 
 // riot api
@@ -27,7 +27,6 @@ for (key in module.exports.serverNames)
 
 // edit when new champs come out
 module.exports.champIDs = {
-
     "aatrox" : 266, "azir" : 268, "akali" : 84,
     "annie" : 1, "tibbers" : 1,
     "anivia" : 34, "egg" : 34, "aniv" : 34,
@@ -163,6 +162,7 @@ module.exports.champIDs = {
     "zed" : 238, "ripadc" : 238,
     "zoe" : 142,
     "zilean" : 26, "zil" : 26,
+    "lillia" : 876, "lilia" : 876, "lil" : 876,
 
 };
 
@@ -198,7 +198,7 @@ module.exports.champNames = {
     111 : "Nautilus", 28 : "Evelynn", 79 : "Gragas", 238 : "Zed", 254 : "Vi",
     96 : "Kog'Maw", 103 : "Ahri", 133 : "Quinn", 7 : "LeBlanc", 81 : "Ezreal",
     555 : "Pyke", 518 : "Neeko", 517 : "Sylas", 350 : "Yuumi", 246: "Qiyana",
-    235 : "Senna", 523 : "Aphelios", 875 : "Sett"
+    235 : "Senna", 523 : "Aphelios", 875 : "Sett", 876 : "Lillia",
 };
 
 /*
@@ -261,3 +261,56 @@ module.exports.champggRoleNames = {
     "adcsupport" : "ADCSUPPORT", "adsupp" : "ADCSUPPORT",
     "synergy" : "SYNERGY"
 }
+
+let lol_version;
+let championByIdCache = {};
+let championJson = {};
+
+/**
+* Update our lookup so that we don't have to manually enter it every time they add a new champ lol
+*/
+async function getLatestChampionsDDragon(language = "en_US") {
+    // subtract version numbers b - a
+    function compareVersionNumber(a,b) {
+        a = a.split('.').map(Number);
+        b = b.split('.').map(Number);
+        for (const i in a) {
+            const cmp = b[i]-a[i];
+            if (cmp != 0)
+                return cmp;
+        }
+    }
+
+    let response;
+
+    const versions = (await fetch("http://ddragon.leagueoflegends.com/api/versions.json").then(async(r) => await r.json()));
+
+    for (const version of versions) {
+        // If we're already up to date, skip it
+        if (lol_version && compareVersionNumber(lol_version, version) <= 0)
+            return;
+
+        response = await fetch(`https://ddragon.leagueoflegends.com/cdn/${version}/data/${language}/champion.json`);
+        if (response.ok) {
+            lol_version = version;
+            break;
+        }
+    }
+
+    // Name => { }
+    const champs = await response.json();
+
+    // Add to cache
+    champs.data.forEach(c => {
+        module.exports.champIDs[c.name.toLowerCase()] = module.exports.champIDs[c.name.toLowerCase()]
+            || Number(c.key);
+        module.exports.champIDs[c.id.toLowerCase()] = module.exports.champIDs[c.id.toLowerCase()]
+            || Number(c.key);
+        module.exports.champNames[Number(c.key)] = module.exports.champNames[Number(c.key)]
+            || c.name;
+    });
+}
+
+// Automatically update champions
+setInterval(getLatestChampionsDDragon, 1000 * 60 * 60 * 4);
+getLatestChampionsDDragon();
