@@ -1,6 +1,3 @@
-"use strict";
-
-// see file if ur concerned about privacy, its not bad
 const logCmd = require("./logging.js");
 const fs = require("fs");
 // Import the discord.js module
@@ -76,6 +73,7 @@ const interactions = []
 const bl = require("./sam/blacklist"); // should ignore msgs in certan servers/channels
 const prefix = require("./sam/prefix"); // respond to different commands in dfferent severs
 const bot_admins = require("./bot_admins"); // bot owner auth & meta stuff
+const ct = require('./ct'); // Cross-guild-communication
 
 // message event listener
 global.client.on("message", async msg => {
@@ -115,6 +113,7 @@ global.client.on("message", async msg => {
 			i.act(msg).catch(e => bot_admins.sendBugReport(msg,
 				 `Interaction Error:\n\`\`\`\n${e.stack}\n\`\`\``));
 	});
+
 
 });
 
