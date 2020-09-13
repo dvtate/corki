@@ -19,7 +19,7 @@
     "lunicode-tiny": "^1.0.1",
     "money": "^0.2.0",
     "node-datetime": "^2.1.2",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "open-exchange-rates": "^0.3.0",
     "request": "^2.88.0",
     "rss-parser": "^3.9.0",
