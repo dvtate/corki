@@ -48,8 +48,7 @@ module.exports = [
             const id = match[2];
 
             if (!champID)
-                return msg.channel.send("invalid champion (run `-lol mastery help` for more)");
-
+                return msg.channel.send("invalid champion (run `-help lol mastery` for more)");
 
             lol.getUserMastery(id, champID).then(data =>
                 msg.channel.send(`<@!${id}> has mastery level ${data.lvl} with ${data.pts} points on ${teemo.champs[champID]}`)
@@ -61,7 +60,14 @@ module.exports = [
         tests: [ "-lol mastery corki <@253784341555970048>" ]
     },
 
-
+    { // -mastery help
+        condition: msg => msg.content.match(/^(?:mastery|lol mastery|help lol mastery|lol mastery help)(?:$|\s)/),
+        act: async function (msg) {
+            logCmd(msg, "got help with `-lol mastery`");
+            msg.channel.send(masteryHelpInfo);
+        }
+    },
+    
     { // self mastery of a champ
         condition: msg => msg.content.match(/^lol mastery (\S+)/),
         act: async function (msg) {
@@ -79,14 +85,6 @@ module.exports = [
                 msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)")
             });
             msg.channel.stopTyping();
-        }
-    },
-
-    { // -mastery help
-        condition: msg => msg.content.match(/^(?:mastery|lol mastery|help lol mastery)(?:$|\s)/),
-        act: async function (msg) {
-            logCmd(msg, "got help with `-lol mastery`");
-            msg.channel.send(masteryHelpInfo);
         }
     },
 
