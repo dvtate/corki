@@ -57,9 +57,12 @@ async function refreshMasteryData(id) {
         let dreqs = userObj.accounts.map(a =>
             teemo.riot.get(a.server, "championMastery.getAllChampionMasteries", a.id)
                 .catch(e => {
+                    // If unable to refresh, resolve with the cache
                     console.error("lol-mastery err ignored...");
+                    resolve(cache[id]);
                     return [];
-        }));
+                })
+        );
 
         // request them all at once
         Promise.all(dreqs).then(accts => {
