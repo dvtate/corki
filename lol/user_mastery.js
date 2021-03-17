@@ -18,7 +18,7 @@ const lol = require("./lol_stuff");
 
 */
 
-
+// TODO should also probably write to FS periodically and load from fs on start
 let cache = {};
 
 
@@ -147,3 +147,15 @@ function getUserMastery (id, champ) {
     );
 }
 module.exports.getUserMastery = getUserMastery;
+
+
+// Load cache from fs on startup
+const cacheFname = `${process.env.HOME}/.corki/lol_mastery_cache.json`;
+setTimeout(() => {
+    cache = JSON.parse(fs.readFileSync(cacheFname).toString());
+}, 1000);
+
+// Write cache to fs every 4 hours
+setInterval(() =>
+    fs.writeFileSync(cacheFname, JSON.stringify(cache)),
+    1000 * 60 * 60 * 4);
