@@ -12,7 +12,7 @@ module.exports = [
             if (!msg.guild)
                 return msg.channel.send("Sorry, you can't blacklist a dm");
 
-            if (!mods.auth(msg))
+            if (!await mods.auth(msg))
                 return;
 
             bl.addGuild(msg.guild.id);
@@ -26,7 +26,7 @@ module.exports = [
             logCmd(msg, "-blacklist channel");
             if (!msg.guild)
                 return msg.channel.send("Sorry you can't blacklist a dm");
-            if (!mods.auth(msg))
+            if (!await mods.auth(msg))
                 return;
 
             let blChans = bl.guildChans(msg.guild.id);
@@ -45,10 +45,10 @@ module.exports = [
             logCmd(msg, "-blacklist remove ()");
             const id = this.condition(msg)[1];
 
-            const guild = global.client.guilds.get(id);
-            const chan = global.client.channels.get(id);
+            const guild = await global.client.guilds.fetch(id);
+            const chan = await global.client.channels.fetch(id);
             if (guild) {
-                if (!mods.isMod(guild.id, msg.author.id))
+                if (!await mods.isMod(guild.id, msg.author.id))
                     return msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
 
@@ -59,7 +59,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
                 if (!chan.guild)
                     return msg.react("👍");
 
-                if (!mods.isMod(chan.guild.id, msg.author.id))
+                if (!await mods.isMod(chan.guild.id, msg.author.id))
                     return msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
 

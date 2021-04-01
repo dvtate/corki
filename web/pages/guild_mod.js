@@ -48,10 +48,13 @@ router.get("/mod", bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token, res);
 
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
+
     let page = new Page("Server Management", userid);
 
 
-    const guilds = bot.modServers(userid);
+    const guilds = await bot.modServers(userid);
     if (guilds.length == 0) {
         page.startFieldset("No Servers Detected")
             .add(`<p>To continue, you must be an administrator/mod of a server where
@@ -122,9 +125,13 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token, res);
 
+    const perms = await mods.getModData(req.params.serverid, userid);
+    const guild = await global.client.guilds.fetch(req.params.serverid);
+    const guildChannels = await guild.channels.fetch();
+    await guild.roles.fetch();
 
-    const perms = mods.getModData(req.params.serverid, userid);
-    const guild = global.client.guilds.get(req.params.serverid);
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
 
     // unauthorized
     if (!guild || (!perms.admin && !perms.mod)) {
@@ -163,7 +170,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         <!-- text channels in current guild -->
         <datalist id="chans">
             <option value="${
-                Array.from(global.client.guilds.get(req.params.serverid).channels)
+                Array.from(guildChannels)
                     .filter(c => c[1].type == "text").map(c => c[1].name)
                     .join("\"><option value=\"")
             }">
@@ -171,10 +178,9 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
         <!-- roles in given sever -->
         <datalist id="roles">
-            <option value"${guild.roles.array().map(r => r.name).join("\"><option value=\"")}">
+            <option value"${guild.roles.catch.array().map(r => r.name).join("\"><option value=\"")}">
         </datalist>
     `);
-
 
     page.startFieldset("Command Prefixes")
         .add(`
@@ -246,7 +252,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     welcome.pruneRules(guild.id);
     const announcementTableValues = welcome.getAnnouncementData(guild.id).map(rule => {
         return [
-            '#' + global.client.channels.get(rule.id).name,
+            '#' + guildChannels.get(rule.id).name,
             rule.msg,
             `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmwelcome/${
                 encodeURIComponent(JSON.stringify(rule))}')">Remove</button>`
@@ -283,7 +289,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         # <input list="chans" id="welcome-channel" placeholder="channel-name" /> :
         <input type="text" id="welcome-msg-template" value="Welcome to {{server}}, {{mention}}!" />
         <button type="button" onclick="addNewMemberAnnouncement()">Add New Member Announcement Rule</button>
-    `)
+    `);
     page.endFieldset();
 
     page.startFieldset("Automatically Role assignment").add(`
@@ -305,20 +311,19 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     		color: black;
     		padding: 15px;
         }
-    `)
+    `);
 
     const ar_table = auto_roles.get(req.params.serverid).map(r => {
         return [
-            guild.roles.find(rl => rl.name == r.role.name).name || guild.roles.get(r.role.id).name || "*invalid_role",
+            guild.roles.cache.find(rl => rl.name == r.role.name).name || guild.roles.cache.get(r.role.id).name || "*invalid_role",
             `<kbd>${ r.cond.replace(/\</g, "&lt;") }</kbd>`,
-            r.announce ? (guild.channels.find(c => c.name == r.announce.name).name || guild.channels.get(r.announce.id).name || "not announced") : "not announced",
+            r.announce ? (guildChannels.find(c => c.name == r.announce.name).name || guildChannels.get(r.announce.id).name || "not announced") : "not announced",
             r.keep ? "kept" : "removed",
             `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rm_ar/${r.role.id}')">Remove</button>`
         ];
     });
     page.addTable(["Role", "Rule", "Announce", "Keep", "Actions"], ar_table, "Automatic Roles");
     page.addScript(`
-
 
         function addAARole() {
             alert("adding automatic roles isn't implemented yet, sorry");
@@ -398,8 +403,8 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     `);
 
     const lol_lb_table = lol_lb.getRules(req.params.serverid).map(r => {
-        let chan = global.client.guilds.get(req.params.serverid).channels.find(ch => ch.name == r.chan.name)
-                    || global.client.guilds.get(req.params.serverid).channels.get(r.chan.id);
+        let chan = guildChannels.find(ch => ch.name == r.chan.name)
+                || guildChannels.get(r.chan.id);
 
         return [
             teemo.champNames[r.champ],
@@ -439,7 +444,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     `);
 
     const rss_table = rss.serverRules(req.params.serverid).map(r => {
-        return [ '#' + global.client.channels.get(r.chan).name,
+        return [ '#' + guildChannels.get(r.chan).name,
             r.url,
             `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrss/${encodeURIComponent(r.chan)}/${encodeURIComponent(r.url)}')">Remove</button>`
         ];
@@ -476,8 +481,8 @@ router.get("/mod/:serverid([0-9]+)/sarcasesensitivity/:value", bot.catchAsync( a
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod) && (req.params.value == "true" || req.params.value == "false")) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} changed sar case sensitivity`);
@@ -497,11 +502,9 @@ router.get("/mod/:serverid([0-9]+)/rmrole/:role", bot.catchAsync(async (req, res
         return;
     }
 
-
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
-
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} removed a SAR`);
@@ -513,7 +516,6 @@ router.get("/mod/:serverid([0-9]+)/rmrole/:role", bot.catchAsync(async (req, res
         roles.setRoles(req.params.serverid, rData);
     }
     res.redirect(`/mod/${req.params.serverid}`);
-
 }));
 
 // delete given role
@@ -524,8 +526,8 @@ router.get("/mod/:serverid([0-9]+)/addrole/:role", bot.catchAsync(async (req, re
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added a SAR`);
@@ -553,8 +555,8 @@ router.get("/mod/:serverid([0-9]+)/resetroles", bot.catchAsync(async (req, res) 
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} cleared all SARs`);
@@ -573,8 +575,11 @@ router.get("/mod/:serverid([0-9]+)/addwelcome/:chan/:msg", bot.catchAsync(async 
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
+
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
 
     // unauthorized
     if (!guild || (!perms.admin && !perms.mod)) {
@@ -586,7 +591,8 @@ router.get("/mod/:serverid([0-9]+)/addwelcome/:chan/:msg", bot.catchAsync(async 
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added a welcome msg`);
 
         const channame = decodeURIComponent(req.params.chan)
-        const chan = guild.channels.find(ch => ch.name == channame);
+        const chans = await guild.channels.fetch();
+        const chan = chans.find(ch => ch.name == channame);
 
         // TODO: also check if chan is a category and doesn't allow sending
         if (!chan) {
@@ -613,7 +619,6 @@ router.get("/mod/:serverid([0-9]+)/addwelcome/:chan/:msg", bot.catchAsync(async 
             msg: decodeURIComponent(req.params.msg)
         });
         welcome.setAnnouncementData(guild.id, rules);
-
     }
     res.redirect(`/mod/${req.params.serverid}`);
 
@@ -628,8 +633,8 @@ router.get("/mod/:serverid([0-9]+)/rmwelcome/:rule", bot.catchAsync(async (req, 
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} removed a welcome msg`);
@@ -652,8 +657,8 @@ router.get("/mod/:serverid([0-9]+)/addprefix/:prefix", bot.catchAsync( async (re
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added a cmd prefx`);
@@ -673,8 +678,8 @@ router.get("/mod/:serverid([0-9]+)/rmprefix/:prefix", bot.catchAsync( async (req
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} removed a prefix`);
@@ -695,8 +700,8 @@ router.get("/mod/:serverid([0-9]+)/rmcmlb/:lb", bot.catchAsync( async (req, res)
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} removed a cm lb`);
@@ -718,14 +723,15 @@ router.get("/mod/:serverid([0-9]+)/addcmlb/:lb", bot.catchAsync( async (req, res
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added a cm lb`);
 
         let lb = JSON.parse(decodeURIComponent(req.params.lb)); // {champ, chan, per}
-        let chan = guild.channels.find(ch => ch.name == lb.chan);
+        const chans = await guild.channels.fetch();
+        let chan = chans.find(ch => ch.name == lb.chan);
         if (!chan)
             return res.send(bot.genErrorPage(userid, "Channel not found", `
 The channel ${lb.chan} wasn't found in ${guild.name} the suggested options should
@@ -771,8 +777,8 @@ router.get("/mod/:serverid([0-9]+)/rmrss/:chan/:url", bot.catchAsync( async (req
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} removed an rss feed`);
@@ -788,13 +794,13 @@ router.get("/mod/:serverid([0-9]+)/addrss/:chan/:url", bot.catchAsync( async (re
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
-    let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let perms = await mods.getModData(req.params.serverid, userid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added an rss feed`);
-
-        const chan = guild.channels.find(ch => ch.name == decodeURIComponent(req.params.chan));
+        const chans = await guild.channels.fetch();
+        const chan = chans.find(ch => ch.name == decodeURIComponent(req.params.chan));
         if (!chan)
             return res.send(bot.genErrorPage(userid, "Invalid Channel", `
 The channel with id ${req.params.chan} (should be only numbers) doesn't appear to exist in the given server.
@@ -812,10 +818,6 @@ An RSS feed wasn't found at the url provided (${req.params.url}). Make sure you 
             `).export());
         });
     }
-
 }));
-
-
-
 
 module.exports = router;

@@ -141,7 +141,6 @@ global.client.on("guildMemberAdd", member => {
 
     // TODO: ask new user to `-lol add` accts or sth (if desired by mods)
 
-
 });
 
 

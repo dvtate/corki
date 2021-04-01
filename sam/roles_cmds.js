@@ -14,7 +14,7 @@ module.exports = [
                 msg.channel.send("This command cannot be used in DM's")
                 return;
             }
-            if (!mods.auth(msg))
+            if (!await mods.auth(msg))
                 return;
 
 
@@ -144,7 +144,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
                 return;
             }
             // unauthorized
-            if (!mods.isMod(msg.guild.id, msg.author.id) && (
+            if (!await mods.isMod(msg.guild.id, msg.author.id) && (
                     !msg.member
                     || !msg.member.permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES))
             ) {

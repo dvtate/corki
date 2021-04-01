@@ -124,9 +124,9 @@ module.exports = [
 
     {
         condition: msg => msg.content.match(/^(?:log author|avatar)(?:\s?<@!?([0-9]+)>)?/),
-        act: function (msg) {
+        act: async function (msg) {
             const m = this.condition(msg);
-            const user = m[1] ? global.client.users.get(m[1]) : msg.author;
+            const user = m[1] ? await global.client.users.fetch(m[1]) : msg.author;
             msg.channel.send({ embed: {
                 title: `@${user.username}#${user.discriminator}`,
                 description: `${user} has user ID ${user.id}`,
@@ -244,10 +244,9 @@ module.exports = [
             const channel = match[1];
             const contents = match[2];
 
-            const chan = global.client.channels.get(channel);
+            const chan = await global.client.channels.fetch(channel);
             if (!chan)
                 return msg.channel.send("Invalid Channel. (Corki must be mutual member of server)");
-
 
             const guild = chan.guild;
             let perms = guild ? mods.getModData(guild.id, msg.author.id) : {
@@ -255,7 +254,12 @@ module.exports = [
             };
 
             // if they don't have roles priveleges or are a bot then stop them
-            if (!botAdmins.auth(msg.author.id) && !guild.members.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR) && !perms.admin && !perms.mod_cmds) {
+            await guild.members.fetch(msg.author.id);
+            if (!botAdmins.auth(msg.author.id)
+                && !guild.members.cache.get(msg.author.id).permissions.has(global.Discord.Permissions.FLAGS.ADMINISTRATOR)
+                && !perms.admin
+                && !perms.mod_cmds)
+            {
                 msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
                 logCmd(msg, "isn't authorized to use -msg");
@@ -263,7 +267,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
             }
 
             try {
-                global.client.channels.get(channel).send(contents);
+                await global.client.channels.fetch(channel).send(contents);
             } catch (e) {
                 msg.channel.send("That didn't work.. Probably wrong channel id");
                 console.log(e);
@@ -271,7 +275,6 @@ Ask the server's owner to promote you to admin or grant you access to this comma
             }
 
             msg.react("👍");
-
         }
 
     },

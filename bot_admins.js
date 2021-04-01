@@ -22,24 +22,24 @@ module.exports.bugReportChannel = bugReportChannel; // atest server:botstuff#bug
 
 module.exports.sendBugReport = async (msg, bug) => {
     if (msg)
-        global.client.channels.get(bugReportChannel)
+        (await global.client.channels.fetch(bugReportChannel))
             .send(`@${msg.author.username}#${msg.author.discriminator} found a bug(${msg.content}): ${bug}`);
     else
-        global.client.channels.get(bugReportChannel)
+        (await global.client.channels.fetch(bugReportChannel))
             .send(`untraced error: ${bug}`);
 }
 
 module.exports.bug = bug => module.exports.sendBugReport(null, bug);
 
 
-module.exports.joinGuild = g => {
+module.exports.joinGuild = async g => {
     g.owner.createDM().then(dm => dm.send(`Hey, you just added me to ${g.name}. :D
 - To set up your server, add features, change behavior, etc. goto https://corki.js.org/portal?rdr=mod
 - To allow admins/mods to do it for you goto https://corki.js.org/portal?rdr=admin
 - For some general info on the bot go to https://corki.js.org`));
     console.log(`Guild joined: ${g.name}#${g.id}`);
 
-    global.client.channels.get("566432610532982804").send({ embed: {
+    (await global.client.channels.fetch("566432610532982804")).send({ embed: {
         title: "Added to Guild",
         description: `${global.client.user} was added to ${g.name}#${g.id} :D`,
         fields: [
@@ -61,7 +61,7 @@ module.exports.joinGuild = g => {
 };
 
 
-module.exports.leaveGuild = g => {
+module.exports.leaveGuild = async g => {
 	console.log(`Guild deleted/left: ${g.name}#${g.id}`);
 return;
 	if (g.owner) g.owner.createDM().then(dm => dm.send(`
@@ -71,7 +71,7 @@ that's fine too. If you could please send a \`-bug\` report (or contact @ridderh
 pointers on any ideas on how to improve the bot, that would be amazing!`))
 		.catch(console.error);
 
-	global.client.channels.get("566432610532982804").send({ embed: {
+	(await global.client.channels.fetch("566432610532982804")).send({ embed: {
 		title: "Removed from giuld",
 		description: `${global.client.user} was removed from ${g.name}#${g.id} :(`,
 		fields: [

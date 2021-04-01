@@ -14,8 +14,11 @@ router.get('/', bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token, res);
 
+    // Make sure user is cached
+    const user = await global.client.users.fetch(userid);
+
     let page = new Page(null, userid);
-    page.startFieldset(`Welcome ${global.client.users.get(userid).username}!`)
+    page.startFieldset(`Welcome ${user.username}!`)
         .addRaw(`
                 <h2>What brings you here?</h2>
                 <button type="button" onclick="redirect('/user')">User Settings</button>
@@ -27,7 +30,6 @@ router.get('/', bot.catchAsync(async (req, res) => {
         .endFieldset()
 
     res.send(page.export());
-
 }));
 
 module.exports = router;

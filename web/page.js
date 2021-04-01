@@ -37,8 +37,8 @@ module.exports = class Page {
                         ${this.userid ? `
                             <div onclick="toggleUserDropdown()">
                                 <img src="${
-                                    global.client.users.get(this.userid).avatar ?
-                                        `https://cdn.discordapp.com/avatars/${this.userid}/${global.client.users.get(this.userid).avatar}`
+                                    global.client.users.cache.get(this.userid).avatar ?
+                                        `${global.client.users.cache.get(this.userid).avatarURL()}`
                                         : "https://discordapp.com/assets/dd4dbc0016779df1378e7812eabaa04d.png"
                             }" class="profilepic" />
                             </div>
@@ -49,7 +49,7 @@ module.exports = class Page {
                 ${ this.userid ? `
                 <div class="row" >
                     <div class="col-md-6 col-md-offset-6" id="user-dropdown">
-                        Logged in as ${ global.client.users.get(this.userid).username }.
+                        Logged in as ${ global.client.users.cache.get(this.userid).username }.
                         <button onclick="deleteAllCookies()" >Logout</button>
                     </div>
                 </div>` : ""

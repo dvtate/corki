@@ -31,7 +31,7 @@
         </div>
         <div class="row" >
             <div class="col-md-6 col-md-offset-6" id="user-dropdown">
-                Logged in as ${global.client.users.get(req.cookies.userid).username}.
+                Logged in as ${global.client.users.cache.get(req.cookies.userid).username}.
                 <button onclick="deleteAllCookies()" >Logout</button>
             </div>
         </div>

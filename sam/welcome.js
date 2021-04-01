@@ -4,6 +4,7 @@ const fs = require("fs");
 const logCmd = require("../logging");
 const sam = require("./sam");
 const mods = require("./mods");
+const { globalAgent } = require("http");
 
 
 /*
@@ -49,24 +50,27 @@ async function welcomeNewMember(member) {
 			.replace(/\{\{(?:mention|member)\}\}/, member.toString())
 			.replace(/\{\{members?Count\}\}/, member.guild.memberCount);
 
-		const chan = global.client.channels.get(r.id);
-		if (!chan)
-			needsPruning = true;
-		else
-			chan.send(msg);
+		global.client.channels.fetch(r.id).then(chan => {
+			if (!chan)
+				needsPruning = true;
+			else
+				chan.send(msg);
+		});
 	});
 
 	if (needsPruning)
 		pruneRules(member.guild.id);
-
 }
 
-function pruneRules(serverid) {
+// Remove rules for non-existant channels
+async function pruneRules(serverid) {
+	const g = await global.client.guilds.fetch(serverid);
+	await g.channels.fetch();
+	const chans = g.channels.cache;
 	setAnnouncementData(serverid,
 		getAnnouncementData(serverid)
-			.filter(r => global.client.channels.has(r.id)));
+			.filter(r => chans.has(r.id)));
 }
-
 
 module.exports = [
 
@@ -83,7 +87,7 @@ module.exports = [
 			}
 
 	        // mod only cmd
-	        if (!mods.isMod(msg.guild.id, msg.author.id)) {
+	        if (!await mods.isMod(msg.guild.id, msg.author.id)) {
 	            msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
 	            logCmd(msg, "isn't authorized to use -msg");
@@ -119,7 +123,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
 			}
 
             // mod only cmd
-            if (!mods.isMod(msg.guild.id, msg.author.id)) {
+            if (!await mods.isMod(msg.guild.id, msg.author.id)) {
                 msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
                 logCmd(msg, "isn't authorized to use -msg");
@@ -154,7 +158,7 @@ Ask the server's owner to promote you to admin or grant you access to this comma
 			}
 
 			// mod cmd
-            if (!mods.isMod(msg.guild.id, msg.author.id)) {
+            if (!await mods.isMod(msg.guild.id, msg.author.id)) {
 				msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
 				logCmd(msg, "isn't authorized to use -msg");

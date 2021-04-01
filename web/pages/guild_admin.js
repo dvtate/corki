@@ -32,10 +32,12 @@ router.get("/admin", bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token, res);
 
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
+
     let page = new Page("Server Administration", userid);
 
-
-    const guilds = bot.adminServers(userid);
+    const guilds = await bot.adminServers(userid);
     if (guilds.length == 0) {
         page.startFieldset("No Servers Detected")
             .add(`<p>To continue, you must be an administrator of a server where
@@ -98,11 +100,12 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token, res);
 
-
-
     let perms = mods.getModData(req.params.serverid, userid);
-    let guild = global.client.guilds.get(req.params.serverid);
+    let guild = await global.client.guilds.fetch(req.params.serverid);
 
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
+    await guild.members.fetch(userid);
 
     // unauthorized
     if (!guild || !perms.admin) {
@@ -122,7 +125,7 @@ router.get("/admin/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
             return;
     }
 
-        let page = new Page(`${guild.name} <span style="font-size: 70%;">Administration</span>`, userid);
+    let page = new Page(`${guild.name} <span style="font-size: 70%;">Administration</span>`, userid);
 
     // user-select
     page.startFieldset("Select Server Member")
@@ -290,8 +293,7 @@ router.get("/admin/:serverid([0-9]+)/apply/:modsjson", bot.catchAsync(async (req
 
     const userid = await bot.getUserID(req.cookies.token, res);
     const perms = mods.getModData(req.params.serverid, userid);
-    const guild = global.client.guilds.get(req.params.serverid);
-
+    const guild = await global.client.guilds.fetch(req.params.serverid);
 
     // if authorized apply desired changes
     if (guild && perms.admin) {

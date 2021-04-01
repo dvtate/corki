@@ -15,6 +15,7 @@ const Page = require("../page.js");
 
 const lol = require("../../lol/lol_stuff");
 const teemo = require("../../lol/teemo");
+const { userInfo } = require("os");
 
 // reddit api
 const reddit_id = "fcn1qC1IsC7JQw";
@@ -28,6 +29,9 @@ router.get("/user", bot.catchAsync(async (req, res) => {
     }
 
     const userid = await bot.getUserID(req.cookies.token, res);
+
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
 
     let page = new Page("User Settings", userid);
 
@@ -114,7 +118,10 @@ router.get("/user/lol/reset", bot.catchAsync(async (req, res) => {
         return;
     }
 
-    logCmd(null, `web@${global.client.users.get(userid).username} reset their LoL accts`);
+    const user = await global.client.users.fetch(userid);
+
+    logCmd(null, `web@${user.username} reset their LoL accts`);
+
     lol.removeDir(userid);
     res.redirect("/user");
 }));
@@ -129,11 +136,13 @@ router.get("/user/lol/rm/:id", bot.catchAsync(async (req, res) => {
 
     const userid = await bot.getUserID(req.cookies.token, res);
     if (!userid) {
-        res.redirect("/login/user");logCmd(null, `web@${global.client.users.get(userid).username} reset their LoL accts`);
+        res.redirect("/login/user");
         return;
     }
 
-    logCmd(null, `web@${global.client.users.get(userid).username} removed a LoL acct`);
+    const user = await global.client.users.fetch(userid);
+
+    logCmd(null, `web@${user.username} removed a LoL acct`);
     let data = lol.getUserData(userid);
     data.accounts = data.accounts.filter(a => a.id != req.params.id);
 
@@ -158,7 +167,10 @@ router.get("/user/lol/main/:id", bot.catchAsync(async (req, res) => {
         res.redirect("/login/user");
         return;
     }
-    logCmd(null, `web@${global.client.users.get(userid).username} changed main LoL acct`);
+
+    const user = await global.client.users.fetch(userid);
+
+    logCmd(null, `web@${user.username} changed main LoL acct`);
     let data = lol.getUserData(userid);
     data.main = data.accounts.findIndex(a => a.id == req.params.id);
     lol.setUserData(userid, data);
@@ -178,6 +190,9 @@ router.get("/user/lol/add/:region([a-u]+)/:name", bot.catchAsync(async (req, res
         res.redirect("/login/user");
         return;
     }
+
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
 
     const badacct = () =>
         res.send(bot.genErrorPage(userid, "That didn't work",
@@ -230,6 +245,7 @@ router.get("/user/lol/add/verify", bot.catchAsync(async (req, res) => {
         res.redirect("/login/user");
         return;
     }
+    const user = await global.client.users.fetch(userid);
 
     if (!fs.existsSync(`${process.env.HOME}/.corki/users/${userid}/pending.json`)) {
         res.redirect("/user");
@@ -244,7 +260,7 @@ router.get("/user/lol/add/verify", bot.catchAsync(async (req, res) => {
         console.log("verify: ", summoner);
         if (summoner.profileIconId == pend.icon) {
 
-                logCmd(null, `[web]@${global.client.users.get(userid).username} added a LoL acct`);
+                logCmd(null, `[web]@${user.username} added a LoL acct`);
                 lol.addUserAcct(userid, pend.region, pend.summoner)
                     .then(() => res.redirect("/user"))
                     .catch(e => { throw e });
@@ -273,6 +289,8 @@ router.get("/user/lol/add/failed", bot.catchAsync(async (req, res) => {
         return;
     }
 
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
 
     let page = new Page("Error", userid, '/user');
     page.startFieldset("That didn't work :/")
@@ -345,18 +363,15 @@ router.get("/user/lol/import/reddit/cb", bot.catchAsync(async (req, res) => {
             return;
         }
 
-        logCmd(null, `web@${global.client.users.get(userid).username} added LoL acct(s) from reddit`);
+        logCmd(null, `web@${(await global.client.users.fetch(userid)).username} added LoL acct(s) from reddit`);
 
         // unfortunately i have to run one at a time or else only one will be added
         // due to multiple async fxn calls modifying same file at same time
         for (let i = 0; i < accts.length; i++)
             await lol.addUserAcct(userid, teemo.serverNames[accts[i].region.toLowerCase()], accts[i].name);
 
-
         res.redirect("/user");
-
     });
-
 }));
 
 // linked reddit accound doesnt have any associated LoL accts.
@@ -368,6 +383,9 @@ router.get("/user/lol/import/reddit/none", bot.catchAsync(async (req, res) => {
         res.redirect("/login/user");
         return;
     }
+
+    // Make sure user is cached
+    await global.client.users.fetch(userid);
 
     let page = new Page("Error", userid);
     page.startFieldset("Couldn't find anything useful")

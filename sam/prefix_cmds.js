@@ -15,7 +15,7 @@ module.exports = [
                 msg.channel.sent("This commmand can only be run in a server.");
                 return;
             }
-            if (!mods.auth(msg))
+            if (!await mods.auth(msg))
                 return;
 
 
@@ -52,7 +52,7 @@ This includes mentions and commands beginning with `-` ");
                 msg.channel.sent("This commmand can only be run in a server.");
                 return;
             }
-            if (!mods.auth(msg))
+            if (!await mods.auth(msg))
                 return;
 
             let prefixes = [ prefix.escapeRegExp(this.condition(msg)[1].trim()) ];
@@ -70,7 +70,7 @@ This includes mentions and commands beginning with `-` ");
                 msg.channel.sent("This commmand can only be run in a server.");
                 return;
             }
-            if (!mods.auth(msg))
+            if (!await mods.auth(msg))
                 return;
 
             prefix.resetGuildPrefixes(msg.guild.id);

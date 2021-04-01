@@ -25,8 +25,9 @@ const cfg = require("./cfg");
 
 async function processMember(g, m, r) {
     const cond = !!await ar_cond.parseCondition(g.id, m.user.id, r.cond);
-    const has_role = !!m.roles.find(role => role.name == r.role.name)
-                    || m.roles.get(r.role.id);
+    await m.roles.fetch();
+    const has_role = !!m.roles.cache.find(role => role.name == r.role.name)
+                    || m.roles.cache.get(r.role.id);
 
     //console.log("cond: ", !!cond, "has_role: ", !!has_role, "username: ", m.user.username);
     // no action needed
@@ -34,16 +35,16 @@ async function processMember(g, m, r) {
         return;
 
     } else if (cond && !has_role) {
-        const role = g.roles.find(role => role.name == r.role.name)
-                  || g.roles.get(r.role.id);
+        const role = g.roles.cache.find(role => role.name == r.role.name)
+                  || g.roles.cache.get(r.role.id);
         if (!role)
             return console.error("invalid role: ", JSON.stringify(r.role));
 
         m.addRole(role);
 
         if (r.announce) {
-            const chan = g.channels.find(c => c.name == r.announce.name)
-                      || g.channels.get(r.announce.id);
+            const chan = g.channels.cache.find(c => c.name == r.announce.name)
+                      || g.channels.cache.get(r.announce.id);
 
             if (!chan)
                 return console.error("invalid channel: ", JSON.stringify(r.announce));
@@ -57,8 +58,8 @@ async function processMember(g, m, r) {
         }
 
     } else if (!cond && has_role && !r.keep) {
-        const role = g.roles.find(role => role.name == r.role.name)
-                  || g.roles.get(r.role.id);
+        const role = g.roles.cache.find(role => role.name == r.role.name)
+                  || g.roles.cache.get(r.role.id);
 
         //console.log("removeed role: ", role.name, r.role.name)
         if (!role)
@@ -71,12 +72,17 @@ async function processMember(g, m, r) {
 
 
 async function processGuild(guildid, rules) {
-    let guild = await global.client.guilds.get(guildid).fetchMembers();
+    let guild = await global.client.guilds.fetch(guildid);
+    await guild.roles.fetch();
+    await guild.members.fetch();
+    await guild.channels.fetch();
 
     // process each rule in order
     for (let i = 0; i < rules.length; i++) {
     //    console.log("rule: ", rules[i].role.name, rules[i].cond);
-        let memberProcs = guild.members.array().map(m => processMember(guild, m, rules[i]).catch(console.error));
+        let memberProcs = guild.members.cache.array()
+            .map(async m => await processMember(guild, m, rules[i])
+            .catch(console.error));
         let _ = await Promise.all(memberProcs);
     }
 }

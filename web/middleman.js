@@ -8,9 +8,9 @@ async function getUserID(token, res) {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
-        }).then(data =>
+        }).then(async data =>
             data.json().then(user => {
-                if (!global.client.users.get(user.id)) {
+                if (!await global.client.users.fetch(user.id)) {
                     res.redirect("/unknown");
                     resolve(null);
                 } else
@@ -31,8 +31,9 @@ module.exports.catchAsync = fn => (
 );
 
 
-function mutualServers(userid) {
-    return Array.from(global.client.guilds).filter(g => g[1].members.has(userid));
+async function mutualServers(userid) {
+    await global.client.guilds.fetch();
+    return Array.from(global.client.guilds.cache).filter(g => g[1].members.has(userid));
 }
 module.exports.mutualServers = mutualServers;
 
@@ -40,19 +41,25 @@ module.exports.mutualServers = mutualServers;
 const mods = require("../sam/mods");
 const botAdmins = require("../bot_admins");
 
-function adminServers(userid) {
-    return mutualServers(userid).filter(g => {
-        let pwr = mods.getModData(g[1].id, userid);
-        return pwr.admin || botAdmins.auth(userid);
-    });
+async function adminServers(userid) {
+    // TODO use Promise.all()
+    const ret = [];
+    for (const g of await mutualServers(userid)) {
+        const pwr = await mods.getModData(g[1].id, userid);
+        ret.push(pwr.admin || botAdmins.auth(userid));
+    }
+    return ret;
 }
 module.exports.adminServers = adminServers;
 
-function modServers(userid) {
-    return mutualServers(userid).filter(g => {
-        let pwr = mods.getModData(g[1].id, userid);
-        return pwr.admin || pwr.mod || botAdmins.auth(userid);
-    });
+async function modServers(userid) {
+    // TODO use Promise.all()
+    const ret = [];
+    for (const g of await mutualServers(userid)) {
+        const pwr = await mods.getModData(g[1].id, userid);
+        ret.push(pwr.admin || pwr.mod || botAdmins.auth(userid));
+    }
+    return ret;
 }
 module.exports.modServers = modServers;
 
