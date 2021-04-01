@@ -8,9 +8,10 @@ async function getUserID(token, res) {
             headers: {
                 "Authorization": `Bearer ${token}`
             }
-        }).then(async data =>
-            data.json().then(user => {
-                if (!await global.client.users.fetch(user.id)) {
+        }).then(data =>
+            data.json().then(async user => {
+                const u = await global.client.users.fetch(user.id);
+                if (!u) {
                     res.redirect("/unknown");
                     resolve(null);
                 } else

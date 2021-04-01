@@ -38,7 +38,7 @@ function setRules(serverid, rules) {
 module.exports.setRules = setRules;
 
 // remove all rules which don't have a valid channel
-function pruneRules(serverid) {
+async function pruneRules(serverid) {
     let rules = getRules(serverid);
     const guild = await global.client.guilds.fetch(serverid);
     guild.channels.fetch().then(_ =>

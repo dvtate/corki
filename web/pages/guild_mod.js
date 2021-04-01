@@ -443,7 +443,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
         <p>Corki can automatically forward RSS feeds to a channel.</p>
     `);
 
-    const rss_table = rss.serverRules(req.params.serverid).map(r => {
+    const rss_table = (await rss.serverRules(req.params.serverid)).map(r => {
         return [ '#' + guildChannels.get(r.chan).name,
             r.url,
             `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rmrss/${encodeURIComponent(r.chan)}/${encodeURIComponent(r.url)}')">Remove</button>`
