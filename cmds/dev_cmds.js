@@ -423,6 +423,8 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
             const formatUptimeSecs = (time) => `${Math.floor(time / 60 / 60 / 24)}d ${Math.floor(time / 60 / 60) % 24
     }h, ${Math.floor(time / 60) % 60}m, and ${Math.round(time % 60)}s`;
 
+            const numGuilds = global.client.guilds.cache.size;
+            const numChans = global.client.channels.cache.size;
 
             msg.channel.send({ embed: {
                 title: "About Corki",
@@ -437,11 +439,11 @@ ${stdout}\n\`\`\`\n::${stderr}\n::${error}`));
 - The currently running patch is ${version}`
                     }, {
                         name: "Severs",// for each rule
-                        value: global.client.guilds.array().length,
+                        value: numGuilds,
                         inline: true
                     }, {
                         name: "Channels",
-                        value: global.client.channels.array().length,
+                        value: numChans,
                         inline: true
                     }, {
                         name: "Users",

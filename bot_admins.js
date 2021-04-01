@@ -94,7 +94,7 @@ pointers on any ideas on how to improve the bot, that would be amazing!`))
 }
 
 function usersCount() {
-    return global.client.guilds.array()
+    return global.client.guilds.cache.array()
         .map(g => g.memberCount)
         .reduce((accum, v) => accum + v);
 }
