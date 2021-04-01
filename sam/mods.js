@@ -23,7 +23,7 @@ async function generateModData(serverid) {
     if (!guild)
         return null;
 
-    // [ { id, admin, mod, mod_cmds } }
+    // [ { id, admin, mod, mod_cmds } ]
     let mods = [];
 
     if (guild.ownerID)
@@ -51,6 +51,7 @@ async function generateModData(serverid) {
 module.exports.generateModData = generateModData;
 
 async function getMods(guildid) {
+	console.log('getMods:', guildid);
     await sam.populateServerDir(guildid);
     return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${guildid}/mods.json`));
 }

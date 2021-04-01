@@ -33,8 +33,14 @@ module.exports.catchAsync = fn => (
 
 
 async function mutualServers(userid) {
-    await global.client.guilds.fetch();
-    return Array.from(global.client.guilds.cache).filter(g => g[1].members.has(userid));
+    const ret = [];
+    for (const g of Array.from(global.client.guilds.cache)) {
+         try {
+             if (await g[1].members.fetch(userid))
+                 ret.push(g); 
+         } catch(e) {}
+    }
+    return ret;
 }
 module.exports.mutualServers = mutualServers;
 
@@ -47,7 +53,8 @@ async function adminServers(userid) {
     const ret = [];
     for (const g of await mutualServers(userid)) {
         const pwr = await mods.getModData(g[1].id, userid);
-        ret.push(pwr.admin || botAdmins.auth(userid));
+	if (pwr.admin || botAdmins.auth(userid))
+	    ret.push(g);
     }
     return ret;
 }
@@ -58,7 +65,8 @@ async function modServers(userid) {
     const ret = [];
     for (const g of await mutualServers(userid)) {
         const pwr = await mods.getModData(g[1].id, userid);
-        ret.push(pwr.admin || pwr.mod || botAdmins.auth(userid));
+        if (pwr.admin || pwr.mod || botAdmins.auth(userid))
+            ret.push(g);
     }
     return ret;
 }

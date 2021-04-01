@@ -98,7 +98,7 @@ router.get("/mod", bot.catchAsync(async (req, res) => {
     guilds.forEach(g => {
         page.add(`
             <div class="guild-entry row" onclick="redirect('/mod/${g[1].id}')">
-                <div class="guild-icon-container" style="background-image: url(${g[1].iconURL});"></div>
+                <div class="guild-icon-container" style="background-image: url(${g[1].iconURL()});"></div>
                 <div>
                     <h3>${g[1].name}</h3><hr/>
                 </div>
