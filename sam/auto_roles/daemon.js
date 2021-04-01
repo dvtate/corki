@@ -25,7 +25,6 @@ const cfg = require("./cfg");
 
 async function processMember(g, m, r) {
     const cond = !!await ar_cond.parseCondition(g.id, m.user.id, r.cond);
-    await m.roles.fetch();
     const has_role = !!m.roles.cache.find(role => role.name == r.role.name)
                     || m.roles.cache.get(r.role.id);
 
@@ -40,7 +39,7 @@ async function processMember(g, m, r) {
         if (!role)
             return console.error("invalid role: ", JSON.stringify(r.role));
 
-        m.addRole(role);
+        m.roles.add(role);
 
         if (r.announce) {
             const chan = g.channels.cache.find(c => c.name == r.announce.name)
@@ -65,7 +64,7 @@ async function processMember(g, m, r) {
         if (!role)
             return console.error("invalid role: ", JSON.stringify(r.role));
 
-        m.removeRole(role);
+        m.roles.remove(role);
     }
 }
 
@@ -75,7 +74,6 @@ async function processGuild(guildid, rules) {
     let guild = await global.client.guilds.fetch(guildid);
     await guild.roles.fetch();
     await guild.members.fetch();
-    await guild.channels.fetch();
 
     // process each rule in order
     for (let i = 0; i < rules.length; i++) {

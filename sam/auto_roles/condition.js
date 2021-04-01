@@ -102,7 +102,6 @@ async function has_role(stack, guildId, userId) {
     const role = stack.pop();
     const guild = await global.client.guilds.fetch(guildId);
     const member = await guild.members.fetch(userId);
-    await member.roles.fetch();
     const roles = member.roles.cache;
 
     if (typeof(role) == "number") // role id ? find name

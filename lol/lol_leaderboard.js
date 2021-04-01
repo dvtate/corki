@@ -238,7 +238,6 @@ async function chkin(serverid, rules) {
         try {
 
             let guild = await global.client.guilds.fetch(serverid);
-            await guild.channels.fetch();
 
             // guild deleted :(
             if (!guild) {
