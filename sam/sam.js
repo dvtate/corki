@@ -9,17 +9,16 @@ function makeServerDir(serverid){
 module.exports.makeServerDir = makeServerDir;
 
 
-
-
-function populateServerDir(serverid) {
+//
+async function populateServerDir(serverid) {
 
     makeServerDir(serverid);
 
-    //const guild = global.client.guilds.get(serverid);
+    //const guild = await global.client.guilds.fetch(serverid);
 
     // moderation permissions file
     if (!fs.existsSync(`${process.env.HOME}/.corki/servers/${serverid}/mods.json`))
-        mods.setModData(serverid, mods.generateModData(serverid));
+        mods.setModData(serverid, await mods.generateModData(serverid));
 
 }
 
@@ -36,7 +35,7 @@ module.exports.backupServerDirs = () => {
     require("child_process").execSync(`cp /home/tate/.corki/servers /home/tate/.corki/servers_bkp`);
 };
 
-module.exports.pruneServerDirs = () => {
+module.exports.pruneServerDirs = async () => {
     // probaly api outage
     if (Array.from(global.client.guilds).length == 0)
         return;
@@ -44,11 +43,13 @@ module.exports.pruneServerDirs = () => {
     const fs = require("fs-extra");
 
     // delete all irrelevant server directories
-    module.exports.serverDirsList().forEach(g => {
-        if (!global.client.guilds.get(g)) {
-            // edit this to make it move the bad server directory to a backup folder
-            fs.removeSync(`${process.env.HOME}/.corki/servers/${g}`);
-            console.log("pruned server dir: " + g);
-        }
-    });
+    module.exports.serverDirsList().forEach(gid =>
+        global.client.guilds.fetch(gid).then(g => {
+            if (!g) {
+                // edit this to make it move the bad server directory to a backup folder
+                fs.removeSync(`${process.env.HOME}/.corki/servers/${g}`);
+                console.log("pruned server dir: " + g);
+            }
+        })
+    );
 };

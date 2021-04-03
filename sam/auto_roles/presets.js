@@ -9,17 +9,21 @@ const teemo = require("../lol/teemo");
 */
 /// options: {announce:{}, max_rank:1/0, queue:ranked queue }
 async function lol_rank_roles(giuldId, options) {
-    const guild = global.client.guilds.get(guildId);
+    const guild = await global.client.guilds.fetch(guildId);
 
     const ranks = [ "Iron", "Bronze", "Silver", "Gold", "Platinum", "Diamond",
                     "Master", "Grandmaster", "Challenger" ];
     const rids = [ 'i', 'b', 's', 'g', 'p', 'd', 'm', 'gm', 'c' ];
+
     const q = options.queue || "any";
 
     let roles = {};
     try {
         for (let i = 0; i < ranks.length; i++)
-            roles[ranks[i]] = await guild.createRole({ name: ranks[i] });
+            roles[ranks[i]] = await guild.roles.create({
+                data: { name: ranks[i], color: "DEFAULT" },
+                reason: 'lol rank roles preset',
+            });
 
     } catch (e) {
         console.error(e);

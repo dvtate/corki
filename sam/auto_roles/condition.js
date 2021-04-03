@@ -91,22 +91,26 @@ function cmp(item1, item2) {
 }
 
 // epoch ms when user joined relevant guild
-function member_join_date(stack, guildId, userId) {
-    return Date.parse(global.client.guilds.get(guildId).members.get(userId).joinedAt);
+async function member_join_date(stack, guildId, userId) {
+    const guild = await global.client.guilds.fetch(guildId);
+    const mem = await guild.members.fetch(userId);
+    return Date.parse(mem.joinedAt);
 }
 
 // bool if user has given role
-function has_role(stack, guildId, userId) {
+async function has_role(stack, guildId, userId) {
     const role = stack.pop();
-    const guild = global.client.guilds.get(guildId);
-    const member = guild.members.get(userId);
-    if (typeof(role) == "number") { // role id ? find name
-        return !!member.roles.get(role);
-    }
-    if (typeof(role) == "string") {
-        return !!member.roles.find(r => r.name == role);
-    }
-    else return false;
+    const guild = await global.client.guilds.fetch(guildId);
+    const member = await guild.members.fetch(userId);
+    const roles = member.roles.cache;
+
+    if (typeof(role) == "number") // role id ? find name
+        return !!roles.get(role);
+
+    if (typeof(role) == "string")
+        return !!roles.find(r => r.name == role);
+    else
+        return false;
 }
 
 // League of Legends imports

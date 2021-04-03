@@ -9,8 +9,9 @@ async function getUserID(token, res) {
                 "Authorization": `Bearer ${token}`
             }
         }).then(data =>
-            data.json().then(user => {
-                if (!global.client.users.get(user.id)) {
+            data.json().then(async user => {
+                const u = await global.client.users.fetch(user.id);
+                if (!u) {
                     res.redirect("/unknown");
                     resolve(null);
                 } else
@@ -31,8 +32,15 @@ module.exports.catchAsync = fn => (
 );
 
 
-function mutualServers(userid) {
-    return Array.from(global.client.guilds).filter(g => g[1].members.has(userid));
+async function mutualServers(userid) {
+    const ret = [];
+    for (const g of Array.from(global.client.guilds.cache)) {
+         try {
+             if (await g[1].members.fetch(userid))
+                 ret.push(g); 
+         } catch(e) {}
+    }
+    return ret;
 }
 module.exports.mutualServers = mutualServers;
 
@@ -40,19 +48,27 @@ module.exports.mutualServers = mutualServers;
 const mods = require("../sam/mods");
 const botAdmins = require("../bot_admins");
 
-function adminServers(userid) {
-    return mutualServers(userid).filter(g => {
-        let pwr = mods.getModData(g[1].id, userid);
-        return pwr.admin || botAdmins.auth(userid);
-    });
+async function adminServers(userid) {
+    // TODO use Promise.all()
+    const ret = [];
+    for (const g of await mutualServers(userid)) {
+        const pwr = await mods.getModData(g[1].id, userid);
+	if (pwr.admin || botAdmins.auth(userid))
+	    ret.push(g);
+    }
+    return ret;
 }
 module.exports.adminServers = adminServers;
 
-function modServers(userid) {
-    return mutualServers(userid).filter(g => {
-        let pwr = mods.getModData(g[1].id, userid);
-        return pwr.admin || pwr.mod || botAdmins.auth(userid);
-    });
+async function modServers(userid) {
+    // TODO use Promise.all()
+    const ret = [];
+    for (const g of await mutualServers(userid)) {
+        const pwr = await mods.getModData(g[1].id, userid);
+        if (pwr.admin || pwr.mod || botAdmins.auth(userid))
+            ret.push(g);
+    }
+    return ret;
 }
 module.exports.modServers = modServers;
 

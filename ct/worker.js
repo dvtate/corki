@@ -5,7 +5,7 @@ const Discord = require("discord.js");
 // Create an instance of a Discord client
 const client = new global.Discord.Client();
 
-/* We save messages sent to these caches so that if the message 
+/* We save messages sent to these caches so that if the message
    gets deleted in one channel we can delete the other copies
 
    Both have same schema, but we limit number of messages in messageCache for performance
@@ -24,7 +24,7 @@ let messageCache = [
 setInterval(() => {
     const PERFORMANCE_CACHE_DURATION = 1000 * 60 * 5;
     const TOTAL_DELETION_WINDOW = 1000 * 60 * 60 * 24;
-    
+
     // Remove messages more than one day old
     let oldMessages = 0;
     while (chatHistory[oldMessages] - Date.now() > TOTAL_DELETION_WINDOW)
@@ -48,10 +48,10 @@ async function dispatch(msg) {
         .filter(c => c !== msg.channel.id)
         .map(async id => {
             // Send message to channel, mocking original user
-            const channel = client.channels.get(id);
-            await channel.guild.members.get(client.user.id).setNickname(nick);
+            const channel = await client.channels.fetch(id);
+            await channel.guild.members.fetch(client.user.id).setNickname(nick);
             await channel.send(msg.contents, { embed: msg.embeds[0] });
-            await channel.guild.members.get(client.user.id).setNickname(name);
+            await channel.guild.members.fetch(client.user.id).setNickname(name);
         })
     );
     messages.push(msg);

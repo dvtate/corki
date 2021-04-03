@@ -8,7 +8,7 @@
     "circular-json": "^0.5.9",
     "cookie-parser": "^1.4.4",
     "dblapi.js": "^2.3.0",
-    "discord.js": "^11.5.1",
+    "discord.js": "^12.5.2",
     "express": "^4.17.1",
     "feedparser": "^2.2.9",
     "form-data": "^3.0.0",

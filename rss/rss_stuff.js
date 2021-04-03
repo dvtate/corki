@@ -106,7 +106,7 @@ async function sendItems(items, channel) {
     //console.log("forwarding rss update(s)");
 
     try {
-        const chan = global.client.channels.get(channel);
+        const chan = await global.client.channels.cache.get(channel);
 
         // channel deleted, no more feeds
         if (!chan)
@@ -210,9 +210,10 @@ setTimeout(refresh, 20000); // give 20 seconds for bot to start before checking
 
 
 
-function serverRules(guildid) {
+async function serverRules(guildid) {
     // array text channel ids for server
-    const chans = Array.from(global.client.guilds.get(guildid).channels)
+    const guild = await global.client.guilds.fetch(guildid);
+    const chans = Array.from(await guild.channels.fetch())
             .filter(c => c[1].type == "text").map(c => c[1].id);
 
     const rules = getRules();

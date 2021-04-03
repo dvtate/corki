@@ -69,7 +69,7 @@ module.exports = [
             const champName = this.condition(msg)[1].toLowerCase();
             if (champName == 'help')
 	            msg.channel.send(masteryHelpInfo);
-	            
+
             const champID =  teemo.champIDs[champName];
             if (!champID)
                 return msg.channel.send("invalid champion (run `-help lol mastery` for more)");
@@ -385,11 +385,13 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 return msg.channel.send("Rank is hidden.");
 
             // generate rank summary for each acct
+            const user = await global.client.users.fetch(userid);
             userObj.accounts.forEach(acct =>
-                teemo.riot.get(acct.server, "league.getLeagueEntriesForSummoner", acct.id).then(rank =>
-                    lol.rank.makeRankSummary(msg.client.users.get(userid).username, `(${acct.server}) ${acct.name}`, rank)
-                        .then(summary => msg.channel.send(summary)).catch(console.error)
-                ).catch(console.error)
+                teemo.riot.get(acct.server, "league.getLeagueEntriesForSummoner", acct.id)
+                    .then(rank =>
+                        lol.rank.makeRankSummary(user.username, `(${acct.server}) ${acct.name}`, rank)
+                            .then(summary => msg.channel.send(summary)).catch(console.error))
+                    .catch(console.error)
             );
         }
     },
@@ -400,7 +402,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             logCmd(msg, "checked a user's -lol rank");
 
             const match = this.condition(msg);
-            const id = match[1];
+            const id = match[1] || msg.author.id;
             let userObj = lol.getUserData(id);
 
             if (!userObj || !userObj.accounts.length)
@@ -414,11 +416,12 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
                 return msg.channel.send("Invalid account number. Use `-lol list` to see available accounts");
 
             // send rank summary for acct
-            teemo.riot.get(acct.server, "league.getLeagueEntriesForSummoner", acct.id).then(rank =>
-                lol.rank.makeRankSummary(msg.client.users.get(id).username, `(${acct.server}) ${acct.name}`, rank)
-                    .then(summary => msg.channel.send(summary)).catch(console.error)
-            ).catch(console.error);
-
+            const user = await global.client.users.fetch(id);
+            teemo.riot.get(acct.server, "league.getLeagueEntriesForSummoner", acct.id)
+                .then(rank =>
+                    lol.rank.makeRankSummary(user.username, `(${acct.server}) ${acct.name}`, rank)
+                        .then(summary => msg.channel.send(summary)).catch(console.error))
+                .catch(console.error);
         },
         tests: [ "-lol rank <@253784341555970048>" ]
     },
@@ -467,8 +470,9 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             if (!acct)
                 return msg.channel.send("Invalid account number. Use `-lol list` to see available accounts");
 
+            const user = await global.client.users.fetch(msg.author.id);
             teemo.riot.get(acct.server, "league.getLeagueEntriesForSummoner", acct.id).then(rank => {
-                lol.rank.makeRankSummary(msg.client.users.get(msg.author.id).username, acct.name, rank)
+                lol.rank.makeRankSummary(user.username, acct.name, rank)
                     .then(summary => msg.channel.send(summary)).catch(console.error)
             }).catch(console.error);
         }
@@ -483,7 +487,7 @@ to change it use \`-lol main <account-number>\`, (account number can be fonud vi
             let is_self = false;
             let user = null;
             if (match[1]) {
-                user = global.client.users.get(match[1]);
+                user = await global.client.users.fetch(match[1]);
                 userObj = lol.getUserData(match[1]);
             } else if (match[2] && match[3]) {
                 const server = teemo.serverNames[match[2].toLowerCase()];

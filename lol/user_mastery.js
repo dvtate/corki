@@ -18,7 +18,6 @@ const lol = require("./lol_stuff");
 
 */
 
-// TODO should also probably write to FS periodically and load from fs on start
 let cache = {};
 
 

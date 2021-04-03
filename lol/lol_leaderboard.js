@@ -38,13 +38,16 @@ function setRules(serverid, rules) {
 module.exports.setRules = setRules;
 
 // remove all rules which don't have a valid channel
-function pruneRules(serverid) {
+async function pruneRules(serverid) {
     let rules = getRules(serverid);
-    setRules(serverid, rules.filter(r =>
-        global.client.guilds.get(req.params.server).channels.find(c => c.name == r.chan.name)
-        || global.client.guilds.get(req.params.server).channels.get(r.chan.id)));
+    const guild = await global.client.guilds.fetch(serverid);
+    guild.channels.fetch().then(_ =>
+        setRules(serverid, rules.filter(r =>
+            guild.channels.cache.find(c => c.name == r.chan.name)
+            || guild.channels.cache.get(r.chan.id))));
 }
 module.exports.pruneRules;
+
 function cd(rule) {
     //console.log(`${Date.now()} - ${rule.cd.ts} > ${rule.cd.period}`);
     //console.log(`${Date.now() - rule.cd.ts} > ${rule.cd.period}`);
@@ -59,6 +62,10 @@ function resetcd(rule) {
 
 async function getLeaderBoard(members, champ) {
     return new Promise( async (resolve, reject) => {
+        // Get all the members as a collection
+        if (members.fetch)
+            members = await members.fetch();
+        members = members.cache || members;
 
         // get list of users with linked LoL accts
         let users = lol.usersList();
@@ -158,12 +165,7 @@ function findUserRanking(data, id) {
 
 // weekly post of leaderboard to #mastery in corkimains server
 async function postLeaderBoard(chanID, champID, rule) {
-
-
     return new Promise(async (resolve, reject) => {
-
-
-
         // verify period has passed
         if (!cd(rule))
             return resolve(rule);
@@ -171,7 +173,9 @@ async function postLeaderBoard(chanID, champID, rule) {
         console.log(`sending periodic leaderboard... (${champID}#${chanID})`);
 
         // members of server
-        const members = global.client.channels.get(chanID).guild.members;
+        const chan = await global.client.channels.fetch(chanID);
+        const guild = await global.client.guilds.fetch(chan.guild);
+        const members = await guild.members.fetch();
 
         let data;
         try {
@@ -189,7 +193,7 @@ async function postLeaderBoard(chanID, champID, rule) {
         const delta = lb_delta(data, rule.prev);
 
         // post leaderboard
-        global.client.channels.get(chanID).send({embed: {
+        chan.send({embed: {
             title: `${teemo.champNames[champID]} Mastery Leaderboard`,
             fields: [
                 {
@@ -218,7 +222,6 @@ async function postLeaderBoard(chanID, champID, rule) {
         // don't post again until next period
         rule = resetcd(rule);
 
-
         console.log("done");
 
         resolve(rule);
@@ -234,7 +237,7 @@ async function chkin(serverid, rules) {
 
         try {
 
-            let guild = global.client.guilds.get(serverid);
+            let guild = await global.client.guilds.fetch(serverid);
 
             // guild deleted :(
             if (!guild) {
@@ -244,9 +247,9 @@ async function chkin(serverid, rules) {
             }
 
             // try and find the destination channel
-            let chan = guild.channels.find(ch => ch.name == r.chan.name).id;
+            let chan = guild.channels.cache.find(ch => ch.name == r.chan.name).id;
             if (!chan)
-                chan = guild.channels.get(r.chan.id).id;
+                chan = guild.channels.cache.get(r.chan.id).id;
 
             if (!chan) {
 

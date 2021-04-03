@@ -15,15 +15,15 @@ const sam = require("./sam");
 */
 
 
-function generateModData(serverid) {
+async function generateModData(serverid) {
 
     console.log(serverid)
-    const guild = global.client.guilds.get(serverid);
+    const guild = await global.client.guilds.fetch(serverid);
 
     if (!guild)
         return null;
 
-    // [ { id, admin, mod, mod_cmds } }
+    // [ { id, admin, mod, mod_cmds } ]
     let mods = [];
 
     if (guild.ownerID)
@@ -50,14 +50,15 @@ function generateModData(serverid) {
 }
 module.exports.generateModData = generateModData;
 
-function getMods(guildid) {
-    sam.populateServerDir(guildid);
+async function getMods(guildid) {
+	console.log('getMods:', guildid);
+    await sam.populateServerDir(guildid);
     return JSON.parse(fs.readFileSync(`${process.env.HOME}/.corki/servers/${guildid}/mods.json`));
 }
 module.exports.getMods = getMods;
 
-function getModData(guildid, userid) {
-    let ret = getMods(guildid).find(m => m.id == userid);
+async function getModData(guildid, userid) {
+    let ret = (await getMods(guildid)).find(m => m.id == userid);
 
 
     // botadmin override perms in case of need for debugging
@@ -92,10 +93,9 @@ module.exports.setModData = setModData;
 
 // edit a mods permissions
 // TODO: finish pls
-function editMod(guildid, mod) {
-    sam.populateServerDir(guildid);
-
-    getModData(guildid)
+async function editMod(guildid, mod) {
+    await sam.populateServerDir(guildid);
+    await getModData(guildid)
 }
 module.exports.editMod = editMod;
 
@@ -111,14 +111,14 @@ module.exports.resetMods = resetMods;
 
 const botAdmins = require("../bot_admins"); // is backdoor really needed?
 
-function isMod(guildid, userid, bot_override) {
+async function isMod(guildid, userid, bot_override) {
 
     // prevent bot from performing actions unless override
     if (!bot_override &&
-        global.client.users.get(userid).bot)
+        (await global.client.users.fetch(userid)).bot)
         return false;
 
-	let perms = getModData(guildid, userid);
+	let perms = await getModData(guildid, userid);
 
     // if they don't have roles priveleges or are a bot then stop them
     if (!botAdmins.auth(userid) && !perms.admin && !perms.mod_cmds)
@@ -130,8 +130,8 @@ function isMod(guildid, userid, bot_override) {
 
 module.exports.isMod = isMod;
 
-function auth(msg, bot_override) {
-    if (!isMod(msg.guild.id, msg.author.id, bot_override)) {
+async function auth(msg, bot_override) {
+    if (!await isMod(msg.guild.id, msg.author.id, bot_override)) {
         msg.channel.send("You are not authorized to perform this action. \
 Ask the server's owner to promote you to admin or grant you access to this command via the web portal\n");
         return false;
@@ -141,13 +141,12 @@ Ask the server's owner to promote you to admin or grant you access to this comma
 module.exports.auth = auth;
 
 
-
-function pruneMods(guildid) {
-    let mods = getMods(guildid);
-    const guild = global.client.guilds.get(guildid);
+async function pruneMods(guildid) {
+    let mods = await getMods(guildid);
+    const guild = await global.client.guilds.fetch(guildid);
     if (!guild)
         return;
 
-    mods.filter(m => guilds.members.has(m.id));
-
+    await guild.members.fetch();
+    mods.filter(m => guild.members.cache.has(m.id));
 }

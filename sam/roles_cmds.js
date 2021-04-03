@@ -14,7 +14,7 @@ module.exports = [
                 msg.channel.send("This command cannot be used in DM's")
                 return;
             }
-            if (!mods.auth(msg))
+            if (!await mods.auth(msg))
                 return;
 
 
@@ -55,7 +55,7 @@ module.exports = [
                     // role name from sar config file
                     let sRole = serverRoles.find(sr => ignore_case ? sr.toLowerCase() == r.toLowerCase() : sr == r);
                     // corresponding disocrd guild role object
-                    let gRole = msg.guild.roles.find(gr => ignore_case ? gr.name.toLowerCase() == r.toLowerCase() : gr.name == r);
+                    let gRole = msg.guild.roles.cache.find(gr => ignore_case ? gr.name.toLowerCase() == r.toLowerCase() : gr.name == r);
 
                     if (!sRole)
                         return msg.channel.send(`invalid role \`${r}\` ignored.${ignore_case ? "" : " (note: this server's roles are case-sensitive)"}`);
@@ -144,7 +144,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
                 return;
             }
             // unauthorized
-            if (!mods.isMod(msg.guild.id, msg.author.id) && (
+            if (!await mods.isMod(msg.guild.id, msg.author.id) && (
                     !msg.member
                     || !msg.member.permissions.has(global.Discord.Permissions.FLAGS.MANAGE_ROLES))
             ) {
