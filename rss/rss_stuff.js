@@ -106,7 +106,7 @@ async function sendItems(items, channel) {
     //console.log("forwarding rss update(s)");
 
     try {
-        const chan = await global.client.channels.fetch(channel);
+        const chan = await global.client.channels.cache.get(channel);
 
         // channel deleted, no more feeds
         if (!chan)

@@ -55,7 +55,7 @@ module.exports = [
                     // role name from sar config file
                     let sRole = serverRoles.find(sr => ignore_case ? sr.toLowerCase() == r.toLowerCase() : sr == r);
                     // corresponding disocrd guild role object
-                    let gRole = msg.guild.roles.find(gr => ignore_case ? gr.name.toLowerCase() == r.toLowerCase() : gr.name == r);
+                    let gRole = msg.guild.roles.cache.find(gr => ignore_case ? gr.name.toLowerCase() == r.toLowerCase() : gr.name == r);
 
                     if (!sRole)
                         return msg.channel.send(`invalid role \`${r}\` ignored.${ignore_case ? "" : " (note: this server's roles are case-sensitive)"}`);
