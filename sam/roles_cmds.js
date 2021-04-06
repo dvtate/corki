@@ -62,7 +62,7 @@ module.exports = [
                     if (!gRole)
                         return msg.channel.send(`it appears the server administrator hasn't added (or maybe has removed) the \`${r}\` role to the server`);
 
-                    msg.member.addRole(gRole).catch(e => {
+                    msg.member.roles.add(gRole).catch(e => {
                         if (e.message == "Missing Permissions")
                             msg.channel.send(`It appears that Corki doesn't have the permissions\
 required to assign the \`${r}\` role. Does Corki have a role higher than the one you are trying to assign?`);
@@ -117,7 +117,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
                 if (!sRole || !gRole)
                     return msg.channel.send(`Invalid role \`${role}\` ignored`)
 
-                msg.member.removeRole(gRole).catch(e => {
+                msg.member.roles.remove(gRole).catch(e => {
                     if (e.message == "Missing Permissions")
                         msg.channel.send(`It appears that Corki doesn't have the permissions\
                     required to manage the \`${role}\` role. Does Corki have a role higher than the one you are trying to remove?`);
