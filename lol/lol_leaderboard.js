@@ -174,7 +174,7 @@ async function postLeaderBoard(chanID, champID, rule) {
 
         // members of server
         const chan = await global.client.channels.fetch(chanID);
-        const guild = await global.client.guilds.fetch(chan.guild);
+        const guild = await global.client.guilds.fetch(chan.guild.id);
         const members = await guild.members.fetch();
 
         let data;
