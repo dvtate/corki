@@ -33,10 +33,10 @@ module.exports.bug = bug => module.exports.sendBugReport(null, bug);
 
 
 module.exports.joinGuild = async g => {
-    g.owner.createDM().then(dm => dm.send(`Hey, you just added me to ${g.name}. :D
+    if (g.owner) g.owner.createDM().then(dm => dm.send(`Hey, you just added me to ${g.name}. :D
 - To set up your server, add features, change behavior, etc. goto https://corki.js.org/portal?rdr=mod
 - To allow admins/mods to do it for you goto https://corki.js.org/portal?rdr=admin
-- For some general info on the bot go to https://corki.js.org`));
+- For some general info on the bot go to https://corki.js.org`)).catch(console.error);
     console.log(`Guild joined: ${g.name}#${g.id}`);
 
     (await global.client.channels.fetch("566432610532982804")).send({ embed: {
@@ -45,7 +45,7 @@ module.exports.joinGuild = async g => {
         fields: [
             {
                 name: "Servers",
-                value: global.client.guilds.array().length,
+                value: global.client.guilds.cache.size,
                 inline: true,
             }, {
                 name: "Users Gained",
@@ -62,8 +62,9 @@ module.exports.joinGuild = async g => {
 
 
 module.exports.leaveGuild = async g => {
+    try {
 	console.log(`Guild deleted/left: ${g.name}#${g.id}`);
-return;
+
 	if (g.owner) g.owner.createDM().then(dm => dm.send(`
 I'm not sure what happened to ${g.name}. If the server was deleted you can \
 disregard this message. If you no longer need corki bot in your server \
@@ -77,7 +78,7 @@ pointers on any ideas on how to improve the bot, that would be amazing!`))
 		fields: [
 			{
 				name: "Servers",
-				value: global.client.guilds.array().length,
+				value: global.client.guilds.cache.size,
 				inline: true,
 			}, {
 				name: "Users Lost",
@@ -90,6 +91,7 @@ pointers on any ideas on how to improve the bot, that would be amazing!`))
             }
 		],
 	}});
+    } catch(e) {console.error(e);}
 
 }
 

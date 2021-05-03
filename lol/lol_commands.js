@@ -208,7 +208,11 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
             if (!userObj || !userObj.accounts.length)
                 return msg.channel.send("you don't have any linked accounts. you should use `-lol add` to link your account(s)");
 
-            userObj.main = this.condition(msg)[1];
+            const main = this.condition(msg)[1];
+	    if (isNaN(main))
+		return msg.channel.send('Use `-lol list to get a list of your accounts and enter the account number to this command');
+            userObj.main = main;
+            
             lol.setUserData(msg.author.id, userObj);
             msg.channel.send("main account updated");
         },
@@ -220,7 +224,7 @@ Alternatively, you can use the web portal to add your account. https://corki.js.
         act: async function (msg) {
             logCmd(msg, "checked their main -lol acct");
             let userObj = lol.getUserData(msg.author.id);
-            if (userObj && userObj.accounts)
+            if (userObj && userObj.accounts && userObj.main)
                 msg.channel.send(`Your main account is ${userObj.accounts[userObj.main].server} ${userObj.accounts[userObj.main].name}
 to change it use \`-lol main <account-number>\`, (account number can be fonud via \`-lol list\``);
             else
