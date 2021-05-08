@@ -17,7 +17,6 @@ module.exports = [
             // send random response from [yes,no, maybe]
             //msg.channel.send(["yes", "no", "maybe"] [Math.floor(Math.random() * 3)]);
 
-
             const responses = [ "It is certain", "It is decidedly so", "Without a doubt",
               "Yes definitely", "You may rely on it", "As I see it, yes",
               "Most likely", "Outlook good", "Yes", "Signs point to yes",
@@ -107,7 +106,7 @@ Go to corki.js.org to add corki to yours.");
             if (!mods.auth(msg))
                 return;
 
-            const flock = Array.from(msg.guild.members);
+            const flock = Array.from(msg.guild.members.cache);
             const goose = flock[Math.floor(Math.random() * flock.length)][1];
             msg.channel.send(goose.toString());
 
