@@ -187,9 +187,9 @@ module.exports = [
                 return msg.channel.send("`-log members` is only available for guilds");
 
             // just in case 250+ members
-            msg.guild.fetchMembers().then(guild => {
-
-                const members = Array.from(guild.members);
+            msg.guild.members.fetch().then(() => {
+                const guild = msg.guild;
+                const members = Array.from(guild.members.cache);
                 const bot_members = members.filter(m => m[1].user.bot).length;
                 const humans = guild.memberCount - bot_members;
                 const online = members.filter(m => m[1].user.presence.status != "offline").length;
