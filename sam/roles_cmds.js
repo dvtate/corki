@@ -113,7 +113,7 @@ To self-assign a role you can use the command \`-iam <role>\``);
 
             rm_roles.forEach(role => {
                 const sRole = serverRoles.find(r => ignore_case ? r.toLowerCase() == role.toLowerCase() : r == role);
-                const gRole = msg.guild.roles.find(gr => ignore_case ? gr.name.toLowerCase() == role.toLowerCase() : gr.name == role);
+                const gRole = msg.guild.roles.cache.find(gr => ignore_case ? gr.name.toLowerCase() == role.toLowerCase() : gr.name == role);
                 if (!sRole || !gRole)
                     return msg.channel.send(`Invalid role \`${role}\` ignored`)
 
