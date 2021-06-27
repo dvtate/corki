@@ -213,7 +213,7 @@ setTimeout(refresh, 20000); // give 20 seconds for bot to start before checking
 async function serverRules(guildid) {
     // array text channel ids for server
     const guild = await global.client.guilds.fetch(guildid);
-    const chans = Array.from(await guild.channels.fetch())
+    const chans = Array.from(await guild.channels.cache)
             .filter(c => c[1].type == "text").map(c => c[1].id);
 
     const rules = getRules();

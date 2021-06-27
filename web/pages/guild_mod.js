@@ -127,8 +127,8 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
     const perms = await mods.getModData(req.params.serverid, userid);
     const guild = await global.client.guilds.fetch(req.params.serverid);
-    const guildChannels = await guild.channels.fetch();
-    await guild.roles.fetch();
+    const guildChannels = await guild.channels.cache;
+    await guild.roles.cache;
 
     // Make sure user is cached
     await global.client.users.fetch(userid);
@@ -178,7 +178,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
 
         <!-- roles in given sever -->
         <datalist id="roles">
-            <option value"${guild.roles.catch.array().map(r => r.name).join("\"><option value=\"")}">
+            <option value"${guild.roles.cache.array().map(r => r.name).join("\"><option value=\"")}">
         </datalist>
     `);
 

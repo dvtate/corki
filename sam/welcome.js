@@ -65,7 +65,6 @@ async function welcomeNewMember(member) {
 // Remove rules for non-existant channels
 async function pruneRules(serverid) {
 	const g = await global.client.guilds.fetch(serverid);
-	await g.channels.fetch();
 	const chans = g.channels.cache;
 	setAnnouncementData(serverid,
 		getAnnouncementData(serverid)
