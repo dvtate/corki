@@ -113,6 +113,13 @@ async function has_role(stack, guildId, userId) {
         return false;
 }
 
+
+class ConditionAbort {
+    constructor(msg) {
+        this.msg = msg;
+    }
+};
+
 // League of Legends imports
 const lol = require("../../lol/lol_stuff");
 const teemo = require("../../lol/teemo");
@@ -123,6 +130,8 @@ async function lol_mastery_points(stack, guildId, userId) {
     let champ = stack.pop();
     champ = teemo.champIDs[champ] || champ;
     const mdata = await mastery.getUserMastery(userId, champ);
+    if (mdata.e)
+        throw new ConditionAbort(mdata.e);
     return mdata.pts;
 }
 // mastery level user has on given champ
@@ -130,6 +139,8 @@ async function lol_mastery_level(stack, guildId, userId) {
     let champ = stack.pop();
     champ = teemo.champIDs[champ] || champ;
     const mdata = await mastery.getUserMastery(userId, champ);
+    if (mdata.e)
+        throw new ConditionAbort(mdata.e);
     return mdata.lvl;
 }
 
@@ -270,7 +281,8 @@ async function parseCondition(guildId, userId, expr) {
                     ret = await ret;
                 stack.push(ret);
             } catch (e) {
-                console.error(e);
+                if (!(e instanceof ConditionAbort))
+                    console.error(e);
                 return NaN;
             }
 

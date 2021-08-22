@@ -66,9 +66,11 @@ async function refreshMasteryData(id) {
         // request them all at once
         Promise.all(dreqs).then(accts => {
 
-            let ret = {
-                timestamp: Date.now() // used to determine relevance of data
-            };
+            // used to determine relevance of data
+            let ret = { timestamp: Date.now() };
+
+            if (!accts.length)
+                reject("no accts");
 
             // combine relevant data into one big list
             accts.forEach(acct => acct.forEach(champ => {
@@ -77,13 +79,13 @@ async function refreshMasteryData(id) {
                     ret[champ.championId] = { // NOTE: DO NOT CHANGE ORDER!
                         pts: ret[champ.championId].pts + champ.championPoints,
                         lvl: champ.championLevel > ret[champ.championId].lvl
-                                ? champ.championLevel : ret[champ.championId].lvl
+                            ? champ.championLevel : ret[champ.championId].lvl,
                     };
 
                 else // otherwise make new entry
                     ret[champ.championId] = { // NOTE: DO NOT CHANGE ORDER!
                         pts: champ.championPoints,
-                        lvl: champ.championLevel
+                        lvl: champ.championLevel,
                     };
 
             }));
@@ -146,7 +148,6 @@ function getUserMastery (id, champ) {
     );
 }
 module.exports.getUserMastery = getUserMastery;
-
 
 // Load cache from fs on startup
 const cacheFname = `${process.env.HOME}/.corki/lol_mastery_cache.json`;
