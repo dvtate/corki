@@ -52,9 +52,27 @@ async function refreshMasteryData(id) {
             return;
         }
 
+        // Get account's mastery data
+        async function getAcctMasteries(a) {
+            try {
+                teemo.riot.get(
+                    a.server,
+                    "championMastery.getAllChampionMasteries",
+                    a.id,
+                );
+            } catch (e) {
+                // Handle ratelimit
+                if (e.message.includes('429')) {
+                    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+                    await sleep(750);
+                    return getAcctMasteries(a);
+                }
+            }
+        }
+
         // fill a list with mastery promise requests
         let dreqs = userObj.accounts.map(a =>
-            teemo.riot.get(a.server, "championMastery.getAllChampionMasteries", a.id)
+            getAcctMasteries(a)
                 .catch(e => {
                     // If unable to refresh, resolve with the cache
                     console.error("lol-mastery err ignored...");
