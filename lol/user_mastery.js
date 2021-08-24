@@ -65,8 +65,12 @@ async function refreshMasteryData(id) {
                 if (e.message.includes('429')) {
                     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
                     await sleep(750);
+		  console.log('mastery ratelimit');
                     return getAcctMasteries(a);
-                }
+                } else {
+			console.log('mastery error', e);
+			throw e;
+		}
             }
         }
 
