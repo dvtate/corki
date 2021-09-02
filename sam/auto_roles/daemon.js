@@ -51,6 +51,7 @@ async function processMember(g, m, r) {
             let msg = { embed: {
                     title: `${m.nickname || m.user.username} got promoted to ${role.name}!`
             }};
+	    console.log(msg);
             if (r.announce.msg)
                 msg.embed.description = await ar_cond.parseCondition(g, m.user.id, r.announce.msg);
             chan.send(msg);

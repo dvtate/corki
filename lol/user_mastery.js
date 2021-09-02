@@ -55,7 +55,7 @@ async function refreshMasteryData(id) {
         // Get account's mastery data
         async function getAcctMasteries(a) {
             try {
-                teemo.riot.get(
+                return await teemo.riot.get(
                     a.server,
                     "championMastery.getAllChampionMasteries",
                     a.id,
