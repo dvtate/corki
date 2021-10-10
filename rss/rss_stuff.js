@@ -165,7 +165,7 @@ function checkFeeds() {
     // make an array full of promises of new rss elements
     let requests = rules.map(r =>
         processRule(r).catch(e => {
-            console.error("rss error: ", e.message, r.url);
+//            console.error("rss error: ", e.message, r.url);
             return { items : [], rule : r };
         })
     );

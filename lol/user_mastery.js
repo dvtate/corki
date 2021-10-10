@@ -46,11 +46,7 @@ async function refreshMasteryData(id) {
     return new Promise(async (resolve, reject) => {
 
         // get their lol data
-        let userObj = lol.getUserData(id);
-        if (!userObj || !userObj.accounts.length) {
-            reject("no accts");
-            return;
-        }
+        let userObj = lol.getUserData(id) || { accounts: [], hide_rank: true };
 
         // Get account's mastery data
         async function getAcctMasteries(a) {
@@ -91,8 +87,10 @@ async function refreshMasteryData(id) {
             // used to determine relevance of data
             let ret = { timestamp: Date.now() };
 
-            if (!accts.length)
+            if (!accts.length && userObj.accounts.length) {
+		    console.log({accts, uso: userObj.accounts});
                 reject("no accts");
+	    }
 
             // combine relevant data into one big list
             accts.forEach(acct => acct.forEach(champ => {

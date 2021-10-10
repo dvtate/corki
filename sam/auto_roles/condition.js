@@ -117,6 +117,7 @@ async function has_role(stack, guildId, userId) {
 class ConditionAbort {
     constructor(msg) {
         this.msg = msg;
+	    console.error(this);
     }
 };
 

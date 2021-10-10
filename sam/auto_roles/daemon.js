@@ -27,8 +27,8 @@ async function processMember(g, m, r) {
     const cond = !!await ar_cond.parseCondition(g.id, m.user.id, r.cond);
     const has_role = !!m.roles.cache.find(role => role.name == r.role.name)
                     || m.roles.cache.get(r.role.id);
-
-    //console.log("cond: ", !!cond, "has_role: ", !!has_role, "username: ", m.user.username);
+//	if (m.user.id == '820190265461571598')
+//	console.log("cond: ", !!cond, "has_role: ", !!has_role, "username: ", r.role.name, m.user.username);
     // no action needed
     if (cond == has_role) {
         return;
