@@ -153,7 +153,7 @@ async function processRule(rule) {
         // update latest post time
         rule.latest = latest > 0 ? latest : rule.latest;
 
-        resolve({ items : ret, rule : rule});
+        resolve({ items : ret.reverse(), rule : rule});
     });
 
 }
