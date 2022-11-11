@@ -1,6 +1,5 @@
 const express = require("express");
 
-const fetch = require("node-fetch");
 const btoa = require("btoa");
 const FormData = require("form-data");
 const bot = require("../middleman.js");

@@ -1,5 +1,4 @@
 const fs = require("fs");
-const fetch = require("node-fetch");
 const request = require("request");
 const btoa = require("btoa");
 

@@ -1,4 +1,3 @@
-const fetch = require("node-fetch");
 const Page = require("./page");
 
 async function getUserID(token, res) {

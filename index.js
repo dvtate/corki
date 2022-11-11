@@ -80,6 +80,13 @@ global.client.on("message", async msg => {
 	if ((msg.guild && bl.guilds().includes(msg.guild.id)) || bl.chans().includes(msg.channel.id))
 		return;
 
+       // discord no longer sends messages not directed at the bot and this at least lets me debug easier (doesn't include usernames)
+       if (msg.content)
+               fs.appendFile(
+                     process.env.HOME + '/.corki/msglog.txt',
+                     msg.content + '\n',
+                     err => err && console.error('msglog err: ', err));
+
 	// check for prefix
 	const prefixes = [ `<@${global.client.user.id}>`, `<@!${global.client.user.id}>` ] // mention
 		.concat(msg.guild ? prefix.getGuildPrefixes(msg.guild.id) : [ '-' ]);

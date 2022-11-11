@@ -1,6 +1,5 @@
 const fs = require("fs");
 const Teemo = require("teemojs");
-const fetch = require('node-fetch');
 
 
 // riot api

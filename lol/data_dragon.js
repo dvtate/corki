@@ -1,4 +1,3 @@
-const fetch = require("node-fetch");
 const teemo = require("./teemo");
 
 // runes reforged
