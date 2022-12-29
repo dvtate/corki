@@ -799,8 +799,7 @@ router.get("/mod/:serverid([0-9]+)/addrss/:chan/:url", bot.catchAsync( async (re
 
     if (guild && (perms.admin || perms.mod)) {
         logCmd(null, `web/mod:${req.params.serverid}@${userid} added an rss feed`);
-        const chans = await guild.channels.fetch();
-        const chan = chans.find(ch => ch.name == decodeURIComponent(req.params.chan));
+        const chan = guild.channels.cache.find(ch => ch.name == decodeURIComponent(req.params.chan));
         if (!chan)
             return res.send(bot.genErrorPage(userid, "Invalid Channel", `
 The channel with id ${req.params.chan} (should be only numbers) doesn't appear to exist in the given server.
