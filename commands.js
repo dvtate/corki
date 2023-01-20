@@ -303,7 +303,7 @@ const c_sam = [
         name: "-blacklist",
         usage: "Prevent Corki from reading messages in the server/channel the command is sent in",
         args: "<kbd>server</kbd> or <kbd>channel</kbd>, whichever you wish to blacklist",
-        example: "<kbd>-blacklist server</kbd><bd/><kbd>-bl channel</kbd>"
+        example: "<kbd>-blacklist server</kbd><br/><kbd>-bl channel</kbd>"
     }, {
         name: "-blacklist remove",
         usage: "Allow corki to read messages again. (send via dm or non-blacklisted channel)",
