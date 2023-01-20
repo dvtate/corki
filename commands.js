@@ -307,7 +307,7 @@ const c_sam = [
     }, {
         name: "-blacklist remove",
         usage: "Allow corki to read messages again. (send via dm or non-blacklisted channel)",
-        arguments: "accepts the id of relevant server/channel (accessable via right-click menu)",
+        args: "accepts the id of relevant server/channel (accessable via right-click menu)",
         example: "<kbd>-blacklist remove 319518724774166531</kbd>"
     },
 ];
