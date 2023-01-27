@@ -1,11 +1,26 @@
 const logCmd = require("./logging.js");
 const fs = require("fs");
+
+const { AutoPoster } = require('topgg-autoposter');
+
 // Import the discord.js module
 global.Discord = require("discord.js");
 
 // Create an instance of a Discord client
-global.client = new global.Discord.Client();
+global.client = new global.Discord.Client(
+{ ws: { intents: [
+	'GUILDS',
+	'GUILD_MESSAGES',
+	'GUILD_MEMBERS',
+	'DIRECT_MESSAGES',
+	'DIRECT_MESSAGE_REACTIONS',
+	(1<<15), // message_content
+	'DIRECT_MESSAGE_TYPING',
+]}}
+);
 
+const ap = AutoPoster(fs.readFileSync(`${process.env.HOME}/.corki/topgg_token`).toString().trim(), global.client);
+ap.on('posted', () => console.log('posted stats to top.gg'));
 
 // bot will only start reacting to information
 // from Discord _after_ ready is emitted
@@ -66,17 +81,14 @@ global.commands = []
 	.concat(require("./sam/blacklist_cmds"));
 
 //
-const interactions = []
-	.concat(require("./reactions"));
-
-
+const interactions = []	.concat(require("./reactions"));
 const bl = require("./sam/blacklist"); // should ignore msgs in certan servers/channels
 const prefix = require("./sam/prefix"); // respond to different commands in dfferent severs
 const bot_admins = require("./bot_admins"); // bot owner auth & meta stuff
 const ct = require('./ct'); // Cross-guild-communication
 
 // message event listener
-global.client.on("message", async msg => {
+async function messageHandler(msg) {
 	if ((msg.guild && bl.guilds().includes(msg.guild.id)) || bl.chans().includes(msg.channel.id))
 		return;
 
@@ -115,7 +127,9 @@ global.client.on("message", async msg => {
 	});
 
 
-});
+};
+global.client.on('message', messageHandler);
+global.client.on('messageCreate', messageHandler);
 
 // something broke
 global.client.on("error", async e => {

@@ -4,6 +4,7 @@
   "description": "a multipurpose discord bot",
   "main": "index.js",
   "dependencies": {
+    "@top-gg/sdk": "^3.1.3",
     "btoa": "^1.2.1",
     "circular-json": "^0.5.9",
     "cookie-parser": "^1.4.4",
@@ -24,6 +25,7 @@
     "rss-parser": "^3.9.0",
     "splitargs": "0.0.7",
     "teemojs": "^1.5.0",
+    "topgg-autoposter": "^2.0.1",
     "twitch.tv": "^2.1.0",
     "urban": "^0.3.2"
   },
