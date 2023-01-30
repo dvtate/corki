@@ -63,8 +63,11 @@ module.exports.joinGuild = async g => {
 
 module.exports.leaveGuild = async g => {
     try {
-	console.log(`Guild deleted/left: ${g.name}#${g.id}`);
-
+	console.log(`Guild deleted/left: ${g.name}#${g.id}`, g);
+	if (!g.name) {
+		console.log(g);
+		return;
+	}
 	if (g.owner) g.owner.createDM().then(dm => dm.send(`
 I'm not sure what happened to ${g.name}. If the server was deleted you can \
 disregard this message. If you no longer need corki bot in your server \
