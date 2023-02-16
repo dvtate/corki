@@ -47,7 +47,7 @@ module.exports = [
     {
         condition: msg => msg.content.match(/^rss list/),
         act: async msg => {
-
+            logCmd(msg, "listed -rss subscriptions");
             // make the list of rules from rss.conf into a string
             let rules = rss.getRules()                      // get rules from file
                 .filter(r => r.channels.includes(msg.channel.id))   // take rules applicable to current channel
@@ -61,7 +61,10 @@ module.exports = [
 
     { // -rss help
         condition: msg => msg.content.match(/^(?:help rss|rss help|rss)(?:$|\s)/),
-        act: async msg => msg.channel.send(rssHelpInfo)
+        act: async msg => {
+            logCmd(msg, "asked for help with rss");
+            msg.channel.send(rssHelpInfo)
+        },
     },
 
 

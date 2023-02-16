@@ -292,7 +292,7 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     `);
     page.endFieldset();
 
-    page.startFieldset("Automatically Role assignment").add(`
+    page.startFieldset("Automatic Role assignment").add(`
         <p>Corki can automatically assign roles to users who qualify given conditions. This feature is
  still relatively new and thus it may take some time for the interface to become intuitive.</p>
 

@@ -158,6 +158,8 @@ async function processRule(rule) {
 
 }
 
+// TODO FIXME when checking feeds should only update timestamps... should have a mutex
+
 // check feeds and forward new ones
 function checkFeeds() {
     let rules = getRules();
