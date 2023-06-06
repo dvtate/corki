@@ -314,10 +314,13 @@ router.get("/mod/:serverid([0-9]+)", bot.catchAsync(async (req, res) => {
     `);
 
     const ar_table = auto_roles.get(req.params.serverid).map(r => {
+	const cr = guild.roles.cache.get(r.role.id)
+	const gr = guild.roles.cache.find(rl => rl.name == r.role.name)
+	const gc = r.announce && guildChannels.find(c => c.name == r.announce.name)
         return [
-            guild.roles.cache.find(rl => rl.name == r.role.name).name || guild.roles.cache.get(r.role.id).name || "*invalid_role",
+            (gr && gr.name) || (cr && cr.name) || "*invalid_role",
             `<kbd>${ r.cond.replace(/\</g, "&lt;") }</kbd>`,
-            r.announce ? (guildChannels.find(c => c.name == r.announce.name).name || guildChannels.get(r.announce.id).name || "not announced") : "not announced",
+            r.announce ? ((gc && gc.name) || guildChannels.get(r.announce.id).name || "not announced") : "not announced",
             r.keep ? "kept" : "removed",
             `<button type="button" onclick="redirect('/mod/${req.params.serverid}/rm_ar/${r.role.id}')">Remove</button>`
         ];
