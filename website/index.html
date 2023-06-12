@@ -1,0 +1,352 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="icon" type="image/gif" href="corgi.gif" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Corki Bot</title>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" />
+		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v2.3.7/dist/mini-default.min.css" />
+        <link rel="stylesheet" href="style.css" />
+
+        <script src="utils.js"></script>
+
+        <style>
+            #about_blurb {
+                background-color: RGBA(211, 211, 211, 0.4);
+                color: black;
+            }
+
+            #footer {
+                background-color: RGBA(0,0,0, 0.8);
+                color: white;
+                margin:0;
+            }
+        </style>
+
+    </head><body>
+
+        <style>
+            div.button-area {
+                height: 50px;
+                width: 100%;
+                background-color: rgba(220,220,220,0.75);
+                transition: background-color 0.5s;
+                cursor: pointer;
+                text-align: center;
+                font-size: 30px;
+                border-radius: 5px;
+            }
+
+            div.button-area:hover {
+                background-color: darkblue;
+            }
+
+            div#disc-inv-button-area {
+                background-color: #7289da;
+            }
+
+            div#disc-inv-button-area:hover {
+
+            }
+
+        </style>
+        <center>
+            <img src="corki-discord.png" style="width: 25%;display:inline;" />
+            <h1 style="font-size:70px">Corki Bot</h1>
+        </center>
+
+
+        <!--
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-3" style="padding: 10px">
+                <div class="button-area" id="disc-inv-button-area" onclick="redirect('/invite')">
+                    Add Corki to your Server
+
+                </div>
+            </div><div class="col-sm-3" style="padding: 10px">
+                <div class="button-area">
+                    Access Web-Portal
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="card fluid">
+                    <img class="section media" src="cmd_demo.png" />
+                    <div class="section">
+                        <h3>Commands</h3>
+                        Click here to figure out how to use Corki bot to its full capacity
+                    </div>
+                    <a href="#commands"><div class="button">See Commands</div></a>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="card fluid">
+                    <img class="section media" src="corki_profile.png" />
+                    <div class="section">
+                        <h3>Add to server</h3>
+                        Corki bot provides functionality which could be useful for any Discord server
+                    </div>
+                    <a href="https://corki.js.org/invite"><div class="button">Add Bot</div></a>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-3">
+                <div class="card fluid">
+                    <img class="section media" src="code_demo.png" />
+                    <div class="section">
+                        <h3>View On Github</h3>
+                        Corki bot is a open source project. Feel free to open a pull request or an issue
+                    </div>
+                    <a href="https://github.com/dvtate/corki-bot"><div class="button">View Code</div></a>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-4 col-lg-3">
+                <div class="card fluid">
+                    <img class="section media" src="help_server.png" />
+                    <div class="section">
+                        <h3>Join Dedicated Server</h3>
+                        Join a server with bot dev and others if you ever need help with the bot or are just lonely
+                    </div>
+                    <a href="https://discord.gg/cXcXSmy"><div class="button">Join Server</div></a>
+                </div>
+            </div>
+        </div>
+    -->
+        <style>
+            .disc-button {
+                background-color: #7289da;
+                transition: background-color 0.5s;
+            }
+
+            .disc-button:hover {
+                background-color: #7590c0;
+            }
+        </style>
+
+        <div class="page-slice" id="about_blurb">
+            <div class="pad20">
+                <h2>About</h2>
+                <p>Corki bot was created by <a href="https://dvtt.net">a member</a>
+                         of the <a href="https://discord.gg/7yeEHAy">CorkiMains Discord server</a>
+                         in order to provide features not found on other bots and to improve on
+                         the featuresets of other bots. Corki bot has since found use in several other communities
+                         giving it a total userbase of over 150k users.</p>
+		    <a class="button disc-button" href="/invite"><i class="fab fa-discord"></i> Add to Server</a>
+		    <a class="button" href="/portal"><i class="fas fa-sliders-h"></i> Access Web Portal</a>
+		    <a class="button" href="https://github.com/dvtate/corki"><i class="fab fa-github"></i> Source Code</a>
+                    <br/><a href="/support"><img src="https://discordapp.com/api/guilds/319518724774166531/embed.png" style="margin-left: 8px;"/></a>
+            </div>
+        </div>
+
+        <style>
+            #commands-list code {
+                color: black;
+            }
+
+            #commands-list {
+                background-color: #423; margin:0;
+            }
+            #cmd-col-labels {
+                background-color: purple;
+                padding: 10px;
+                font-size: 150%;
+            }
+            #cmd-col-labels * {
+                font-size: 110%;
+            }
+
+            #cmd-categories {
+                padding: 0;
+                background-color: transparent;
+                border: 0;
+            }
+            #cmd-categories > fieldset {
+                padding: 0;
+                padding-left: 5px;
+                padding-bottom: 2px;
+            }
+
+            .cmd-cat {
+                padding: 0;
+                padding-left: 6px;
+                border: 1px solid grey;
+                transition: border-color 0.5s;
+                border-radius: 8px;
+            }
+
+            .cmd-cat:hover {
+                border-color: green;
+            }
+
+            .cmd-row {
+                background-color: #22111a;
+                padding-top: 10px;
+                border-bottom: 1px solid #101
+            }
+
+            .cmd-col {
+                padding-left: 5px;
+                border-right: 1px solid #101;
+            }
+
+            table.data-table {
+                width: 100%;
+                color: #fff;
+            }
+
+            table.data-table thead tr th {
+                background-color: purple;
+            }
+
+            table.data-table tr {
+                padding: 0;
+            }
+
+            table.data-table td {
+                transition: background-color 0.5s;
+            }
+            table.data-table tr:hover td {
+                background-color: #302020;
+            }
+
+            table.data-table td {
+                background-color: #22111a;
+            }
+
+            table.data-table td:hover {
+                background-color: #000 !important;
+            }
+        </style>
+        <div class="page-slice" id="commands-list">
+            <div class="container pad10">
+                <h2  id="commands">Command List</h2>
+
+                <form id="cmd-categories">
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-general" onclick="chkin()" checked="true" value="general" tabindex="0" />
+                            <label for="cat-general">General</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-fun"  onclick="chkin()" value="fun" tabindex="0" />
+                            <label for="cat-fun">Fun</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-lol" onclick="chkin()" value="lol" tabindex="0" />
+                            <label for="cat-lol">League of Legends</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-international" onclick="chkin()" value="international" tabindex="0"/>
+                            <label for="cat-international">International</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-sam" onclick="chkin()" value="sam" tabindex="0" />
+                            <label for="cat-sam">Server Automation & Management</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-tools" onclick="chkin()" value="tools" tabindex="0" />
+                            <label for="cat-tools">Tools</label>
+                        </div>
+                        <div class="input-group cmd-cat">
+                            <input type="checkbox" class="category-select" id="cat-devtools" onclick="chkin()" value="devtools" tabindex="0" />
+                            <label for="cat-devtools">Developer Tools</label>
+                        </div>
+                </form>
+                <style>
+                    .mod-box {
+                        border-radius: 3px;
+                        padding: 5px;
+                        display: inline-block;
+                        background-color: #4b00a9;
+                        transition: background-color, 0.5s;
+                    }
+                    .mod-box:hover {
+                        background-color: #4b00c9;
+                    }
+                </style>
+
+                <div class="cmdlist" id="cmdlist">
+
+                </div>
+
+            </div>
+
+            <script src="commands.js">
+                var commands;
+            </script>
+            <script>
+                // none of this is compatible with internet explorer (not that it matters)
+
+                // actually make list work
+                function chkin(){
+
+                    // generate list from checkboxes
+                    let cmds = [];
+                    Array.from(document.getElementsByClassName("category-select")).forEach(e => {
+                        if (e.checked)
+                            cmds = cmds.concat(commands[e.value]);
+                    });
+
+                    // sort alphabetically
+                    cmds.sort((a,b) =>
+                        (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0);
+
+                    // remove any duplicates (required for commands which fit in multiple categories)
+                    cmds = cmds.filter((c, ind) =>
+                        !cmds.find((cmd, ind2) => {
+                            if (ind2 <= ind || JSON.stringify(c) != JSON.stringify(cmd))
+                                return false;
+                        })
+                    );
+
+                    let cmdlist = table(["Command", "Usage", "Arguments", "Examples"],
+                        cmds.map(c => [ c.name, c.usage, c.args, c.example ]));
+
+                    // add list to site
+                    document.getElementById("cmdlist").innerHTML = cmdlist;
+                }
+                chkin();
+            </script>
+
+        </div>
+        <div class="page-slice" >
+            <!--
+        - Features and other links/pictures go here
+        - feathub
+        - changelog
+
+            <div class="row">
+
+                <div class="col-sm-12 col-md-4 col-md-offset-4 col-lg-3 col-lg-offset-3">
+                    <div class="card fluid">
+                        <img class="section media" src="code_demo.png" />
+                        <div class="section">
+                            <h3>View On Github</h3>
+                            Corki bot is a open source project. Feel free to open a pull request or an issue
+                        </div>
+                        <a href="https://github.com/dvtate/corki-bot"><div class="button">View Code</div></a>
+                    </div>
+                </div>
+
+            </div>
+        -->
+        </div>
+
+        <div class="page-slice" id="footer">
+            <div class="pad10">
+                <p>Corki Bot isn’t endorsed by Riot Games and doesn’t reflect the
+                     views or opinions of Riot Games or anyone officially involved
+                     in producing or managing League of Legends. League of Legends
+                     and Riot Games are trademarks or registered trademarks of Riot
+                     Games, Inc. League of Legends © Riot Games, Inc.</p>
+            </div>
+        </div>
+
+    </body>
+</html>
