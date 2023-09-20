@@ -19,4 +19,4 @@ Originally made for the CorkiMains Discord server, Corki Bot now has over 100k u
 - More and More to come: Self-assignable roles, server specific commands, new member announcements/messages, 
 
 ## History:
-Corki bot originated out of necessity in the [CorkiMains Discord server](https://discordapp.com/invite/8ASxJG2), eventually improving upon the functionality of other bots in order to fit our needs and provide new features. Corki bot is now used in a number of other servers in addition to being the main discord bot CorkiMains.
+Corki bot originated out of necessity in the [CorkiMains Discord server](https://discordapp.com/invite/8ASxJG2), eventually improving upon the functionality of other bots in order to fit our needs and provide new features. Corki bot is now used in a number of other servers in addition to being the main discord bot CorkiMains. Hosting for Corki bot is provided by [Research in English](https://researchinenglish.com).
