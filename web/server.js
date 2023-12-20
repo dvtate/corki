@@ -19,6 +19,16 @@ app.use((err, req, res, next) =>
             error: err.message,
         })
 );
+const querystring = require('querystring');
+app.use((req, res, next) => {
+	    if (req.path === "/") return next();
+	    const bodyString = JSON.stringify(req.body) || '';
+	    const qs = querystring.stringify(req.query);
+	    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+	    console.log('corki:web', `${req.method} ${req.path}${qs ? '?' + qs : ''} body=${bodyString.length > 2 ? bodyString.length.toString() + " bytes" : "∅"} (${ip})`);
+	    next();
+});
+
 
 app.use("/resources", express.static(path.join(__dirname, "resources")));
 app.use('/', require("./pages/home"));          // /
