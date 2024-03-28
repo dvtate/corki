@@ -10,7 +10,7 @@
     "cookie-parser": "^1.4.4",
     "dblapi.js": "^2.3.0",
     "discord.js": "^12.5.2",
-    "express": "^4.17.3",
+    "express": "^4.19.2",
     "feedparser": "^2.2.9",
     "form-data": "^3.0.0",
     "fs-extra": "^7.0.1",
